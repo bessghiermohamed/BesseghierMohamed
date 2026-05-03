@@ -35,6 +35,7 @@ interface AppState {
   theme: "light" | "dark";
   chatOpen: boolean;
   favorites: string[];
+  favoriteQuotes: number[];
 
   // Actions
   setView: (view: ViewType) => void;
@@ -55,6 +56,7 @@ interface AppState {
   toggleTheme: () => void;
   toggleChat: () => void;
   toggleFavorite: (subjectId: string) => void;
+  toggleFavoriteQuote: (index: number) => void;
   addWeeklyGoal: (goal: WeeklyGoal) => void;
   toggleWeeklyGoal: (id: string) => void;
   removeWeeklyGoal: (id: string) => void;
@@ -96,6 +98,7 @@ export const useAppStore = create<AppState>()(
       theme: "light",
       chatOpen: false,
       favorites: [],
+      favoriteQuotes: [],
 
       // Actions
       setView: (view) => set({ currentView: view }),
@@ -219,6 +222,13 @@ export const useAppStore = create<AppState>()(
             : [...state.favorites, subjectId],
         })),
 
+      toggleFavoriteQuote: (index) =>
+        set((state) => ({
+          favoriteQuotes: state.favoriteQuotes.includes(index)
+            ? state.favoriteQuotes.filter((i) => i !== index)
+            : [...state.favoriteQuotes, index],
+        })),
+
       addWeeklyGoal: (goal) =>
         set((state) => ({
           weeklyGoals: [...state.weeklyGoals, goal],
@@ -249,6 +259,7 @@ export const useAppStore = create<AppState>()(
         studySessions: state.studySessions,
         achievements: state.achievements,
         favorites: state.favorites,
+        favoriteQuotes: state.favoriteQuotes,
         weeklyGoals: state.weeklyGoals,
         theme: state.theme,
       }),

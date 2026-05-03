@@ -1005,3 +1005,163 @@ Stage Summary:
 4. Improve DataImport to use Zustand store actions
 5. Add mobile gestures (swipe navigation)
 6. Add notification system for study reminders
+
+---
+Task ID: phase7-new-features
+Agent: main
+Task: Create 2 new feature components (ActivityTimeline + MotivationalQuoteWidget)
+
+Work Log:
+- Created ActivityTimeline.tsx: vertical timeline showing computed activities from store data (progress updates, achievements, study sessions, notes), color-coded by type (red/gold/green/blue), staggered framer-motion animations, empty state with encouraging Arabic message, glass morphism card, scrollable list (max-h-96), relative timestamps in Arabic
+- Created MotivationalQuoteWidget.tsx: rotating Arabic motivational quotes widget with 17 quotes from Arab scholars/poets/Islamic tradition, auto-rotate every 8 seconds, manual prev/next navigation, dot indicators, fade+slide transitions, decorative quotation marks, favorite feature (persisted to Zustand), glass morphism card with Red+Gold theme
+- Updated Zustand store (store.ts): added `favoriteQuotes: number[]` state, `toggleFavoriteQuote: (index: number) => void` action, added `favoriteQuotes` to partialize for localStorage persistence
+- Integrated ActivityTimeline into StudentDashboard.tsx: imported and added as section 5 between Category Breakdown and Subject Comparison, wrapped in motion.div with itemVariants
+- Integrated both components into page.tsx: imported MotivationalQuoteWidget and ActivityTimeline, added ActivityTimeline after Subject Comparison section, added MotivationalQuoteWidget after Activity Timeline, both with section dividers
+- Lint passes with zero errors
+- Dev server compiles and serves pages successfully (200 responses)
+
+Stage Summary:
+- 2 new components created: ActivityTimeline, MotivationalQuoteWidget
+- Zustand store expanded with favoriteQuotes system (persisted to localStorage)
+- ActivityTimeline computes timeline from existing store data (progress, achievements, sessions, notes)
+- MotivationalQuoteWidget features 17 Arabic quotes with auto-rotation, navigation, and favorites
+- Both components integrated into StudentDashboard and homepage
+- Project now has 27 components in /src/components/omnischool/
+- All changes lint-clean, dev server running correctly
+
+---
+Task ID: phase7-dashboard-redesign
+Agent: frontend-styling-expert
+Task: Redesign StudentDashboard for better quality (was rated 3/10 by VLM)
+
+Work Log:
+- Read worklog.md for project context, StudentDashboard.tsx, globals.css, and ProgressCircle.tsx
+- Completely rewrote StudentDashboard.tsx with major improvements to all sections
+- Redesigned SummaryCard component:
+  - Solid opaque card backgrounds with clear borders (dashboard-summary-card class)
+  - Thicker 2px gradient accent bar at top (was 1px)
+  - MiniSparkline component — 7-bar SVG micro chart in each card for visual interest
+  - Much larger numbers (text-5xl sm:text-6xl with stat-value-xl class)
+  - Better color coding with stat-card-gradient backgrounds
+  - Icon + sparkline in top row for balanced layout
+  - Bold uppercase tracking labels with better contrast (text-foreground/60)
+  - Hover lift to -5px with shadow-xl transition
+- Redesigned Overall Progress section:
+  - Larger progress circle (180px from 160px) with thicker stroke (14 from 12)
+  - progress-ring-glow class for drop-shadow glow effect on the circle
+  - MilestoneBar component — horizontal progress bar with milestone markers at 25%/50%/75%
+  - Gold tip marker at current progress position with spring animation
+  - Larger percentage text (text-5xl sm:text-6xl) in omni-red color
+  - Better badge styling with ✓/◐/○ symbols and font-semibold
+  - section-header-line decorative underline on heading
+- Improved Category Breakdown section:
+  - dashboard-summary-card with border-border/60 for better visibility
+  - Thicker progress bars (h-5 from h-4) with better contrast
+  - Milestone markers inside the progress bars (25%, 50%, 75% lines)
+  - Shine effect on progress fill (gradient overlay)
+  - Larger icon containers (8x8) with shadow-sm and border
+  - stat-value-xl class for percentage values
+  - section-header-line on section title
+- Improved Subject Grid cards:
+  - dashboard-summary-card with border-border/50 for solid backgrounds
+  - Category-colored 1.5px accent bar at top of each card
+  - Larger icon containers (12x12 with shadow-sm)
+  - Larger progress circles (80px from 64px) with thicker stroke (7 from 5)
+  - progress-ring-glow-sm class for subtle glow on subject circles
+  - More prominent status badges with font-semibold and wider padding (px-3 py-1)
+  - Better hover scale (1.04 from 1.03)
+- Added 3 new CSS utility classes to globals.css:
+  - .dashboard-summary-card — Enhanced card with solid bg, border, inset highlight shadow, hover elevation
+  - .progress-ring-glow / .progress-ring-glow-sm — Glowing drop-shadow effect on progress circles with hover enhancement, light/dark mode support
+  - .stat-value-xl — Extra large stat numbers with tight line-height, letter-spacing, and subtle text-shadow
+- All changes pass lint with zero errors
+- Build succeeds (compiled in 10.3s, all 9 pages generated)
+
+Stage Summary:
+- Complete dashboard redesign addressing all VLM 3/10 issues
+- SummaryCard: solid backgrounds, sparkline charts, larger numbers, better contrast
+- Overall Progress: larger circle with glow, milestone progress bar, better hierarchy
+- Category Breakdown: thicker bars with markers, shine effects, better icons
+- Subject Grid: larger cards with colored accent bars, bigger progress circles, better badges
+- 3 new CSS utility classes (dashboard-summary-card, progress-ring-glow*, stat-value-xl)
+- All lint and build checks pass
+
+---
+Task ID: phase7
+Agent: main
+Task: QA testing, dashboard redesign, styling improvements, new features
+
+Work Log:
+- Reviewed worklog.md and assessed project status (25 components, 27+ features, dashboard rated 3/10)
+- Performed QA testing with agent-browser + VLM analysis
+  - Homepage rated 7/10 (needs better card depth and section transitions)
+  - Dashboard rated 3/10 (CRITICAL - poor contrast, invisible progress, bad data viz)
+  - Subjects grid rated 8/10 (good design overall)
+- Delegated dashboard redesign to frontend-styling-expert subagent
+  - SummaryCard redesign with solid backgrounds, sparklines, larger numbers, better contrast
+  - Overall Progress section: larger circle (180px), progress ring glow, milestone bar
+  - Category breakdown: thicker bars, shine effect, better icons
+  - Subject grid cards: colored accent bars, larger progress circles, better hover
+  - 3 new CSS utilities: dashboard-summary-card, progress-ring-glow, stat-value-xl
+- Delegated new feature development to full-stack-developer subagent
+  - Created ActivityTimeline.tsx: vertical timeline with color-coded activities
+  - Created MotivationalQuoteWidget.tsx: 17 Arabic quotes, auto-rotate, favorites
+  - Added favoriteQuotes state to Zustand store
+  - Integrated both into StudentDashboard and homepage
+- Direct styling improvements to homepage QuickAccessSection
+  - Enhanced subject cards with card-depth, solid bg-card borders, gradient accent bars, arrow indicators
+  - Enhanced study tools cards with card-depth, border styling, gradient top accents, shadow-sm
+  - Enhanced category cards with thicker gradient accent bars, larger icons, better text styling
+- VLM re-test: dashboard improved from 3/10 to 7/10 (massive improvement)
+- All lint checks pass with zero errors
+
+Stage Summary:
+- Dashboard redesigned: 3/10 → 7/10 (major contrast/readability fix)
+- 2 new components: ActivityTimeline, MotivationalQuoteWidget
+- Homepage cards enhanced with solid backgrounds, borders, gradient accents
+- Zustand store expanded with favoriteQuotes system
+- Project now has 27+ components, 30+ features
+- All lint-clean, dev server verified
+
+## Current Project Status Assessment (Phase 7 Update)
+
+### Architecture
+- **Framework**: Next.js 16 App Router, TypeScript, Tailwind CSS 4
+- **27+ Components** in `/src/components/omnischool/`
+- **9 API Routes** (subjects, progress, search, stats, chat with LLM)
+- **Zustand Store** with localStorage persistence for 18+ state fields
+- **Prisma SQLite** for server-side data
+- **8 Views**: home, dashboard, subjects, subject-detail, search, about, planner, timer
+
+### VLM Quality Ratings (Phase 7)
+- **Homepage**: 7/10 (improved from initial, cards enhanced with depth)
+- **Dashboard**: 7/10 (major improvement from 3/10 — contrast, readability, data viz all fixed)
+- **Subjects Grid**: 8/10 (consistently good)
+
+### Features Completed (All 30+)
+1-27. All previous features maintained and enhanced
+28. ✅ **NEW** Redesigned Dashboard (3/10→7/10): solid card backgrounds, sparklines, milestone bars, glow effects
+29. ✅ **NEW** ActivityTimeline: vertical timeline with color-coded study activities
+30. ✅ **NEW** MotivationalQuoteWidget: 17 Arabic quotes with auto-rotate and favorites
+31. ✅ **NEW** Homepage card depth improvements: solid borders, gradient accents, arrow indicators
+32. ✅ **NEW** Favorite quotes system persisted to localStorage
+
+### Goals Completed This Phase
+- QA testing with agent-browser + VLM analysis ✅
+- Dashboard redesign (3/10 → 7/10) ✅
+- Styling improvements (homepage cards, category cards, study tools) ✅
+- New features (ActivityTimeline, MotivationalQuoteWidget) ✅
+
+### Unresolved Issues / Risks
+- Dev server may die in sandbox (inherent sandbox limitation)
+- Homepage VLM still 7/10 — could benefit from even more visual polish
+- Performance optimization needed for heavy components (Recharts, GPACalculator)
+- DataImport uses direct localStorage manipulation
+
+### Next Phase Recommendations
+1. **Performance optimization** — lazy loading for Recharts, GPACalculator, SubjectRadarChart
+2. **Add subject resource library** with download links and organized materials
+3. **Improve About page** with more visual interest and platform story
+4. **Add dark mode animated toggle** with smooth theme transition
+5. **Add collaborative features** (shared notes, study groups)
+6. **Improve mobile experience** — better touch targets, swipe navigation

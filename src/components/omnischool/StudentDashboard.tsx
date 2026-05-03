@@ -15,7 +15,6 @@ import {
   Monitor,
   Search,
   School,
-  ChevronLeft,
 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { subjectsData, categories } from "@/lib/subjects-data";
@@ -23,6 +22,7 @@ import { Subject, SubjectStatus } from "@/lib/types";
 import { ProgressCircle } from "./ProgressCircle";
 import { StudyStreak } from "./StudyStreak";
 import { DataExportImport } from "./DataExportImport";
+import { ActivityTimeline } from "./ActivityTimeline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -102,9 +102,11 @@ const statusLabels: Record<SubjectStatus, string> = {
 };
 
 const statusBadgeClass: Record<SubjectStatus, string> = {
-  not_started: "bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700",
+  not_started:
+    "bg-gray-200/80 text-gray-700 border-gray-300 dark:bg-gray-700/60 dark:text-gray-300 dark:border-gray-600",
   in_progress: "badge-omni-gold",
-  completed: "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
+  completed:
+    "bg-green-100/80 text-green-700 border-green-300 dark:bg-green-900/40 dark:text-green-400 dark:border-green-700",
 };
 
 function getStatusForSubject(
@@ -149,8 +151,116 @@ const itemVariants = {
 
 const cardHover = {
   rest: { scale: 1 },
-  hover: { scale: 1.03, transition: { duration: 0.25 } },
+  hover: { scale: 1.04, transition: { duration: 0.25 } },
 };
+
+/* ------------------------------------------------------------------ */
+/*  Mini Sparkline SVG Component — 7-bar micro chart                  */
+/* ------------------------------------------------------------------ */
+interface MiniSparklineProps {
+  color: string;
+  values?: number[];
+  height?: number;
+  barWidth?: number;
+  gap?: number;
+}
+
+function MiniSparkline({
+  color,
+  values = [30, 50, 40, 70, 55, 80, 65],
+  height = 28,
+  barWidth = 4,
+  gap = 3,
+}: MiniSparklineProps) {
+  const maxVal = Math.max(...values, 1);
+  const totalWidth = values.length * barWidth + (values.length - 1) * gap;
+
+  return (
+    <svg width={totalWidth} height={height} viewBox={`0 0 ${totalWidth} ${height}`} className="opacity-60">
+      {values.map((val, i) => {
+        const barHeight = Math.max(3, (val / maxVal) * (height - 2));
+        const x = i * (barWidth + gap);
+        const y = height - barHeight;
+        const isLast = i === values.length - 1;
+        return (
+          <rect
+            key={i}
+            x={x}
+            y={y}
+            width={barWidth}
+            height={barHeight}
+            rx={barWidth / 2}
+            fill={isLast ? color : color}
+            opacity={isLast ? 1 : 0.35}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Milestone Progress Bar — Horizontal bar with milestone markers    */
+/* ------------------------------------------------------------------ */
+interface MilestoneBarProps {
+  percentage: number;
+  color?: string;
+}
+
+function MilestoneBar({ percentage, color = "#B91C1C" }: MilestoneBarProps) {
+  const milestones = [
+    { pct: 25, label: "٢٥٪" },
+    { pct: 50, label: "٥٠٪" },
+    { pct: 75, label: "٧٥٪" },
+  ];
+
+  return (
+    <div className="w-full space-y-1.5">
+      {/* The bar */}
+      <div className="relative h-3 w-full rounded-full bg-muted/60 dark:bg-muted/40 border border-border/50 overflow-visible">
+        {/* Milestone markers */}
+        {milestones.map((m) => (
+          <div
+            key={m.pct}
+            className="absolute top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-border/80 dark:bg-border/60"
+            style={{ left: `${m.pct}%` }}
+          />
+        ))}
+        {/* Fill */}
+        <motion.div
+          className="absolute inset-y-0 start-0 rounded-full"
+          style={{
+            background: `linear-gradient(90deg, ${color}, #D4A843)`,
+            maxWidth: "100%",
+          }}
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.min(percentage, 100)}%` }}
+          transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
+        />
+        {/* Tip marker */}
+        {percentage > 0 && (
+          <motion.div
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-omni-gold border-2 border-background shadow-sm"
+            style={{ left: `${Math.min(percentage, 100)}%` }}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 1.5, type: "spring", stiffness: 300 }}
+          />
+        )}
+      </div>
+      {/* Labels */}
+      <div className="flex justify-between text-[10px] text-muted-foreground/70 px-0.5">
+        <span>٠٪</span>
+        {milestones.map((m) => (
+          <span key={m.pct} className="hidden sm:inline">
+            {m.label}
+          </span>
+        ))}
+        <span>١٠٠٪</span>
+      </div>
+    </div>
+  );
+}
 
 /* ================================================================== */
 /*  Main Component                                                     */
@@ -212,7 +322,7 @@ export function StudentDashboard() {
         <h1 className="text-3xl sm:text-4xl font-black gradient-text-red-gold">
           لوحة المتعلم
         </h1>
-        <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+        <p className="text-foreground/70 mt-2 text-sm sm:text-base font-medium">
           نظرة شاملة على تقدّمك الدراسي
         </p>
       </motion.div>
@@ -220,46 +330,50 @@ export function StudentDashboard() {
       {/* ========== 1. Summary Cards ========== */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-2 xl:grid-cols-4 gap-5"
+        className="grid grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5"
       >
         {/* Total */}
         <SummaryCard
           label="إجمالي المواد"
           value={stats.total}
-          icon={<BookOpen className="h-7 w-7" />}
+          icon={<BookOpen className="h-6 w-6" />}
           accentColor="#B91C1C"
-          iconBgColor="rgba(185, 28, 28, 0.1)"
-          darkIconBgColor="rgba(239, 68, 68, 0.12)"
+          gradientClass="stat-card-gradient-red"
+          sparklineColor="#B91C1C"
+          sparklineValues={[12, 18, 15, 20, 22, 24, stats.total]}
           delay={0}
         />
         {/* Completed */}
         <SummaryCard
           label="مكتملة"
           value={stats.completed}
-          icon={<CheckCircle className="h-7 w-7" />}
+          icon={<CheckCircle className="h-6 w-6" />}
           accentColor="#16A34A"
-          iconBgColor="rgba(22, 163, 74, 0.1)"
-          darkIconBgColor="rgba(34, 197, 94, 0.12)"
+          gradientClass="stat-card-gradient-green"
+          sparklineColor="#16A34A"
+          sparklineValues={[2, 4, 5, 7, 8, 10, stats.completed]}
           delay={0.1}
         />
         {/* In Progress */}
         <SummaryCard
           label="قيد التقدم"
           value={stats.inProgress}
-          icon={<Clock className="h-7 w-7" />}
+          icon={<Clock className="h-6 w-6" />}
           accentColor="#D4A843"
-          iconBgColor="rgba(212, 168, 67, 0.1)"
-          darkIconBgColor="rgba(212, 168, 67, 0.12)"
+          gradientClass="stat-card-gradient-gold"
+          sparklineColor="#D4A843"
+          sparklineValues={[1, 3, 5, 4, 6, 7, stats.inProgress]}
           delay={0.2}
         />
         {/* Not Started */}
         <SummaryCard
           label="لم تبدأ"
           value={stats.notStarted}
-          icon={<Circle className="h-7 w-7" />}
+          icon={<Circle className="h-6 w-6" />}
           accentColor="#8B7E6A"
-          iconBgColor="rgba(139, 126, 106, 0.1)"
-          darkIconBgColor="rgba(168, 152, 128, 0.12)"
+          gradientClass="stat-card-gradient-purple"
+          sparklineColor="#8B7E6A"
+          sparklineValues={[20, 18, 16, 14, 12, 10, stats.notStarted]}
           delay={0.3}
         />
       </motion.div>
@@ -269,46 +383,56 @@ export function StudentDashboard() {
 
       {/* ========== 2. Overall Progress ========== */}
       <motion.div variants={itemVariants}>
-        <Card className="glass-dashboard overflow-hidden border-border shadow-lg">
+        <Card className="dashboard-summary-card overflow-hidden border-border/60 shadow-lg">
           <CardContent className="p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
-              {/* Circle */}
-              <div className="flex-shrink-0">
+              {/* Circle with glow */}
+              <div className="flex-shrink-0 progress-ring-glow">
                 <ProgressCircle
                   percentage={stats.overallProgress}
-                  size={160}
-                  strokeWidth={12}
+                  size={180}
+                  strokeWidth={14}
                   color="#B91C1C"
-                  trackColor="rgba(185,28,28,0.1)"
-                  textSize={28}
+                  trackColor="rgba(185,28,28,0.08)"
+                  textSize={32}
                   delay={0.3}
                 />
               </div>
-              {/* Text */}
-              <div className="text-center sm:text-start flex-1 space-y-3">
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
+              {/* Text & stats */}
+              <div className="text-center sm:text-start flex-1 space-y-3 w-full">
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground section-header-line">
                   التقدم العام
                 </h2>
-                <p className="text-4xl sm:text-5xl font-black text-omni-red ltr-content" dir="ltr">
+                <p className="text-5xl sm:text-6xl font-black text-omni-red dark:text-omni-red-light ltr-content" dir="ltr">
                   {Math.round(stats.overallProgress)}%
                 </p>
-                <p className="text-muted-foreground text-sm sm:text-base">
+                <p className="text-foreground/70 text-sm sm:text-base font-medium">
                   {stats.completed} من {stats.total} مادة مكتملة
                 </p>
+
                 {/* Mini stats row */}
-                <div className="flex flex-wrap justify-center sm:justify-start gap-3 pt-2">
-                  <Badge variant="outline" className="badge-omni-red">
-                    {stats.completed} مكتملة
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2 pt-1">
+                  <Badge variant="outline" className="badge-omni-red text-xs font-semibold px-3 py-1">
+                    ✓ {stats.completed} مكتملة
                   </Badge>
-                  <Badge variant="outline" className="badge-omni-gold">
-                    {stats.inProgress} قيد التقدم
+                  <Badge variant="outline" className="badge-omni-gold text-xs font-semibold px-3 py-1">
+                    ◐ {stats.inProgress} قيد التقدم
                   </Badge>
-                  <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700">
-                    {stats.notStarted} لم تبدأ
+                  <Badge
+                    variant="outline"
+                    className="bg-gray-200/70 text-gray-700 border-gray-300 dark:bg-gray-700/50 dark:text-gray-300 dark:border-gray-600 text-xs font-semibold px-3 py-1"
+                  >
+                    ○ {stats.notStarted} لم تبدأ
                   </Badge>
                 </div>
+
+                {/* Milestone progress bar */}
+                <div className="pt-2">
+                  <MilestoneBar percentage={stats.overallProgress} />
+                </div>
+
                 {/* Motivational message */}
-                <p className="text-sm font-medium text-omni-gold-dark dark:text-omni-gold pt-1">
+                <p className="text-sm font-bold text-omni-gold-dark dark:text-omni-gold pt-1">
                   {getMotivationalMessage(stats.overallProgress)}
                 </p>
               </div>
@@ -356,33 +480,45 @@ export function StudentDashboard() {
                         className="cursor-pointer"
                         onClick={() => selectSubject(subject.id)}
                       >
-                        <Card className="glass card-omni overflow-hidden h-full">
-                          <CardContent className="p-4 flex flex-col items-center gap-3 text-center">
-                            {/* Subject icon */}
+                        <Card className="dashboard-summary-card overflow-hidden h-full border-border/50">
+                          {/* Top accent bar with category color */}
+                          <div
+                            className="h-1.5 w-full"
+                            style={{
+                              background: `linear-gradient(90deg, ${catColor}, ${catColor}88, #D4A843)`,
+                            }}
+                          />
+                          <CardContent className="p-4 flex flex-col items-center gap-2.5 text-center">
+                            {/* Subject icon — larger and more prominent */}
                             <div
-                              className="w-10 h-10 rounded-lg flex items-center justify-center"
-                              style={{ backgroundColor: `${catColor}15`, color: catColor }}
+                              className="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border border-border/30"
+                              style={{ backgroundColor: `${catColor}18`, color: catColor }}
                             >
-                              <IconComp className="h-5 w-5" />
+                              <IconComp className="h-6 w-6" />
                             </div>
+
                             {/* Subject name */}
-                            <h3 className="text-sm font-semibold leading-tight line-clamp-2 min-h-[2.5rem]">
+                            <h3 className="text-sm font-bold leading-tight line-clamp-2 min-h-[2.5rem] text-foreground">
                               {subject.nameAr}
                             </h3>
-                            {/* Mini progress circle */}
-                            <ProgressCircle
-                              percentage={pct}
-                              size={64}
-                              strokeWidth={5}
-                              color={catColor}
-                              trackColor={`${catColor}15`}
-                              textSize={13}
-                              delay={idx * 0.04 + 0.3}
-                            />
-                            {/* Status badge */}
+
+                            {/* Larger mini progress circle */}
+                            <div className="progress-ring-glow-sm my-1">
+                              <ProgressCircle
+                                percentage={pct}
+                                size={80}
+                                strokeWidth={7}
+                                color={catColor}
+                                trackColor={`${catColor}12`}
+                                textSize={16}
+                                delay={idx * 0.04 + 0.3}
+                              />
+                            </div>
+
+                            {/* Status badge — more prominent */}
                             <Badge
                               variant="outline"
-                              className={`text-[11px] px-2 py-0.5 ${statusBadgeClass[status]}`}
+                              className={`text-[11px] px-3 py-1 font-semibold ${statusBadgeClass[status]}`}
                             >
                               {statusLabels[status]}
                             </Badge>
@@ -403,39 +539,53 @@ export function StudentDashboard() {
 
       {/* ========== 4. Category Breakdown ========== */}
       <motion.div variants={itemVariants}>
-        <Card className="glass-dashboard overflow-hidden border-border shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-bold">تقدم المواد حسب التصنيف</CardTitle>
+        <Card className="dashboard-summary-card overflow-hidden border-border/60 shadow-lg">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-bold section-header-line">تقدم المواد حسب التصنيف</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 pt-0">
+          <CardContent className="p-6 pt-2">
             <div className="space-y-5">
               {categoryBreakdown.map((cat, idx) => {
                 const catIcon = getSubjectIcon(cat.icon);
                 return (
                   <div key={cat.id} className="space-y-2">
                     {/* Label row */}
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
                         <div
-                          className="w-7 h-7 rounded-lg flex items-center justify-center"
-                          style={{ backgroundColor: `${cat.color}15`, color: cat.color }}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm border border-border/30"
+                          style={{ backgroundColor: `${cat.color}18`, color: cat.color }}
                         >
                           <catIcon className="h-4 w-4" />
                         </div>
-                        <span className="font-semibold">{cat.label}</span>
-                        <span className="text-muted-foreground text-xs">
+                        <span className="font-bold text-sm text-foreground">{cat.label}</span>
+                        <span className="text-muted-foreground text-xs font-medium">
                           ({cat.total} مادة)
                         </span>
                       </div>
-                      <span className="font-bold text-base ltr-content" dir="ltr" style={{ color: cat.color }}>
+                      <span
+                        className="stat-value-xl font-black text-base ltr-content"
+                        dir="ltr"
+                        style={{ color: cat.color }}
+                      >
                         {cat.avgProgress}%
                       </span>
                     </div>
-                    {/* Progress bar — thicker with rounded corners */}
-                    <div className="h-4 w-full rounded-full bg-muted overflow-hidden">
+                    {/* Progress bar — thicker with better contrast */}
+                    <div className="h-5 w-full rounded-full bg-muted/50 dark:bg-muted/30 border border-border/30 overflow-hidden relative">
+                      {/* Milestone markers inside the bar */}
+                      {[25, 50, 75].map((m) => (
+                        <div
+                          key={m}
+                          className="absolute top-0 bottom-0 w-px bg-border/50 dark:bg-border/30"
+                          style={{ left: `${m}%` }}
+                        />
+                      ))}
                       <motion.div
-                        className="h-full rounded-full"
-                        style={{ backgroundColor: cat.color }}
+                        className="h-full rounded-full relative"
+                        style={{
+                          background: `linear-gradient(90deg, ${cat.color}, ${cat.color}cc)`,
+                        }}
                         initial={{ width: 0 }}
                         animate={{ width: `${cat.avgProgress}%` }}
                         transition={{
@@ -443,7 +593,10 @@ export function StudentDashboard() {
                           ease: "easeOut",
                           delay: 0.1 * idx + 0.3,
                         }}
-                      />
+                      >
+                        {/* Shine effect */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent rounded-full" />
+                      </motion.div>
                     </div>
                   </div>
                 );
@@ -453,7 +606,13 @@ export function StudentDashboard() {
         </Card>
       </motion.div>
 
-      {/* ========== 5. Subject Comparison ========== */}
+      {/* ========== 5. Activity Timeline ========== */}
+      <div className="section-divider" />
+      <motion.div variants={itemVariants}>
+        <ActivityTimeline />
+      </motion.div>
+
+      {/* ========== 6. Subject Comparison ========== */}
       <motion.div variants={itemVariants}>
         <SubjectComparison />
       </motion.div>
@@ -491,57 +650,68 @@ export function StudentDashboard() {
 }
 
 /* ================================================================== */
-/*  SummaryCard Sub-component — Glass Morphism with Red-Gold Accent   */
+/*  SummaryCard — Redesigned with high contrast, solid bg, sparkline  */
 /* ================================================================== */
 interface SummaryCardProps {
   label: string;
   value: number;
   icon: React.ReactNode;
   accentColor: string;
-  iconBgColor: string;
-  darkIconBgColor: string;
+  gradientClass: string;
+  sparklineColor: string;
+  sparklineValues: number[];
   delay: number;
 }
 
-function SummaryCard({ label, value, icon, accentColor, iconBgColor, darkIconBgColor, delay }: SummaryCardProps) {
+function SummaryCard({
+  label,
+  value,
+  icon,
+  accentColor,
+  gradientClass,
+  sparklineColor,
+  sparklineValues,
+  delay,
+}: SummaryCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="dashboard-card glass-dashboard rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className="dashboard-summary-card rounded-xl overflow-hidden border border-border/50 shadow-md hover:shadow-xl transition-shadow"
     >
-      {/* 4px gradient accent bar at top */}
+      {/* Thick gradient accent bar at top */}
       <div
-        className="h-1 w-full"
+        className="h-2 w-full"
         style={{ background: `linear-gradient(90deg, #B91C1C, ${accentColor}, #D4A843)` }}
       />
 
-      <div className="p-6 relative">
-        {/* Subtle background pattern — decorative circle */}
+      <div className={`p-5 sm:p-6 relative ${gradientClass}`}>
+        {/* Decorative background circles */}
         <div
-          className="absolute -top-8 -left-8 w-32 h-32 rounded-full pointer-events-none"
+          className="absolute -top-10 -left-10 w-36 h-36 rounded-full pointer-events-none"
           style={{ background: `radial-gradient(circle, ${accentColor}06 0%, transparent 70%)` }}
         />
         <div
-          className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full pointer-events-none"
-          style={{ background: `radial-gradient(circle, #D4A84305 0%, transparent 70%)` }}
+          className="absolute -bottom-8 -right-8 w-28 h-28 rounded-full pointer-events-none"
+          style={{ background: `radial-gradient(circle, #D4A84304 0%, transparent 70%)` }}
         />
 
-        {/* Icon in top-right corner */}
-        <div className="flex justify-end mb-2">
+        {/* Top row: icon + sparkline */}
+        <div className="flex items-center justify-between mb-3 relative z-10">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ backgroundColor: iconBgColor, color: accentColor }}
+            className="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border border-border/30"
+            style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
           >
             {icon}
           </div>
+          <MiniSparkline color={sparklineColor} values={sparklineValues} />
         </div>
 
         {/* Large number */}
         <motion.p
-          className="text-4xl sm:text-5xl font-black ltr-content animate-number-pop"
+          className="stat-value-xl text-5xl sm:text-6xl font-black ltr-content animate-number-pop"
           dir="ltr"
           style={{ color: accentColor }}
           initial={{ scale: 0.5, opacity: 0 }}
@@ -551,8 +721,8 @@ function SummaryCard({ label, value, icon, accentColor, iconBgColor, darkIconBgC
           {value}
         </motion.p>
 
-        {/* Label — uppercase tracking */}
-        <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mt-2">
+        {/* Label */}
+        <p className="text-xs uppercase tracking-wider text-foreground/60 font-bold mt-2 relative z-10">
           {label}
         </p>
       </div>

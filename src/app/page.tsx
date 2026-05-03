@@ -19,6 +19,8 @@ import { AnnouncementBanner } from "@/components/omnischool/AnnouncementBanner";
 import { StudyStreak } from "@/components/omnischool/StudyStreak";
 import { DataExportImport } from "@/components/omnischool/DataExportImport";
 import { QuickStatsWidget } from "@/components/omnischool/QuickStatsWidget";
+import { MotivationalQuoteWidget } from "@/components/omnischool/MotivationalQuoteWidget";
+import { ActivityTimeline } from "@/components/omnischool/ActivityTimeline";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
 import { useEffect, useState } from "react";
@@ -131,33 +133,37 @@ function QuickAccessSection() {
               className="cursor-pointer hover-lift"
               onClick={() => selectSubject(subject.id)}
             >
-              <div className="glass-dashboard rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group">
-                {/* Accent bar */}
+              <div className="card-depth bg-card border border-border rounded-xl p-4 sm:p-5 flex items-center gap-4 relative overflow-hidden group transition-all duration-300 hover:border-omni-red/20 hover:shadow-lg">
+                {/* Accent bar — thicker, gradient */}
                 <div
-                  className="absolute top-0 right-0 left-0 h-0.5"
-                  style={{ background: subject.color }}
+                  className="absolute top-0 right-0 left-0 h-1 rounded-t-xl"
+                  style={{ background: `linear-gradient(90deg, ${subject.color}, ${subject.color}80)` }}
                 />
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
-                  style={{ backgroundColor: `${subject.color}15` }}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 shadow-sm border border-border/50"
+                  style={{ backgroundColor: `${subject.color}12` }}
                 >
-                  <span className="text-lg font-black" style={{ color: subject.color }}>
+                  <span className="text-xl sm:text-2xl font-black" style={{ color: subject.color }}>
                     {subject.nameAr.charAt(0)}
                   </span>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-sm truncate">
+                  <h3 className="font-bold text-sm sm:text-base truncate text-foreground">
                     {subject.nameAr}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">
                     {subject.category} • السداسي {subject.semester}
                   </p>
                 </div>
                 {subject.isShared && (
-                  <span className="badge-omni-gold text-[10px] px-1.5 py-0.5 rounded-full">
+                  <span className="badge-omni-gold text-[10px] px-2 py-0.5 rounded-full font-semibold">
                     مشترك
                   </span>
                 )}
+                {/* Arrow indicator */}
+                <svg className="w-4 h-4 text-muted-foreground/40 group-hover:text-omni-red/60 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
               </div>
             </motion.div>
           ))}
@@ -183,12 +189,14 @@ function QuickAccessSection() {
             onClick={() => setView("planner")}
             style={{ perspective: 1000 }}
           >
-            <div className="glass-red gradient-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl transition-all">
-              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-red/10 animate-float">
+            <div className="card-depth bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-omni-red/20 transition-all relative overflow-hidden group">
+              {/* Red gradient top accent */}
+              <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-omni-red to-omni-red-dark rounded-t-2xl" />
+              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-red/10 animate-float border border-omni-red/10 shadow-sm">
                 <span className="text-3xl">📅</span>
               </div>
-              <h3 className="font-bold text-foreground">مخطط الدراسة</h3>
-              <p className="text-xs text-muted-foreground">نظّم جدولك الأسبوعي</p>
+              <h3 className="font-bold text-foreground text-lg">مخطط الدراسة</h3>
+              <p className="text-sm text-muted-foreground">نظّم جدولك الأسبوعي</p>
             </div>
           </motion.div>
           <motion.div
@@ -201,12 +209,14 @@ function QuickAccessSection() {
             onClick={() => setView("timer")}
             style={{ perspective: 1000 }}
           >
-            <div className="glass-gold gradient-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl transition-all">
-              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-gold/10 animate-float" style={{ animationDelay: "0.5s" }}>
+            <div className="card-depth bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-omni-gold/20 transition-all relative overflow-hidden group">
+              {/* Gold gradient top accent */}
+              <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-omni-gold to-omni-gold-dark rounded-t-2xl" />
+              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-gold/10 animate-float border border-omni-gold/10 shadow-sm" style={{ animationDelay: "0.5s" }}>
                 <span className="text-3xl">⏱️</span>
               </div>
-              <h3 className="font-bold text-foreground">مؤقت البومودورو</h3>
-              <p className="text-xs text-muted-foreground">ركّز بمتقنية البومودورو</p>
+              <h3 className="font-bold text-foreground text-lg">مؤقت البومودورو</h3>
+              <p className="text-sm text-muted-foreground">ركّز بتقنية البومودورو</p>
             </div>
           </motion.div>
           <motion.div
@@ -219,12 +229,14 @@ function QuickAccessSection() {
             onClick={() => setView("dashboard")}
             style={{ perspective: 1000 }}
           >
-            <div className="glass gradient-border rounded-2xl p-6 sm:p-8 text-center space-y-3 border border-border hover:shadow-xl transition-all">
-              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-green-500/10 animate-float" style={{ animationDelay: "1s" }}>
+            <div className="card-depth bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-green-500/20 transition-all relative overflow-hidden group">
+              {/* Green gradient top accent */}
+              <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-green-600 to-green-500 rounded-t-2xl" />
+              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-green-500/10 animate-float border border-green-500/10 shadow-sm" style={{ animationDelay: "1s" }}>
                 <span className="text-3xl">📊</span>
               </div>
-              <h3 className="font-bold text-foreground">لوحة المتعلم</h3>
-              <p className="text-xs text-muted-foreground">تتبع تقدّمك الدراسي</p>
+              <h3 className="font-bold text-foreground text-lg">لوحة المتعلم</h3>
+              <p className="text-sm text-muted-foreground">تتبع تقدّمك الدراسي</p>
             </div>
           </motion.div>
         </div>
@@ -245,6 +257,18 @@ function QuickAccessSection() {
 
       {/* Subject Comparison */}
       <SubjectComparison />
+
+      {/* Section Divider */}
+      <div className="section-divider" />
+
+      {/* Activity Timeline */}
+      <ActivityTimeline />
+
+      {/* Section Divider */}
+      <div className="section-divider" />
+
+      {/* Motivational Quote Widget */}
+      <MotivationalQuoteWidget />
 
       {/* Section Divider */}
       <div className="section-divider" />
@@ -274,25 +298,25 @@ function QuickAccessSection() {
                 }}
               >
                 <div
-                  className="glass-dashboard rounded-xl p-4 text-center space-y-2 relative overflow-hidden group"
+                  className="card-depth bg-card border border-border rounded-xl p-4 sm:p-5 text-center space-y-2 relative overflow-hidden group transition-all duration-300 hover:shadow-lg"
                 >
-                  {/* Accent bar at top */}
+                  {/* Accent bar at top — thicker gradient */}
                   <div
-                    className="absolute top-0 right-0 left-0 h-0.5"
-                    style={{ background: cat.color }}
+                    className="absolute top-0 right-0 left-0 h-1 rounded-t-xl"
+                    style={{ background: `linear-gradient(90deg, ${cat.color}, ${cat.color}80)` }}
                   />
                   <div
-                    className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center transition-transform group-hover:scale-110"
-                    style={{ backgroundColor: `${cat.color}15` }}
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl mx-auto flex items-center justify-center transition-transform group-hover:scale-110 border border-border/50 shadow-sm"
+                    style={{ backgroundColor: `${cat.color}12` }}
                   >
-                    <span className="text-lg font-black" style={{ color: cat.color }}>
+                    <span className="text-xl sm:text-2xl font-black" style={{ color: cat.color }}>
                       {count}
                     </span>
                   </div>
-                  <p className="text-sm font-semibold text-foreground">
+                  <p className="text-sm font-bold text-foreground">
                     {cat.label}
                   </p>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-[11px] text-muted-foreground font-medium">
                     {count === 1 ? 'مادة واحدة' : count === 2 ? 'مادتين' : `${count} مواد`}
                   </p>
                 </div>

@@ -2137,3 +2137,89 @@ html {
     rgba(212, 168, 67, 0.06) 100%
   );
 }
+
+/* ========================================================================
+   Phase 7 — Dashboard Redesign CSS Utility Classes
+   ======================================================================== */
+
+/* ------------------------------------------------------------------
+   Dashboard Summary Card — Enhanced card with solid bg, border, and depth
+   ------------------------------------------------------------------ */
+.dashboard-summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.dashboard-summary-card:hover {
+  border-color: rgba(185, 28, 28, 0.2);
+  box-shadow:
+    0 8px 32px rgba(185, 28, 28, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.dark .dashboard-summary-card:hover {
+  border-color: rgba(239, 68, 68, 0.15);
+  box-shadow:
+    0 8px 32px rgba(239, 68, 68, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* ------------------------------------------------------------------
+   Progress Ring Glow — Glowing effect on progress circles
+   ------------------------------------------------------------------ */
+.progress-ring-glow {
+  filter: drop-shadow(0 0 6px rgba(185, 28, 28, 0.2));
+  transition: filter 0.3s ease;
+}
+
+.progress-ring-glow:hover {
+  filter: drop-shadow(0 0 12px rgba(185, 28, 28, 0.35))
+         drop-shadow(0 0 24px rgba(212, 168, 67, 0.15));
+}
+
+.dark .progress-ring-glow {
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.2));
+}
+
+.dark .progress-ring-glow:hover {
+  filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.3))
+         drop-shadow(0 0 32px rgba(212, 168, 67, 0.12));
+}
+
+/* Smaller glow variant for subject grid cards */
+.progress-ring-glow-sm {
+  filter: drop-shadow(0 0 3px rgba(185, 28, 28, 0.15));
+  transition: filter 0.3s ease;
+}
+
+.progress-ring-glow-sm:hover {
+  filter: drop-shadow(0 0 8px rgba(185, 28, 28, 0.25));
+}
+
+.dark .progress-ring-glow-sm {
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.15));
+}
+
+.dark .progress-ring-glow-sm:hover {
+  filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.25));
+}
+
+/* ------------------------------------------------------------------
+   Stat Value XL — Extra large stat numbers with proper styling
+   ------------------------------------------------------------------ */
+.stat-value-xl {
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .stat-value-xl {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
