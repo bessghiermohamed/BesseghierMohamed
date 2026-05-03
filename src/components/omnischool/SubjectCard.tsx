@@ -147,7 +147,7 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
       whileTap={{ scale: 0.98 }}
     >
       <Card
-        className="glass card-omni card-ornament glow-hover relative cursor-pointer overflow-hidden p-0"
+        className="glass card-omni card-depth card-gradient-overlay glow-hover card-ornament relative cursor-pointer overflow-hidden p-0"
         onClick={onClick}
       >
         {/* Color accent bar on the right side (RTL) */}
@@ -156,7 +156,7 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
           style={{ backgroundColor: subjectColor }}
         />
 
-        <div className="flex items-start gap-4 p-4 sm:p-5 pe-6">
+        <div className="flex items-start gap-4 p-4 sm:p-5 pe-6 relative z-10">
           {/* Icon with colored background */}
           <div
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl sm:h-14 sm:w-14"
@@ -170,7 +170,7 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
           </div>
 
           {/* Content area */}
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             {/* Subject name + code badge + favorite */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-1.5 min-w-0">
@@ -192,8 +192,15 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
               </Badge>
             </div>
 
+            {/* Subject description — truncated subtitle */}
+            {subject.description && (
+              <p className="text-xs text-muted-foreground/70 leading-relaxed line-clamp-1">
+                {subject.description}
+              </p>
+            )}
+
             {/* Badges row: category, shared, semester, status */}
-            <div className="flex flex-wrap items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
               {/* Category badge */}
               <Badge
                 variant="secondary"
@@ -244,14 +251,14 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
             </div>
           </div>
 
-          {/* Progress circle */}
+          {/* Progress circle — larger and more prominent */}
           <div className="shrink-0 self-center">
             <ProgressCircle
               percentage={progressValue}
-              size={56}
-              strokeWidth={5}
+              size={68}
+              strokeWidth={6}
               color={subjectColor}
-              textSize={12}
+              textSize={14}
             />
           </div>
         </div>

@@ -17,15 +17,42 @@ import { AchievementToast } from "@/components/omnischool/AchievementToast";
 import { AIChatPanel } from "@/components/omnischool/AIChatPanel";
 import { AnnouncementBanner } from "@/components/omnischool/AnnouncementBanner";
 import { StudyStreak } from "@/components/omnischool/StudyStreak";
-import { SemesterComparisonChart } from "@/components/omnischool/SemesterComparisonChart";
 import { DataExportImport } from "@/components/omnischool/DataExportImport";
 import { QuickStatsWidget } from "@/components/omnischool/QuickStatsWidget";
-import { WeeklyGoalsTracker } from "@/components/omnischool/WeeklyGoalsTracker";
-import { KeyboardShortcutsHelp } from "@/components/omnischool/KeyboardShortcutsHelp";
-import { SubjectComparison } from "@/components/omnischool/SubjectComparison";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+/* ------------------------------------------------------------------ */
+/*  Loading Skeleton for lazy-loaded components                       */
+/* ------------------------------------------------------------------ */
+const LoadingSkeleton = () => (
+  <div className="glass-dashboard rounded-xl p-6 animate-pulse">
+    <div className="h-6 w-48 bg-muted rounded mb-4" />
+    <div className="h-40 bg-muted rounded" />
+  </div>
+);
+
+/* ------------------------------------------------------------------ */
+/*  Lazy-loaded heavy components                                      */
+/* ------------------------------------------------------------------ */
+const SemesterComparisonChart = dynamic(
+  () => import("@/components/omnischool/SemesterComparisonChart").then((m) => m.SemesterComparisonChart),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
+const WeeklyGoalsTracker = dynamic(
+  () => import("@/components/omnischool/WeeklyGoalsTracker").then((m) => m.WeeklyGoalsTracker),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
+const SubjectComparison = dynamic(
+  () => import("@/components/omnischool/SubjectComparison").then((m) => m.SubjectComparison),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
+const KeyboardShortcutsHelp = dynamic(
+  () => import("@/components/omnischool/KeyboardShortcutsHelp").then((m) => m.KeyboardShortcutsHelp),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
 
 const pageVariants = {
   initial: { opacity: 0, y: 12 },

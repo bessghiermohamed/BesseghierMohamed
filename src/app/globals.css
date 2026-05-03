@@ -1889,3 +1889,251 @@ html {
     display: none !important;
   }
 }
+
+/* ========================================================================
+   Phase 7 — Visual Quality Enhancement CSS Utilities
+   ======================================================================== */
+
+/* ------------------------------------------------------------------
+   Card Depth — Enhanced card shadow system with dark mode variants
+   ------------------------------------------------------------------ */
+.card-depth {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(185, 28, 28, 0.04);
+  transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+}
+
+.card-depth:hover {
+  box-shadow:
+    0 4px 8px rgba(185, 28, 28, 0.08),
+    0 12px 32px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(185, 28, 28, 0.1);
+  transform: translateY(-3px);
+}
+
+.dark .card-depth {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(239, 68, 68, 0.06);
+}
+
+.dark .card-depth:hover {
+  box-shadow:
+    0 4px 8px rgba(239, 68, 68, 0.1),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(239, 68, 68, 0.12);
+}
+
+/* ------------------------------------------------------------------
+   Progress Indicator — Active progress state indicator with glow
+   ------------------------------------------------------------------ */
+.progress-indicator {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-indicator.active {
+  box-shadow:
+    0 0 12px rgba(185, 28, 28, 0.3),
+    0 0 24px rgba(185, 28, 28, 0.1),
+    inset 0 0 8px rgba(185, 28, 28, 0.06);
+  border-color: rgba(185, 28, 28, 0.4);
+  background: linear-gradient(135deg, rgba(185, 28, 28, 0.08), rgba(212, 168, 67, 0.04));
+}
+
+.dark .progress-indicator.active {
+  box-shadow:
+    0 0 12px rgba(239, 68, 68, 0.25),
+    0 0 24px rgba(239, 68, 68, 0.08),
+    inset 0 0 8px rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.35);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(212, 168, 67, 0.04));
+}
+
+.progress-indicator.active::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(185, 28, 28, 0.15), rgba(212, 168, 67, 0.1));
+  z-index: -1;
+  animation: progress-glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes progress-glow-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ------------------------------------------------------------------
+   Button Prominent — Large prominent button style for primary actions
+   ------------------------------------------------------------------ */
+.btn-prominent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #B91C1C, #991B1B);
+  color: white;
+  border: none;
+  box-shadow:
+    0 4px 12px rgba(185, 28, 28, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.btn-prominent:hover {
+  background: linear-gradient(135deg, #DC2626, #B91C1C);
+  box-shadow:
+    0 6px 20px rgba(185, 28, 28, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-prominent:active {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 8px rgba(185, 28, 28, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark .btn-prominent {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  box-shadow:
+    0 4px 12px rgba(239, 68, 68, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dark .btn-prominent:hover {
+  background: linear-gradient(135deg, #F87171, #EF4444);
+  box-shadow:
+    0 6px 20px rgba(239, 68, 68, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* ------------------------------------------------------------------
+   Sparkline Mini — Mini inline sparkline decoration
+   ------------------------------------------------------------------ */
+.sparkline-mini {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 16px;
+  padding: 0 2px;
+}
+
+.sparkline-mini .spark-bar {
+  width: 3px;
+  border-radius: 1px;
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 2px;
+}
+
+/* ------------------------------------------------------------------
+   Breadcrumb Navigation — with RTL-aware dividers
+   ------------------------------------------------------------------ */
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  direction: rtl;
+}
+
+.breadcrumb-nav .breadcrumb-item {
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.breadcrumb-nav .breadcrumb-item:hover {
+  color: #B91C1C;
+}
+
+.dark .breadcrumb-nav .breadcrumb-item:hover {
+  color: #EF4444;
+}
+
+.breadcrumb-nav .breadcrumb-item.active {
+  color: var(--foreground);
+  font-weight: 600;
+  cursor: default;
+}
+
+.breadcrumb-nav .breadcrumb-divider {
+  color: var(--muted-foreground);
+  opacity: 0.4;
+  margin: 0 0.125rem;
+  font-size: 0.75rem;
+}
+
+/* ------------------------------------------------------------------
+   Hover Elevate — Hover elevation transition with shadow
+   ------------------------------------------------------------------ */
+.hover-elevate {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-elevate:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.dark .hover-elevate:hover {
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ------------------------------------------------------------------
+   Card Gradient Hover Overlay — Subtle gradient on hover for subject cards
+   ------------------------------------------------------------------ */
+.card-gradient-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-gradient-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(185, 28, 28, 0.0) 0%,
+    rgba(212, 168, 67, 0.0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-gradient-overlay:hover::before {
+  background: linear-gradient(
+    135deg,
+    rgba(185, 28, 28, 0.04) 0%,
+    rgba(212, 168, 67, 0.06) 100%
+  );
+  opacity: 1;
+}
+
+.dark .card-gradient-overlay:hover::before {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.04) 0%,
+    rgba(212, 168, 67, 0.06) 100%
+  );
+}

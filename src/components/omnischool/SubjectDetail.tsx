@@ -46,6 +46,8 @@ import {
   FileText,
   Download,
   Share2,
+  Home,
+  ChevronLeft as ChevronSep,
   type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -168,11 +170,35 @@ export function SubjectDetail() {
 
   return (
     <motion.div
-      className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
+      className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
+      {/* Breadcrumb Navigation */}
+      <motion.div variants={itemVariants}>
+        <nav className="breadcrumb-nav" aria-label="التنقل">
+          <span
+            className="breadcrumb-item hover:underline"
+            onClick={() => setView("home")}
+          >
+            <Home className="size-3.5 inline-block ml-1" />
+            الرئيسية
+          </span>
+          <span className="breadcrumb-divider">‹</span>
+          <span
+            className="breadcrumb-item hover:underline"
+            onClick={() => setView("subjects")}
+          >
+            المواد
+          </span>
+          <span className="breadcrumb-divider">‹</span>
+          <span className="breadcrumb-item active">
+            {subject.nameAr}
+          </span>
+        </nav>
+      </motion.div>
+
       {/* Back button */}
       <motion.div variants={itemVariants}>
         <Button
@@ -187,7 +213,7 @@ export function SubjectDetail() {
 
       {/* Header Card */}
       <motion.div variants={itemVariants}>
-        <Card className="glass overflow-hidden border-border">
+        <Card className="glass card-depth overflow-hidden border-border">
           <div
             className="h-2"
             style={{ backgroundColor: subjectColor }}
@@ -263,11 +289,45 @@ export function SubjectDetail() {
               <div className="shrink-0 self-center">
                 <ProgressCircle
                   percentage={progressValue}
-                  size={120}
-                  strokeWidth={10}
+                  size={130}
+                  strokeWidth={11}
                   color={subjectColor}
-                  textSize={22}
+                  textSize={24}
                 />
+              </div>
+            </div>
+
+            {/* Visual Progress Bar Below Progress Circle */}
+            <div className="mt-6 pt-5 border-t border-border/50">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold text-muted-foreground">مستوى الإنجاز</span>
+                <span className="text-sm font-bold ltr-content" style={{ color: subjectColor }} dir="ltr">
+                  {progressValue}%
+                </span>
+              </div>
+              <div className="relative h-3 w-full rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${subjectColor}, ${subjectColor}CC)`,
+                  }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressValue}%` }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
+                {/* Milestone markers */}
+                {[25, 50, 75].map((milestone) => (
+                  <div
+                    key={milestone}
+                    className="absolute top-0 bottom-0 w-px bg-background/40"
+                    style={{ left: `${milestone}%` }}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between mt-1">
+                <span className="text-[10px] text-muted-foreground/60">0%</span>
+                <span className="text-[10px] text-muted-foreground/60">50%</span>
+                <span className="text-[10px] text-muted-foreground/60">100%</span>
               </div>
             </div>
           </CardContent>
@@ -276,16 +336,16 @@ export function SubjectDetail() {
 
       {/* Actions Row */}
       <motion.div variants={itemVariants}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {/* Status Update */}
-          <Card className="glass border-border">
+          <Card className="glass card-depth border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <Edit3 className="size-4 text-omni-red" />
                 تحديث الحالة
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-2">
                 <Button
                   variant={status === "not_started" ? "default" : "outline"}
@@ -317,7 +377,7 @@ export function SubjectDetail() {
               </div>
 
               {/* Progress slider */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">نسبة التقدم</span>
                   <span className="font-bold ltr-content" style={{ color: subjectColor }}>
@@ -340,26 +400,41 @@ export function SubjectDetail() {
                     transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                 </div>
-                {/* Quick progress buttons */}
-                <div className="flex gap-1.5 flex-wrap">
-                  {[0, 25, 50, 75, 100].map((val) => (
-                    <Button
-                      key={val}
-                      variant={progressValue === val ? "default" : "outline"}
-                      size="sm"
-                      className="h-7 text-xs px-2 btn-ripple"
-                      onClick={() => handleProgressChange(val)}
-                    >
-                      {val}%
-                    </Button>
-                  ))}
+                {/* Quick progress buttons — larger with glow on active */}
+                <div className="flex gap-2 flex-wrap">
+                  {[0, 25, 50, 75, 100].map((val) => {
+                    const isActive = progressValue === val;
+                    return (
+                      <motion.button
+                        key={val}
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`progress-indicator inline-flex items-center justify-center h-9 min-w-[3rem] px-3 rounded-lg text-sm font-semibold border transition-all cursor-pointer ${
+                          isActive
+                            ? "active"
+                            : "border-border bg-background hover:border-omni-red/20 hover:bg-muted/50"
+                        }`}
+                        style={
+                          isActive
+                            ? {
+                                color: "white",
+                                borderColor: subjectColor,
+                              }
+                            : {}
+                        }
+                        onClick={() => handleProgressChange(val)}
+                      >
+                        {val}%
+                      </motion.button>
+                    );
+                  })}
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Resources */}
-          <Card className="glass border-border">
+          <Card className="glass card-depth border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <FileText className="size-4 text-omni-gold" />
@@ -399,7 +474,7 @@ export function SubjectDetail() {
 
       {/* Notes */}
       <motion.div variants={itemVariants}>
-        <Card className="glass border-border">
+        <Card className="glass card-depth border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold flex items-center gap-2">
               <Edit3 className="size-4 text-omni-gold" />
@@ -408,7 +483,7 @@ export function SubjectDetail() {
           </CardHeader>
           <CardContent>
             <textarea
-              className="w-full min-h-[120px] rounded-xl border border-border bg-background/50 p-4 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-omni-red/30 transition-all placeholder:text-muted-foreground/50"
+              className="w-full min-h-[140px] rounded-xl border border-border bg-background/50 p-4 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-omni-red/30 transition-all placeholder:text-muted-foreground/50"
               placeholder="أضف ملاحظاتك حول هذه المادة..."
               value={notes}
               onChange={(e) => {
@@ -417,17 +492,22 @@ export function SubjectDetail() {
                 }
               }}
             />
-            <div className="mt-3 flex items-center justify-between">
+            <div className="mt-4 flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
                 {notes.length > 0 ? `${notes.length} حرف` : "يتم الحفظ تلقائياً"}
               </p>
-              <Button size="sm" className="gap-2 btn-omni-primary" onClick={() => {
-                setSaving(true);
-                setTimeout(() => setSaving(false), 500);
-              }}>
-                <Save className="size-4" />
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="btn-prominent btn-ripple"
+                onClick={() => {
+                  setSaving(true);
+                  setTimeout(() => setSaving(false), 500);
+                }}
+              >
+                <Save className="size-5" />
                 {saving ? "تم الحفظ ✓" : "حفظ الملاحظات"}
-              </Button>
+              </motion.button>
             </div>
           </CardContent>
         </Card>
@@ -436,7 +516,7 @@ export function SubjectDetail() {
       {/* Related Subjects */}
       {relatedSubjects.length > 0 && (
         <motion.div variants={itemVariants}>
-          <Card className="glass border-border">
+          <Card className="glass card-depth border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <Share2 className="size-4 text-omni-red" />
@@ -458,7 +538,7 @@ export function SubjectDetail() {
                         useAppStore.getState().selectSubject(rs.id);
                       }}
                     >
-                      <div className="flex items-center gap-3 rounded-xl border border-border p-3 transition-all hover:border-omni-red/30 hover:shadow-md">
+                      <div className="flex items-center gap-3 rounded-xl border border-border p-3 transition-all hover:border-omni-red/30 hover:shadow-md card-depth">
                         <div
                           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                           style={{ backgroundColor: `${rsColor}15` }}

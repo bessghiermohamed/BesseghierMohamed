@@ -22,14 +22,45 @@ import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject, SubjectStatus } from "@/lib/types";
 import { ProgressCircle } from "./ProgressCircle";
 import { StudyStreak } from "./StudyStreak";
-import { SemesterComparisonChart } from "./SemesterComparisonChart";
 import { DataExportImport } from "./DataExportImport";
-import { GPACalculator } from "./GPACalculator";
-import { ProgressReport } from "./ProgressReport";
-import { SubjectComparison } from "./SubjectComparison";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import dynamic from "next/dynamic";
+
+/* ------------------------------------------------------------------ */
+/*  Loading Skeleton for lazy-loaded components                       */
+/* ------------------------------------------------------------------ */
+const LoadingSkeleton = () => (
+  <div className="glass-dashboard rounded-xl p-6 animate-pulse">
+    <div className="h-6 w-48 bg-muted rounded mb-4" />
+    <div className="h-40 bg-muted rounded" />
+  </div>
+);
+
+/* ------------------------------------------------------------------ */
+/*  Lazy-loaded heavy components                                      */
+/* ------------------------------------------------------------------ */
+const SemesterComparisonChart = dynamic(
+  () => import("./SemesterComparisonChart").then((m) => m.SemesterComparisonChart),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
+const GPACalculator = dynamic(
+  () => import("./GPACalculator").then((m) => m.GPACalculator),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
+const SubjectComparison = dynamic(
+  () => import("./SubjectComparison").then((m) => m.SubjectComparison),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
+const ProgressReport = dynamic(
+  () => import("./ProgressReport").then((m) => m.ProgressReport),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
+const SubjectRadarChart = dynamic(
+  () => import("./SubjectRadarChart").then((m) => m.SubjectRadarChart),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
 
 /* ------------------------------------------------------------------ */
 /*  Icon mapping — maps string icon names from subjects-data to JSX   */
@@ -439,6 +470,11 @@ export function StudentDashboard() {
       {/* ========== 7. GPA Calculator ========== */}
       <motion.div variants={itemVariants}>
         <GPACalculator />
+      </motion.div>
+
+      {/* ========== 7b. Subject Radar Chart ========== */}
+      <motion.div variants={itemVariants}>
+        <SubjectRadarChart />
       </motion.div>
 
       {/* ========== 8. Data Management ========== */}
