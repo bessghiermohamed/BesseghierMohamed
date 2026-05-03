@@ -109,7 +109,7 @@ export function QuickStatsWidget() {
   const values = [stats.total, stats.completed, stats.inProgress, stats.avgProgress];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
       {cardConfigs.map((cfg, idx) => {
         const Icon = cfg.icon;
         const isPercent = idx === 3;
@@ -124,7 +124,7 @@ export function QuickStatsWidget() {
               y: -3,
               transition: { duration: 0.2 },
             }}
-            className={`${cfg.gradientClass} glass card-ornament rounded-xl p-4 sm:p-5 text-center cursor-default card-shine animate-border-glow relative overflow-hidden group`}
+            className={`${cfg.gradientClass} glass-dashboard rounded-xl p-5 sm:p-6 text-center cursor-default card-shine animate-border-glow relative overflow-hidden group`}
           >
             {/* Accent bar at top */}
             <div
@@ -134,7 +134,7 @@ export function QuickStatsWidget() {
 
             {/* Decorative corner element */}
             <div
-              className="absolute -bottom-2 -left-2 w-16 h-16 rounded-full opacity-[0.04] group-hover:opacity-[0.08] transition-opacity"
+              className="absolute -bottom-3 -left-3 w-20 h-20 rounded-full opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none"
               style={{ background: cfg.color }}
             />
 
@@ -146,9 +146,9 @@ export function QuickStatsWidget() {
               <Icon className="size-6 sm:size-7" style={{ color: cfg.color }} />
             </div>
 
-            {/* Animated counter value */}
+            {/* Animated counter value — prominent */}
             <p
-              className="text-2xl sm:text-3xl font-black ltr-content animate-count-up"
+              className="text-3xl sm:text-4xl font-black ltr-content animate-number-pop"
               dir="ltr"
               style={{ color: cfg.color }}
             >
@@ -158,8 +158,8 @@ export function QuickStatsWidget() {
               />
             </p>
 
-            {/* Label */}
-            <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+            {/* Label — uppercase tracking */}
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mt-1.5">
               {cfg.label}
             </p>
           </motion.div>

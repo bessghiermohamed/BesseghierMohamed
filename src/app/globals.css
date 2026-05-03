@@ -196,6 +196,7 @@
     font-family: var(--font-cairo), 'Cairo', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Arabic text rendering */
@@ -776,6 +777,15 @@
   border-color: rgba(239, 68, 68, 0.15);
   box-shadow: 0 8px 30px rgba(239, 68, 68, 0.06),
               0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Theme transition for card, header, footer elements */
+[data-slot="card"],
+header,
+footer,
+[role="banner"],
+[role="contentinfo"] {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 /* OmniSchool Badge */
@@ -1580,4 +1590,302 @@ html {
 
 .search-glow-pulse {
   animation: search-glow-pulse 3s ease-in-out infinite;
+}
+
+/* ========================================================================
+   Phase 6 — Dashboard & New CSS Utility Classes
+   ======================================================================== */
+
+/* ------------------------------------------------------------------
+   Dashboard Card — Card with red-gold top accent bar
+   ------------------------------------------------------------------ */
+.dashboard-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dashboard-card:hover {
+  border-color: rgba(185, 28, 28, 0.15);
+  box-shadow: 0 8px 30px rgba(185, 28, 28, 0.06),
+              0 2px 8px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+.dark .dashboard-card:hover {
+  border-color: rgba(239, 68, 68, 0.12);
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.05),
+              0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ------------------------------------------------------------------
+   Stat Number Large — Large stat number with gradient text
+   ------------------------------------------------------------------ */
+.stat-number-lg {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, #B91C1C, #D4A843);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .stat-number-lg {
+  background: linear-gradient(135deg, #EF4444, #E5C168);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ------------------------------------------------------------------
+   Progress Bar Animated — Animated progress bar with gradient fill
+   ------------------------------------------------------------------ */
+.progress-bar-animated {
+  position: relative;
+  height: 1rem;
+  border-radius: 9999px;
+  background: var(--muted);
+  overflow: hidden;
+}
+
+.progress-bar-animated .progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #B91C1C, #D4A843);
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .progress-bar-animated .progress-fill {
+  background: linear-gradient(90deg, #EF4444, #E5C168);
+}
+
+.progress-bar-animated .progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------
+   Animate Slide Up — Slide up entrance animation
+   ------------------------------------------------------------------ */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ------------------------------------------------------------------
+   Glass Dashboard — Glass morphism variant for dashboard cards
+   ------------------------------------------------------------------ */
+.glass-dashboard {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.dark .glass-dashboard {
+  background: rgba(26, 16, 16, 0.75);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* ========================================================================
+   Phase 6 — PDF Progress Report Print Styles
+   ======================================================================== */
+
+/* ------------------------------------------------------------------
+   Print Report Container — for the hidden report div
+   ------------------------------------------------------------------ */
+.print-report {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+  width: 210mm;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------
+   Enhanced Print Media Query — for PDF generation via window.print()
+   ------------------------------------------------------------------ */
+@media print {
+  /* Reset body for printing */
+  body {
+    background: white !important;
+    color: #1C0A0A !important;
+    font-size: 12px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Show the print report container */
+  .print-report {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    z-index: auto !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* A4 page size */
+  @page {
+    size: A4;
+    margin: 15mm 12mm;
+  }
+
+  /* Force dark text on white for print */
+  .print-report *,
+  .print-report *::before,
+  .print-report *::after {
+    color: #1C0A0A !important;
+    border-color: #ddd !important;
+  }
+
+  /* Preserve intentional colored elements */
+  .print-report .report-header,
+  .print-report .report-header * {
+    color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print-report .stat-card .stat-value,
+  .print-report .gpa-card .gpa-value,
+  .print-report .streak-card .streak-value,
+  .print-report .section-title {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide decorative elements in print */
+  .print-report .ornament::before,
+  .print-report .ornament::after {
+    display: none;
+  }
+
+  .print-report .card-ornament::before,
+  .print-report .card-ornament::after {
+    display: none;
+  }
+
+  /* Page break controls */
+  .page-break {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  .no-page-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Prevent orphaned headings */
+  .print-report .section-title {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Prevent table rows from splitting */
+  .print-report table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Glass effects removal for print */
+  .glass,
+  .glass-strong,
+  .glass-subtle,
+  .glass-red,
+  .glass-gold {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: white !important;
+    border-color: #ddd !important;
+  }
+
+  /* Gradient removal for print */
+  .gradient-hero,
+  .gradient-hero-gold,
+  .gradient-hero-warm {
+    background: white !important;
+  }
+
+  /* Hide non-printable UI elements */
+  .no-print,
+  button,
+  .scroll-top-btn,
+  nav,
+  .chat-bubble-user,
+  .chat-bubble-ai,
+  header,
+  footer {
+    display: none !important;
+  }
+
+  /* Table styling for print */
+  .print-report table {
+    border-collapse: collapse;
+  }
+
+  .print-report table th,
+  .print-report table td {
+    border: 1px solid #ddd;
+  }
+
+  /* Ensure progress bars are visible in print */
+  .print-report .progress-bar-fill {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Print-Only Utility — show only when printing
+   ------------------------------------------------------------------ */
+.print-only {
+  display: none !important;
+}
+
+@media print {
+  .print-only {
+    display: block !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Screen-Only Utility — hide when printing
+   ------------------------------------------------------------------ */
+.screen-only {
+  display: block;
+}
+
+@media print {
+  .screen-only {
+    display: none !important;
+  }
 }

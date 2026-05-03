@@ -25,6 +25,8 @@ import { StudyStreak } from "./StudyStreak";
 import { SemesterComparisonChart } from "./SemesterComparisonChart";
 import { DataExportImport } from "./DataExportImport";
 import { GPACalculator } from "./GPACalculator";
+import { ProgressReport } from "./ProgressReport";
+import { SubjectComparison } from "./SubjectComparison";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -176,10 +178,10 @@ export function StudentDashboard() {
     >
       {/* Page title */}
       <motion.div variants={itemVariants} className="text-center sm:text-start">
-        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+        <h1 className="text-3xl sm:text-4xl font-black gradient-text-red-gold">
           لوحة المتعلم
         </h1>
-        <p className="text-muted-foreground mt-1 text-sm sm:text-base">
+        <p className="text-muted-foreground mt-2 text-sm sm:text-base">
           نظرة شاملة على تقدّمك الدراسي
         </p>
       </motion.div>
@@ -187,50 +189,57 @@ export function StudentDashboard() {
       {/* ========== 1. Summary Cards ========== */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4"
+        className="grid grid-cols-2 xl:grid-cols-4 gap-5"
       >
         {/* Total */}
         <SummaryCard
           label="إجمالي المواد"
           value={stats.total}
-          icon={<BookOpen className="h-6 w-6" />}
-          gradient="from-red-600 to-red-800"
-          iconBg="bg-white/20"
+          icon={<BookOpen className="h-7 w-7" />}
+          accentColor="#B91C1C"
+          iconBgColor="rgba(185, 28, 28, 0.1)"
+          darkIconBgColor="rgba(239, 68, 68, 0.12)"
           delay={0}
         />
         {/* Completed */}
         <SummaryCard
           label="مكتملة"
           value={stats.completed}
-          icon={<CheckCircle className="h-6 w-6" />}
-          gradient="from-green-600 to-green-800"
-          iconBg="bg-white/20"
+          icon={<CheckCircle className="h-7 w-7" />}
+          accentColor="#16A34A"
+          iconBgColor="rgba(22, 163, 74, 0.1)"
+          darkIconBgColor="rgba(34, 197, 94, 0.12)"
           delay={0.1}
         />
         {/* In Progress */}
         <SummaryCard
           label="قيد التقدم"
           value={stats.inProgress}
-          icon={<Clock className="h-6 w-6" />}
-          gradient="from-omni-gold-dark to-omni-gold"
-          iconBg="bg-white/20"
+          icon={<Clock className="h-7 w-7" />}
+          accentColor="#D4A843"
+          iconBgColor="rgba(212, 168, 67, 0.1)"
+          darkIconBgColor="rgba(212, 168, 67, 0.12)"
           delay={0.2}
         />
         {/* Not Started */}
         <SummaryCard
           label="لم تبدأ"
           value={stats.notStarted}
-          icon={<Circle className="h-6 w-6" />}
-          gradient="from-gray-500 to-gray-600"
-          iconBg="bg-white/20"
+          icon={<Circle className="h-7 w-7" />}
+          accentColor="#8B7E6A"
+          iconBgColor="rgba(139, 126, 106, 0.1)"
+          darkIconBgColor="rgba(168, 152, 128, 0.12)"
           delay={0.3}
         />
       </motion.div>
 
+      {/* Section divider */}
+      <div className="section-divider" />
+
       {/* ========== 2. Overall Progress ========== */}
       <motion.div variants={itemVariants}>
-        <Card className="glass overflow-hidden border-border">
-          <CardContent className="p-6">
+        <Card className="glass-dashboard overflow-hidden border-border shadow-lg">
+          <CardContent className="p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
               {/* Circle */}
               <div className="flex-shrink-0">
@@ -245,11 +254,11 @@ export function StudentDashboard() {
                 />
               </div>
               {/* Text */}
-              <div className="text-center sm:text-start flex-1 space-y-2">
+              <div className="text-center sm:text-start flex-1 space-y-3">
                 <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                   التقدم العام
                 </h2>
-                <p className="text-3xl sm:text-4xl font-black text-omni-red ltr-content" dir="ltr">
+                <p className="text-4xl sm:text-5xl font-black text-omni-red ltr-content" dir="ltr">
                   {Math.round(stats.overallProgress)}%
                 </p>
                 <p className="text-muted-foreground text-sm sm:text-base">
@@ -276,6 +285,9 @@ export function StudentDashboard() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Section divider */}
+      <div className="section-divider" />
 
       {/* ========== 3. Subjects Progress Grid ========== */}
       <motion.div variants={itemVariants}>
@@ -355,9 +367,12 @@ export function StudentDashboard() {
         </Tabs>
       </motion.div>
 
+      {/* Section divider */}
+      <div className="section-divider" />
+
       {/* ========== 4. Category Breakdown ========== */}
       <motion.div variants={itemVariants}>
-        <Card className="glass overflow-hidden border-border">
+        <Card className="glass-dashboard overflow-hidden border-border shadow-lg">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-bold">تقدم المواد حسب التصنيف</CardTitle>
           </CardHeader>
@@ -366,27 +381,27 @@ export function StudentDashboard() {
               {categoryBreakdown.map((cat, idx) => {
                 const catIcon = getSubjectIcon(cat.icon);
                 return (
-                  <div key={cat.id} className="space-y-1.5">
+                  <div key={cat.id} className="space-y-2">
                     {/* Label row */}
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
                         <div
-                          className="w-6 h-6 rounded flex items-center justify-center"
+                          className="w-7 h-7 rounded-lg flex items-center justify-center"
                           style={{ backgroundColor: `${cat.color}15`, color: cat.color }}
                         >
-                          <catIcon className="h-3.5 w-3.5" />
+                          <catIcon className="h-4 w-4" />
                         </div>
-                        <span className="font-medium">{cat.label}</span>
+                        <span className="font-semibold">{cat.label}</span>
                         <span className="text-muted-foreground text-xs">
                           ({cat.total} مادة)
                         </span>
                       </div>
-                      <span className="font-bold ltr-content" dir="ltr" style={{ color: cat.color }}>
+                      <span className="font-bold text-base ltr-content" dir="ltr" style={{ color: cat.color }}>
                         {cat.avgProgress}%
                       </span>
                     </div>
-                    {/* Progress bar */}
-                    <div className="h-3 w-full rounded-full bg-muted overflow-hidden">
+                    {/* Progress bar — thicker with rounded corners */}
+                    <div className="h-4 w-full rounded-full bg-muted overflow-hidden">
                       <motion.div
                         className="h-full rounded-full"
                         style={{ backgroundColor: cat.color }}
@@ -407,7 +422,13 @@ export function StudentDashboard() {
         </Card>
       </motion.div>
 
-      {/* ========== 5. Streak & Semester Comparison ========== */}
+      {/* ========== 5. Subject Comparison ========== */}
+      <motion.div variants={itemVariants}>
+        <SubjectComparison />
+      </motion.div>
+
+      {/* ========== 6. Streak & Semester Comparison ========== */}
+      <div className="section-divider" />
       <motion.div variants={itemVariants}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <StudyStreak />
@@ -415,70 +436,90 @@ export function StudentDashboard() {
         </div>
       </motion.div>
 
-      {/* ========== 6. GPA Calculator ========== */}
+      {/* ========== 7. GPA Calculator ========== */}
       <motion.div variants={itemVariants}>
         <GPACalculator />
       </motion.div>
 
-      {/* ========== 7. Data Management ========== */}
+      {/* ========== 8. Data Management ========== */}
       <motion.div variants={itemVariants}>
         <DataExportImport />
+      </motion.div>
+
+      {/* ========== 9. Progress Report (PDF) ========== */}
+      <motion.div variants={itemVariants}>
+        <ProgressReport />
       </motion.div>
     </motion.div>
   );
 }
 
 /* ================================================================== */
-/*  SummaryCard Sub-component                                          */
+/*  SummaryCard Sub-component — Glass Morphism with Red-Gold Accent   */
 /* ================================================================== */
 interface SummaryCardProps {
   label: string;
   value: number;
   icon: React.ReactNode;
-  gradient: string;
-  iconBg: string;
+  accentColor: string;
+  iconBgColor: string;
+  darkIconBgColor: string;
   delay: number;
 }
 
-function SummaryCard({ label, value, icon, gradient, iconBg, delay }: SummaryCardProps) {
+function SummaryCard({ label, value, icon, accentColor, iconBgColor, darkIconBgColor, delay }: SummaryCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      className="dashboard-card glass-dashboard rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
     >
-      <Card className="overflow-hidden border-0 shadow-lg h-full">
-        <div className={`bg-gradient-to-br ${gradient} p-5 sm:p-6 text-white relative`}>
-          {/* Decorative circle */}
-          <div className="absolute -top-4 -left-4 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
-          <div className="flex items-center justify-between relative z-10">
-            <div className="space-y-1">
-              <motion.p
-                className="text-3xl sm:text-4xl font-black ltr-content"
-                dir="ltr"
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: delay + 0.2, type: "spring" }}
-              >
-                {value}
-              </motion.p>
-              <p className="text-white/80 text-sm font-medium">{label}</p>
-            </div>
-            <motion.div
-              className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center backdrop-blur-sm`}
-              animate={{ y: [0, -4, 0] }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: delay + 0.5,
-              }}
-            >
-              {icon}
-            </motion.div>
+      {/* 4px gradient accent bar at top */}
+      <div
+        className="h-1 w-full"
+        style={{ background: `linear-gradient(90deg, #B91C1C, ${accentColor}, #D4A843)` }}
+      />
+
+      <div className="p-6 relative">
+        {/* Subtle background pattern — decorative circle */}
+        <div
+          className="absolute -top-8 -left-8 w-32 h-32 rounded-full pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${accentColor}06 0%, transparent 70%)` }}
+        />
+        <div
+          className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full pointer-events-none"
+          style={{ background: `radial-gradient(circle, #D4A84305 0%, transparent 70%)` }}
+        />
+
+        {/* Icon in top-right corner */}
+        <div className="flex justify-end mb-2">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center"
+            style={{ backgroundColor: iconBgColor, color: accentColor }}
+          >
+            {icon}
           </div>
         </div>
-      </Card>
+
+        {/* Large number */}
+        <motion.p
+          className="text-4xl sm:text-5xl font-black ltr-content animate-number-pop"
+          dir="ltr"
+          style={{ color: accentColor }}
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: delay + 0.2, type: "spring" }}
+        >
+          {value}
+        </motion.p>
+
+        {/* Label — uppercase tracking */}
+        <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mt-2">
+          {label}
+        </p>
+      </div>
     </motion.div>
   );
 }

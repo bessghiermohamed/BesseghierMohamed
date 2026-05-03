@@ -22,6 +22,7 @@ import { DataExportImport } from "@/components/omnischool/DataExportImport";
 import { QuickStatsWidget } from "@/components/omnischool/QuickStatsWidget";
 import { WeeklyGoalsTracker } from "@/components/omnischool/WeeklyGoalsTracker";
 import { KeyboardShortcutsHelp } from "@/components/omnischool/KeyboardShortcutsHelp";
+import { SubjectComparison } from "@/components/omnischool/SubjectComparison";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
 import { useEffect, useState } from "react";
@@ -103,12 +104,17 @@ function QuickAccessSection() {
               className="cursor-pointer hover-lift"
               onClick={() => selectSubject(subject.id)}
             >
-              <div className="glass card-omni rounded-xl p-4 flex items-center gap-4">
+              <div className="glass-dashboard rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group">
+                {/* Accent bar */}
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                  className="absolute top-0 right-0 left-0 h-0.5"
+                  style={{ background: subject.color }}
+                />
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
                   style={{ backgroundColor: `${subject.color}15` }}
                 >
-                  <span className="text-lg font-bold" style={{ color: subject.color }}>
+                  <span className="text-lg font-black" style={{ color: subject.color }}>
                     {subject.nameAr.charAt(0)}
                   </span>
                 </div>
@@ -132,9 +138,7 @@ function QuickAccessSection() {
       </div>
 
       {/* Section Divider */}
-      <div className="section-divider">
-        <span className="diamond" />
-      </div>
+      <div className="section-divider" />
 
       {/* Quick Feature Cards — with depth/parallax effect */}
       <div className="space-y-6">
@@ -200,9 +204,7 @@ function QuickAccessSection() {
       </div>
 
       {/* Section Divider */}
-      <div className="section-divider">
-        <span className="diamond" />
-      </div>
+      <div className="section-divider" />
 
       {/* Study Streak, Semester Comparison & Weekly Goals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -212,9 +214,13 @@ function QuickAccessSection() {
       </div>
 
       {/* Section Divider */}
-      <div className="section-divider">
-        <span className="diamond" />
-      </div>
+      <div className="section-divider" />
+
+      {/* Subject Comparison */}
+      <SubjectComparison />
+
+      {/* Section Divider */}
+      <div className="section-divider" />
 
       {/* Categories */}
       <div className="space-y-6">
@@ -222,35 +228,45 @@ function QuickAccessSection() {
           التصنيفات
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {categories.map((cat) => {
+          {categories.map((cat, idx) => {
             const count = subjectsData.filter(
               (s) => s.category === cat.id
             ).length;
             return (
               <motion.div
                 key={cat.id}
-                whileHover={{ scale: 1.03, y: -2 }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.06, duration: 0.4 }}
+                whileHover={{ scale: 1.04, y: -3 }}
                 whileTap={{ scale: 0.97 }}
-                className="cursor-pointer hover-lift"
+                className="cursor-pointer"
                 onClick={() => {
                   useAppStore.getState().setSearchCategory(cat.id);
                   useAppStore.getState().setView("search");
                 }}
               >
                 <div
-                  className="glass rounded-xl p-4 text-center space-y-2"
-                  style={{ borderColor: `${cat.color}20` }}
+                  className="glass-dashboard rounded-xl p-4 text-center space-y-2 relative overflow-hidden group"
                 >
+                  {/* Accent bar at top */}
                   <div
-                    className="w-10 h-10 rounded-lg mx-auto flex items-center justify-center"
+                    className="absolute top-0 right-0 left-0 h-0.5"
+                    style={{ background: cat.color }}
+                  />
+                  <div
+                    className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center transition-transform group-hover:scale-110"
                     style={{ backgroundColor: `${cat.color}15` }}
                   >
-                    <span className="font-bold" style={{ color: cat.color }}>
+                    <span className="text-lg font-black" style={{ color: cat.color }}>
                       {count}
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-foreground">
+                  <p className="text-sm font-semibold text-foreground">
                     {cat.label}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {count === 1 ? 'مادة واحدة' : count === 2 ? 'مادتين' : `${count} مواد`}
                   </p>
                 </div>
               </motion.div>
@@ -260,9 +276,7 @@ function QuickAccessSection() {
       </div>
 
       {/* Section Divider */}
-      <div className="section-divider">
-        <span className="diamond" />
-      </div>
+      <div className="section-divider" />
 
       {/* CTA Section — enhanced with decorative elements */}
       <motion.div
