@@ -146,7 +146,7 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
       whileTap={{ scale: 0.98 }}
     >
       <Card
-        className="glass card-omni glow-hover relative cursor-pointer overflow-hidden p-0"
+        className="glass card-omni card-ornament glow-hover relative cursor-pointer overflow-hidden p-0"
         onClick={onClick}
       >
         {/* Color accent bar on the right side (RTL) */}

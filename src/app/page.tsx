@@ -15,6 +15,10 @@ import { PomodoroTimer } from "@/components/omnischool/PomodoroTimer";
 import { OnboardingModal } from "@/components/omnischool/OnboardingModal";
 import { AchievementToast } from "@/components/omnischool/AchievementToast";
 import { AIChatPanel } from "@/components/omnischool/AIChatPanel";
+import { AnnouncementBanner } from "@/components/omnischool/AnnouncementBanner";
+import { StudyStreak } from "@/components/omnischool/StudyStreak";
+import { SemesterComparisonChart } from "@/components/omnischool/SemesterComparisonChart";
+import { DataExportImport } from "@/components/omnischool/DataExportImport";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
 import { useEffect } from "react";
@@ -170,6 +174,12 @@ function QuickAccessSection() {
         </div>
       </div>
 
+      {/* Study Streak & Semester Comparison */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <StudyStreak />
+        <SemesterComparisonChart />
+      </div>
+
       {/* Categories */}
       <div className="space-y-4">
         <h2 className="text-2xl font-bold text-foreground">التصنيفات</h2>
@@ -268,6 +278,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <AnnouncementBanner />
       <Header />
       <main className="flex-1">
         <ViewRenderer />

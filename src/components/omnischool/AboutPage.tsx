@@ -81,8 +81,8 @@ export function AboutPage() {
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
           حول{" "}
-          <span className="text-omni-red">
-            Omni<span className="text-omni-gold">School</span>
+          <span className="gradient-text-red-gold">
+            OmniSchool
           </span>
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">

@@ -21,6 +21,9 @@ import { useAppStore } from "@/lib/store";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject, SubjectStatus } from "@/lib/types";
 import { ProgressCircle } from "./ProgressCircle";
+import { StudyStreak } from "./StudyStreak";
+import { SemesterComparisonChart } from "./SemesterComparisonChart";
+import { DataExportImport } from "./DataExportImport";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -401,6 +404,19 @@ export function StudentDashboard() {
             </div>
           </CardContent>
         </Card>
+      </motion.div>
+
+      {/* ========== 5. Streak & Semester Comparison ========== */}
+      <motion.div variants={itemVariants}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <StudyStreak />
+          <SemesterComparisonChart />
+        </div>
+      </motion.div>
+
+      {/* ========== 6. Data Management ========== */}
+      <motion.div variants={itemVariants}>
+        <DataExportImport />
       </motion.div>
     </motion.div>
   );

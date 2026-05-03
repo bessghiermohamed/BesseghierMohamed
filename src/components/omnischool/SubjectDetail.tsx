@@ -287,7 +287,7 @@ export function SubjectDetail() {
                 <Button
                   variant={status === "not_started" ? "default" : "outline"}
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 btn-ripple"
                   onClick={() => handleStatusChange("not_started")}
                 >
                   <PlayCircle className="size-4" />
@@ -296,7 +296,7 @@ export function SubjectDetail() {
                 <Button
                   variant={status === "in_progress" ? "default" : "outline"}
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 btn-ripple"
                   onClick={() => handleStatusChange("in_progress")}
                 >
                   <Clock className="size-4" />
@@ -305,7 +305,7 @@ export function SubjectDetail() {
                 <Button
                   variant={status === "completed" ? "default" : "outline"}
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 btn-ripple"
                   onClick={() => handleStatusChange("completed")}
                 >
                   <CheckCircle2 className="size-4" />
@@ -344,7 +344,7 @@ export function SubjectDetail() {
                       key={val}
                       variant={progressValue === val ? "default" : "outline"}
                       size="sm"
-                      className="h-7 text-xs px-2"
+                      className="h-7 text-xs px-2 btn-ripple"
                       onClick={() => handleProgressChange(val)}
                     >
                       {val}%
@@ -365,7 +365,7 @@ export function SubjectDetail() {
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
-                className="w-full btn-omni-primary gap-2"
+                className="w-full btn-omni-primary btn-ripple gap-2"
                 onClick={() => {
                   if (subject.driveLink) {
                     window.open(subject.driveLink, "_blank");

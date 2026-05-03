@@ -227,7 +227,7 @@ export function AIChatPanel() {
         const aiMessage: ChatMessage = {
           id: `ai-${Date.now()}`,
           role: "assistant",
-          content: data.message || data.content || defaultResponse,
+          content: data.message || defaultResponse,
           timestamp: Date.now(),
         };
         setMessages((prev) => [...prev, aiMessage]);
