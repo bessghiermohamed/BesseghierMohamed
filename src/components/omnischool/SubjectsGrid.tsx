@@ -175,22 +175,22 @@ export function SubjectsGrid() {
                 <div className="flex flex-wrap gap-2">
                   <Badge
                     variant={selectedCategory === "" && !showFavorites ? "default" : "outline"}
-                    className="cursor-pointer transition-all hover:scale-105"
+                    className={`cursor-pointer transition-all hover:scale-110 text-sm px-4 py-1.5 ${selectedCategory === "" && !showFavorites ? "category-filter-active" : ""}`}
                     onClick={() => { setSelectedCategory(""); setShowFavorites(false); }}
                   >
                     الكل
                   </Badge>
                   <Badge
                     variant={showFavorites ? "default" : "outline"}
-                    className="cursor-pointer transition-all hover:scale-105 gap-1"
+                    className={`cursor-pointer transition-all hover:scale-110 gap-1.5 text-sm px-4 py-1.5 ${showFavorites ? "category-filter-active" : ""}`}
                     onClick={() => { setShowFavorites(true); setSelectedCategory(""); }}
                     style={
                       showFavorites
-                        ? { backgroundColor: "#B91C1C", borderColor: "#B91C1C" }
+                        ? {}
                         : { borderColor: "rgba(185, 28, 28, 0.25)", color: "#B91C1C" }
                     }
                   >
-                    <Heart className="size-3" />
+                    <Heart className="size-3.5" />
                     المفضلة
                   </Badge>
                   {categories.map((cat) => (
@@ -199,13 +199,10 @@ export function SubjectsGrid() {
                       variant={
                         selectedCategory === cat.id ? "default" : "outline"
                       }
-                      className="cursor-pointer transition-all hover:scale-105"
+                      className={`cursor-pointer transition-all hover:scale-110 text-sm px-4 py-1.5 ${selectedCategory === cat.id ? "category-filter-active" : ""}`}
                       style={
                         selectedCategory === cat.id
-                          ? {
-                              backgroundColor: cat.color,
-                              borderColor: cat.color,
-                            }
+                          ? {}
                           : {
                               borderColor: `${cat.color}40`,
                               color: cat.color,
@@ -264,8 +261,13 @@ export function SubjectsGrid() {
                   initial="hidden"
                   animate="visible"
                 >
-                  {filteredSubjects.map((subject) => (
-                    <motion.div key={subject.id} variants={itemVariants}>
+                  {filteredSubjects.map((subject, idx) => (
+                    <motion.div
+                      key={subject.id}
+                      variants={itemVariants}
+                      className="card-hover-lift card-entrance"
+                      style={{ animationDelay: `${idx * 60}ms` }}
+                    >
                       <SubjectCard
                         subject={subject}
                         progress={getProgress(subject.id)}

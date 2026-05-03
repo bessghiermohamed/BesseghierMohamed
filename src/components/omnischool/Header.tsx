@@ -17,6 +17,7 @@ import {
   GraduationCap,
   CalendarDays,
   Timer,
+  Library,
 } from "lucide-react";
 import { NotificationCenter } from "@/components/omnischool/NotificationCenter";
 import { useState, useEffect } from "react";
@@ -35,6 +36,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "الرئيسية", view: "home", icon: Home },
   { label: "المواد", view: "subjects", icon: BookOpen },
   { label: "لوحة الطالب", view: "dashboard", icon: LayoutDashboard },
+  { label: "مكتبة الموارد", view: "resources", icon: Library },
   { label: "مخطط الدراسة", view: "planner", icon: CalendarDays },
   { label: "مؤقت البومودورو", view: "timer", icon: Timer },
   { label: "بحث متقدم", view: "search", icon: Search },
@@ -120,22 +122,22 @@ export default function Header() {
                 onClick={() => handleNav(link.view)}
                 className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                   isActive
-                    ? "text-omni-red dark:text-red-400"
+                    ? "nav-link-active text-omni-red dark:text-red-400"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <Icon className="size-4" />
                 <span>{link.label}</span>
-                {/* Active indicator */}
+                {/* Active indicator — bottom underline */}
                 <AnimatePresence>
                   {isActive && (
                     <motion.span
                       layoutId="activeNav"
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: "100%" }}
-                      exit={{ opacity: 0, width: 0 }}
+                      initial={{ opacity: 0, scaleX: 0 }}
+                      animate={{ opacity: 1, scaleX: 1 }}
+                      exit={{ opacity: 0, scaleX: 0 }}
                       transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-omni-red dark:bg-red-400"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-3/4 rounded-full bg-omni-gold"
                     />
                   )}
                 </AnimatePresence>

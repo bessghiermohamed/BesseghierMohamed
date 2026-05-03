@@ -22,6 +22,7 @@ import { QuickStatsWidget } from "@/components/omnischool/QuickStatsWidget";
 import { MotivationalQuoteWidget } from "@/components/omnischool/MotivationalQuoteWidget";
 import { StudyCountdownTimer } from "@/components/omnischool/StudyCountdownTimer";
 import { ActivityTimeline } from "@/components/omnischool/ActivityTimeline";
+import { SubjectResourceLibrary } from "@/components/omnischool/SubjectResourceLibrary";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
 import { useEffect, useState } from "react";
@@ -80,7 +81,9 @@ function ViewRenderer() {
           <div>
             <HeroSection />
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 mb-8">
-              <QuickStatsWidget />
+              <div className="bg-muted/30 rounded-2xl p-4 sm:p-6 backdrop-blur-sm border border-border/30">
+                <QuickStatsWidget />
+              </div>
             </div>
             <QuickAccessSection />
           </div>
@@ -92,6 +95,7 @@ function ViewRenderer() {
         {currentView === "about" && <AboutPage />}
         {currentView === "planner" && <StudyPlanner />}
         {currentView === "timer" && <PomodoroTimer />}
+        {currentView === "resources" && <SubjectResourceLibrary />}
       </motion.div>
     </AnimatePresence>
   );

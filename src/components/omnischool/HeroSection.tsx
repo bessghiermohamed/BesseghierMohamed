@@ -204,8 +204,9 @@ export default function HeroSection() {
         </motion.div>
       </motion.div>
 
-      {/* Wave divider */}
+      {/* Wave divider with enhanced visual separation */}
       <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-16 left-0 right-0 h-16 bg-gradient-to-t from-[var(--background)] to-transparent opacity-30 pointer-events-none" />
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none" className="w-full h-16 sm:h-20">
           <path fill="var(--background)" d="M0,48L48,45.3C96,43,192,37,288,37.3C384,37,480,43,576,48C672,53,768,59,864,56C960,53,1056,43,1152,40C1248,37,1344,43,1392,45.3L1440,48L1440,80L0,80Z" />
         </svg>

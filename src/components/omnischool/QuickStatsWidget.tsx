@@ -128,12 +128,12 @@ const cardConfigs = [
   {
     icon: BarChart3,
     label: "متوسط التقدم",
-    color: "#7C3AED",
-    gradientClass: "stat-card-gradient-purple",
-    accentBg: "linear-gradient(90deg, #7C3AED, #A78BFA)",
-    iconBg: "rgba(124, 58, 237, 0.1)",
-    darkIconBg: "rgba(167, 139, 250, 0.12)",
-    trendColor: "#7C3AED",
+    color: "#0D9488",
+    gradientClass: "stat-card-gradient-teal",
+    accentBg: "linear-gradient(90deg, #0D9488, #14B8A6)",
+    iconBg: "rgba(13, 148, 136, 0.1)",
+    darkIconBg: "rgba(20, 184, 166, 0.12)",
+    trendColor: "#0D9488",
   },
 ];
 

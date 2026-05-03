@@ -357,7 +357,7 @@ export function OnboardingModal() {
     }
   }, [hasOnboarded]);
 
-  if (hasOnboarded || !isOpen) return null;
+  if (hasOnboarded) return null;
 
   /* Handlers */
   const goNext = () => {

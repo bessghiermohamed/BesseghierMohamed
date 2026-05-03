@@ -61,6 +61,10 @@ const SubjectRadarChart = dynamic(
   () => import("./SubjectRadarChart").then((m) => m.SubjectRadarChart),
   { loading: () => <LoadingSkeleton />, ssr: false }
 );
+const ProgressHistoryChart = dynamic(
+  () => import("./ProgressHistoryChart").then((m) => m.ProgressHistoryChart),
+  { loading: () => <LoadingSkeleton />, ssr: false }
+);
 
 /* ------------------------------------------------------------------ */
 /*  Icon mapping — maps string icon names from subjects-data to JSX   */
@@ -312,7 +316,7 @@ export function StudentDashboard() {
   /* ================================================================ */
   return (
     <motion.div
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8"
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10 section-gradient-bg rounded-3xl"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -330,7 +334,7 @@ export function StudentDashboard() {
       {/* ========== 1. Summary Cards ========== */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5"
+        className="grid grid-cols-2 xl:grid-cols-4 gap-6"
       >
         {/* Total */}
         <SummaryCard
@@ -371,7 +375,7 @@ export function StudentDashboard() {
           value={stats.notStarted}
           icon={<Circle className="h-6 w-6" />}
           accentColor="#8B7E6A"
-          gradientClass="stat-card-gradient-purple"
+          gradientClass="stat-card-gradient-neutral"
           sparklineColor="#8B7E6A"
           sparklineValues={[20, 18, 16, 14, 12, 10, stats.notStarted]}
           delay={0.3}
@@ -383,9 +387,12 @@ export function StudentDashboard() {
 
       {/* ========== 2. Overall Progress ========== */}
       <motion.div variants={itemVariants}>
-        <Card className="dashboard-summary-card overflow-hidden border-border/60 shadow-lg">
-          <CardContent className="p-6 sm:p-8">
-            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+        <Card className="dashboard-summary-card card-glow-hover shadow-dramatic overflow-hidden border-border/60 dashboard-pattern-overlay">
+          <CardContent className="p-6 sm:p-8 dashboard-section-bg relative">
+            {/* Decorative gradient orbs behind progress circle */}
+            <div className="decorative-orb top-4 right-4 w-48 h-48" style={{ background: "#B91C1C" }} />
+            <div className="decorative-orb bottom-4 left-4 w-36 h-36" style={{ background: "#D4A843" }} />
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10 relative z-10">
               {/* Circle with glow */}
               <div className="flex-shrink-0 progress-ring-glow">
                 <ProgressCircle
@@ -403,7 +410,7 @@ export function StudentDashboard() {
                 <h2 className="text-xl sm:text-2xl font-bold text-foreground section-header-line">
                   التقدم العام
                 </h2>
-                <p className="text-5xl sm:text-6xl font-black text-omni-red dark:text-omni-red-light ltr-content" dir="ltr">
+                <p className="text-6xl sm:text-7xl font-black text-omni-red dark:text-omni-red-light ltr-content stat-value-glow" dir="ltr" style={{ textShadow: "0 0 30px rgba(185,28,28,0.3), 0 0 60px rgba(185,28,28,0.1)" }}>
                   {Math.round(stats.overallProgress)}%
                 </p>
                 <p className="text-foreground/70 text-sm sm:text-base font-medium">
@@ -458,7 +465,7 @@ export function StudentDashboard() {
 
           {([1, 2] as const).map((sem) => (
             <TabsContent key={sem} value={String(sem)}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {semesterSubjects[sem].map((subject, idx) => {
                   const { status, progress: pct } = getStatusForSubject(subject.id, progress);
                   const IconComp = getSubjectIcon(subject.icon);
@@ -480,7 +487,7 @@ export function StudentDashboard() {
                         className="cursor-pointer"
                         onClick={() => selectSubject(subject.id)}
                       >
-                        <Card className="dashboard-summary-card overflow-hidden h-full border-border/50">
+                        <Card className="dashboard-summary-card card-glow-hover overflow-hidden h-full border-border/50">
                           {/* Top accent bar with category color */}
                           <div
                             className="h-1.5 w-full"
@@ -539,12 +546,12 @@ export function StudentDashboard() {
 
       {/* ========== 4. Category Breakdown ========== */}
       <motion.div variants={itemVariants}>
-        <Card className="dashboard-summary-card overflow-hidden border-border/60 shadow-lg">
+        <Card className="dashboard-summary-card card-glow-hover overflow-hidden border-border/60">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg font-bold section-header-line">تقدم المواد حسب التصنيف</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 pt-2">
-            <div className="space-y-5">
+          <CardContent className="p-6 pt-2 dashboard-section-bg">
+            <div className="space-y-6">
               {categoryBreakdown.map((cat, idx) => {
                 const catIcon = getSubjectIcon(cat.icon);
                 return (
@@ -572,7 +579,7 @@ export function StudentDashboard() {
                       </span>
                     </div>
                     {/* Progress bar — thicker with better contrast */}
-                    <div className="h-5 w-full rounded-full bg-muted/50 dark:bg-muted/30 border border-border/30 overflow-hidden relative">
+                    <div className="h-5 w-full rounded-full category-bar-track border border-border/30 overflow-hidden relative">
                       {/* Milestone markers inside the bar */}
                       {[25, 50, 75].map((m) => (
                         <div
@@ -584,7 +591,7 @@ export function StudentDashboard() {
                       <motion.div
                         className="h-full rounded-full relative"
                         style={{
-                          background: `linear-gradient(90deg, ${cat.color}, ${cat.color}cc)`,
+                          background: `linear-gradient(90deg, ${cat.color}, ${cat.color}cc, #D4A84388)`,
                         }}
                         initial={{ width: 0 }}
                         animate={{ width: `${cat.avgProgress}%` }}
@@ -624,6 +631,11 @@ export function StudentDashboard() {
           <StudyStreak />
           <SemesterComparisonChart />
         </div>
+      </motion.div>
+
+      {/* ========== 6c. Progress History Chart ========== */}
+      <motion.div variants={itemVariants}>
+        <ProgressHistoryChart />
       </motion.div>
 
       {/* ========== 7. GPA Calculator ========== */}
@@ -678,24 +690,24 @@ function SummaryCard({
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className="dashboard-summary-card rounded-xl overflow-hidden border border-border/50 shadow-md hover:shadow-xl transition-shadow"
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      className="dashboard-summary-card card-glow-hover shadow-dramatic rounded-xl overflow-hidden border border-border/50"
     >
       {/* Thick gradient accent bar at top */}
       <div
-        className="h-2 w-full"
+        className="h-2.5 w-full"
         style={{ background: `linear-gradient(90deg, #B91C1C, ${accentColor}, #D4A843)` }}
       />
 
       <div className={`p-5 sm:p-6 relative ${gradientClass}`}>
-        {/* Decorative background circles */}
+        {/* Decorative background circles — more prominent */}
         <div
-          className="absolute -top-10 -left-10 w-36 h-36 rounded-full pointer-events-none"
-          style={{ background: `radial-gradient(circle, ${accentColor}06 0%, transparent 70%)` }}
+          className="decorative-orb -top-12 -left-12 w-44 h-44"
+          style={{ background: accentColor }}
         />
         <div
-          className="absolute -bottom-8 -right-8 w-28 h-28 rounded-full pointer-events-none"
-          style={{ background: `radial-gradient(circle, #D4A84304 0%, transparent 70%)` }}
+          className="decorative-orb -bottom-10 -right-10 w-32 h-32"
+          style={{ background: "#D4A843" }}
         />
 
         {/* Top row: icon + sparkline */}
@@ -709,11 +721,11 @@ function SummaryCard({
           <MiniSparkline color={sparklineColor} values={sparklineValues} />
         </div>
 
-        {/* Large number */}
+        {/* Large number — much more prominent */}
         <motion.p
-          className="stat-value-xl text-5xl sm:text-6xl font-black ltr-content animate-number-pop"
+          className="stat-value-xl text-5xl sm:text-7xl font-black ltr-content stat-value-glow"
           dir="ltr"
-          style={{ color: accentColor }}
+          style={{ color: accentColor, textShadow: `0 0 30px ${accentColor}40, 0 0 60px ${accentColor}15` }}
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5, delay: delay + 0.2, type: "spring" }}
@@ -721,8 +733,8 @@ function SummaryCard({
           {value}
         </motion.p>
 
-        {/* Label */}
-        <p className="text-xs uppercase tracking-wider text-foreground/60 font-bold mt-2 relative z-10">
+        {/* Label — improved contrast */}
+        <p className="text-xs uppercase tracking-wider text-foreground/80 font-bold mt-2 relative z-10">
           {label}
         </p>
       </div>

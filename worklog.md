@@ -1355,3 +1355,191 @@ Stage Summary:
 4. **Add mobile gesture navigation** — swipe between views
 5. **Add dark mode animated toggle** with smooth theme transition
 6. **Improve DataImport** to use Zustand store actions
+
+---
+Task ID: phase9-bugs-styling
+Agent: frontend-styling-expert
+Task: Fix QA bugs and dramatically improve styling (Phase 9)
+
+Work Log:
+- Bug Fix 1: Fixed QuickStatsWidget label confusion — Card 4 "متوسط التقدم" (Avg Progress) now uses teal (#0D9488) instead of purple (#7C3AED), eliminating the confusing purple gradient for a non-purple-metric card
+- Bug Fix 2: Fixed StudentDashboard "لم تبدأ" (Not Started) card — changed from `stat-card-gradient-purple` to `stat-card-gradient-neutral` (warm gray gradient), removing the purple gradient that was inconsistent with the card's meaning
+- Bug Fix 3: Fixed OnboardingModal close/persistence bug — removed `|| !isOpen` from the early return condition (`if (hasOnboarded || !isOpen) return null` → `if (hasOnboarded) return null`), which was preventing AnimatePresence from animating the exit. The hasOnboarded state IS properly persisted via Zustand's partialize (confirmed in store.ts), so the real issue was the AnimatePresence exit animation being cut short
+- Styling 1: Dashboard SummaryCards redesign — added `card-glow-hover` class for multi-layer red/gold shadow on hover, replaced `shadow-md hover:shadow-xl` with `dashboard-summary-card` enhanced glass-morphism + `card-glow-hover`, added `stat-value-glow` text glow effect to stat numbers, increased grid gap from `gap-4 sm:gap-5` to `gap-6`
+- Styling 2: Dashboard Overall Progress section — added `card-glow-hover` to Card, added `dashboard-section-bg` gradient background, added `stat-value-glow` to the large percentage text, enhanced progress ring glow with `progress-ring-glow` class
+- Styling 3: Dashboard Category Breakdown — added `card-glow-hover` to Card, added `dashboard-section-bg` to CardContent, increased spacing from `space-y-5` to `space-y-6`, changed progress bar track from inline bg to `category-bar-track` class, added gold gradient tail to bar fill (`linear-gradient(90deg, ${cat.color}, ${cat.color}cc, #D4A84388)`)
+- Styling 4: Dashboard Subject Progress Grid — added `card-glow-hover` to subject cards, increased grid gap from `gap-4` to `gap-6`
+- Styling 5: Header navigation — added `nav-link-active` class for bold + gold underline active state, changed active indicator from red `width` animation to gold `scaleX` animation with `w-3/4` width for better visual, combined with CSS text-decoration underline
+- Styling 6: Homepage QuickStatsWidget — wrapped in `bg-muted/30 rounded-2xl p-4 sm:p-6 backdrop-blur-sm border border-border/30` container for better visual separation from hero
+- Styling 7: HeroSection — enhanced wave divider with gradient fade overlay before the SVG wave for smoother transition
+- Styling 8: SubjectCard — added `subject-card-glow` class for subtle red/gold hover glow, made icon sizing consistent (always h-14 w-14 container with h-7 w-7 icon, removed responsive variation)
+- Styling 9: SubjectsGrid category filters — added `category-filter-active` class to active filter badges (الكلم, المفضلة, and category badges) for prominent gradient active state with shadow
+- CSS Additions: Added 11 new CSS utility classes to globals.css:
+  - `.stat-card-gradient-teal` / `.stat-card-gradient-neutral` — Teal/neutral gradient backgrounds (light + dark)
+  - `.dashboard-section-bg` — Subtle red-to-gold gradient bg for dashboard sections
+  - `.card-glow-hover` — Multi-layer red/gold shadow on hover with translateY
+  - `.stat-value-glow` — Text glow effect on stat numbers (currentColor + red shadow)
+  - `.nav-link-active` — Bold weight + gold underline for active nav
+  - `.progress-ring-glow` — Drop shadow glow for progress circles
+  - `.category-bar-track` — Rounded track for category progress bars
+  - `.dashboard-summary-card` — Enhanced glass-morphism with multi-layer shadows
+  - `.subject-card-glow` — Subtle red/gold glow on subject card hover
+  - `.category-filter-active` — Prominent gradient active state for filter buttons
+- Ran lint — passes with zero errors
+
+Stage Summary:
+- 3 bug fixes: QuickStatsWidget purple→teal, dashboard Not Started purple→neutral, OnboardingModal AnimatePresence exit
+- 9 styling improvements across 6 components
+- 11 new CSS utility classes added
+- Dashboard went from flat/depthless to glass-morphism + glow + multi-layer shadows
+- All changes lint-clean
+
+---
+Task ID: phase9-new-features
+Agent: full-stack-developer
+Task: Create 2 new feature components (ProgressHistoryChart, SubjectResourceLibrary) and integrate them
+
+Work Log:
+- Created ProgressHistoryChart.tsx: Recharts AreaChart showing progress over time with two areas (Semester 1 in red #B91C1C, Semester 2 in gold #D4A843), toggle between 7-day and 30-day views, glass morphism card styling, RTL Arabic labels, custom tooltip, simulated data when no studySessions exist, summary stats below chart, animated chart entrance with framer-motion
+- Created SubjectResourceLibrary.tsx: grid layout showing all 24 subjects organized by semester, each subject card shows name/code/category badge/status indicator/progress slider/فتح المحتوى button, search by name/code/category, filter by semester (1/2/all) and category chips, responsive grid (1→2→3→4 cols), empty state with clear filters button, glass morphism styling with card-ornament, RTL Arabic layout
+- Updated types.ts: added "resources" to ViewType union
+- Updated Header.tsx: added Library icon import, added "مكتبة الموارد" navigation link with Library icon to NAV_LINKS array
+- Updated StudentDashboard.tsx: added dynamic import for ProgressHistoryChart, added ProgressHistoryChart after Streak/SemesterComparison section (section 6c)
+- Updated page.tsx: imported SubjectResourceLibrary, added "resources" view rendering in ViewRenderer
+- All lint checks pass with zero errors
+- Dev server running correctly, all routes returning 200
+
+Stage Summary:
+- 2 new components created: ProgressHistoryChart (Recharts AreaChart), SubjectResourceLibrary (resource grid with search/filter)
+- ViewType expanded from 8 to 9 views (added "resources")
+- Header navigation expanded with مكتبة الموارد link (Library icon)
+- ProgressHistoryChart dynamically imported and integrated into StudentDashboard
+- SubjectResourceLibrary added as new view in page.tsx ViewRenderer
+- Project now has 27 components in /src/components/omnischool/
+- All changes lint-clean, dev server verified
+
+---
+Task ID: phase9-styling-round2
+Agent: frontend-styling-expert
+Task: Further improve styling based on VLM QA feedback (round 2)
+
+Work Log:
+- Reviewed VLM QA scores: Dashboard 6/10, Subjects Grid 7/10, Resource Library 7/10
+- Added 12+ new CSS utility classes to globals.css:
+  - `.card-hover-lift` — Enhanced hover with translateY(-6px) + multi-layer shadow + border glow
+  - `.progress-shimmer` — Shimmer animation on 0% progress indicators (red↔gold gradient sweep)
+  - `.btn-omni-gradient` — Red-to-gold gradient button with hover lift, shine overlay, dark mode
+  - `.section-gradient-bg` — Gradient background for sections with decorative ::before/::after orbs
+  - `.search-bar-prominent` — Larger search input with gradient border via CSS mask
+  - `.shadow-dramatic` — Triple-layer dramatic shadows (ambient + directional + colored)
+  - `.decorative-orb` — Large blurred gradient orb for backgrounds (filter: blur(60px))
+  - `.card-entrance` — Staggered card entrance animation (translateY + scale)
+  - `.resource-header-gradient` — Subtle gradient for Resource Library header area
+  - `.filter-toggle-active` — Prominent active state for semester toggle buttons (gradient bg)
+  - `.progress-slider-visible` — Enhanced visibility for progress sliders (larger thumb, glow ring)
+  - `.dashboard-pattern-overlay` — Subtle texture overlay for dashboard cards (radial dots)
+- StudentDashboard improvements:
+  - Added `section-gradient-bg rounded-3xl` to main container with `space-y-10` for more breathing room
+  - SummaryCards: added `shadow-dramatic` triple-layer shadows, increased accent bar from h-2 to h-2.5, replaced radial-gradient circles with `decorative-orb` (larger, blurred), increased stat numbers from text-5xl/6xl to text-5xl/7xl, added text-shadow glow per accent color, improved label contrast from foreground/60 to foreground/80
+  - Overall Progress card: added `shadow-dramatic`, `dashboard-pattern-overlay`, decorative gradient orbs behind progress circle, increased percentage from text-5xl/6xl to text-6xl/7xl with text-shadow glow
+- SubjectsGrid improvements:
+  - Added `card-hover-lift card-entrance` classes with staggered animation delay (idx * 60ms) to each subject card wrapper
+  - Made category filter badges larger (text-sm, px-4, py-1.5) with `hover:scale-110` and prominent `category-filter-active` gradient
+  - Increased Heart icon size from size-3 to size-3.5
+- SubjectResourceLibrary improvements:
+  - Added `resource-header-gradient` background to header section
+  - Summary stats: increased padding p-3→p-4, gap-3→gap-4, text-2xl→text-3xl with `shadow-dramatic card-glow-hover stat-value-glow`
+  - Search bar: much larger (h-14, text-base, rounded-xl) with `search-bar-prominent` gradient border, larger icon (size-5)
+  - Semester filter buttons: larger (h-8, px-4, font-bold) with `filter-toggle-active` class for prominent active state
+  - Resource cards: added `card-hover-lift` for enhanced hover (6px lift + glow)
+  - Progress slider: larger thumb (h-5 w-5), `progress-slider-visible` for glow ring, `progress-shimmer` on 0% progress tracks, progress percentage text enlarged (text-sm font-black stat-value-glow)
+  - Open Content button: replaced outline Button with `btn-omni-gradient` (red→gold gradient, h-10, shadow, hover lift)
+- Fixed JSX parsing error in SubjectsGrid.tsx (missing closing `}` in categories.map expression)
+- Ran lint — passes with zero errors
+
+Stage Summary:
+- 12+ new CSS utility classes added for premium styling
+- Dashboard: dramatic shadows, decorative orbs, pattern overlay, larger stat numbers with glow
+- SubjectsGrid: card hover lift + entrance animations, larger filter badges
+- Resource Library: prominent search bar, gradient header, shimmer on empty progress, gradient action buttons
+- All changes lint-clean and verified
+
+---
+Task ID: phase9-main
+Agent: main
+Task: Phase 9 QA testing, bug fixes, styling improvements, and new features
+
+Work Log:
+- Reviewed worklog.md and assessed project status (29+ components, 34+ features, VLM 7/10)
+- Performed QA testing with agent-browser + VLM analysis on all pages
+- Initial VLM ratings: Homepage 7/10, Dashboard 3/10, Subjects 6/10
+- Identified bugs: QuickStatsWidget label confusion, onboarding modal exit animation, dashboard card depth
+- Delegated bug fixes and styling improvements to frontend-styling-expert subagent (round 1)
+- Delegated new feature development to full-stack-developer subagent
+- Bug fixes: QuickStatsWidget card 4 changed from purple to teal, "لم تبدأ" card changed from purple to neutral gradient, onboarding modal exit animation fixed
+- Styling improvements round 1: dashboard card glow hover, stat value glow, nav-link-active, dashboard-section-bg, category-bar-track, subject-card-glow, category-filter-active
+- New features: ProgressHistoryChart (Recharts AreaChart with 7/30 day toggle), SubjectResourceLibrary (resource grid with search/filter)
+- Integration: Added "resources" view type, Header nav link, dashboard + page.tsx integration
+- VLM QA re-test: Homepage 8/10 (up from 7), Dashboard 6/10 (up from 3), Subjects 7/10 (up from 6), Resources 7/10
+- Delegated round 2 styling improvements to frontend-styling-expert subagent
+- Round 2: dramatic shadows, decorative orbs, pattern overlay, search-bar-prominent, btn-omni-gradient, card-hover-lift, progress-shimmer, resource-header-gradient
+- Final VLM QA: Homepage 8/10, Dashboard lower sections show gradient bg + decorative orbs + dramatic shadows, Subjects 7/10
+- All lint checks pass with zero errors
+
+Stage Summary:
+- Homepage improved from 7/10 to 8/10
+- Dashboard improved from 3/10 to 6/10 (major improvement, still needs more polish)
+- Subjects page improved from 6/10 to 7/10
+- 3 bugs fixed (label colors, onboarding exit, card gradient)
+- 2 new components created (ProgressHistoryChart, SubjectResourceLibrary)
+- 23+ new CSS utility classes added across 2 rounds
+- Project now has 33 components in /src/components/omnischool/
+- 9 views: home, dashboard, subjects, subject-detail, search, about, planner, timer, resources
+
+## Current Project Status Assessment (Phase 9 Update)
+
+### Architecture
+- **Framework**: Next.js 16 App Router, TypeScript, Tailwind CSS 4
+- **33 Components** in `/src/components/omnischool/`
+- **9 API Routes** (subjects, progress, search, stats, chat with LLM)
+- **Zustand Store** with localStorage persistence for 22+ state fields
+- **Prisma SQLite** for server-side data
+- **9 Views**: home, dashboard, subjects, subject-detail, search, about, planner, timer, resources
+
+### VLM Quality Ratings (Phase 9)
+- **Homepage**: 8/10 (improved from 7/10)
+- **Dashboard**: 6/10 (improved from 3/10 — major improvement, needs more polish)
+- **Subjects Grid**: 7/10 (improved from 6/10)
+- **Resource Library**: 7/10 (new component)
+
+### Features Completed (All 38+)
+1-32. All previous features maintained and enhanced
+33. ✅ **NEW** ProgressHistoryChart: Recharts AreaChart with 7/30 day toggle, simulated data
+34. ✅ **NEW** SubjectResourceLibrary: resource grid with search, category filter, progress sliders
+35. ✅ **NEW** "resources" view type with Header navigation
+36. ✅ **NEW** Dashboard dramatic shadows, decorative orbs, pattern overlay
+37. ✅ **NEW** Card hover lift effects with glow
+38. ✅ **NEW** btn-omni-gradient (red-to-gold gradient button)
+39. ✅ **NEW** search-bar-prominent with gradient border
+40. ✅ **NEW** progress-shimmer animation for 0% indicators
+
+### Goals Completed This Phase
+- QA testing with agent-browser + VLM analysis ✅
+- Bug fixes (3 fixes: label colors, onboarding exit, card gradient) ✅
+- Styling improvements (2 rounds, 23+ new CSS utilities) ✅
+- New features (2 new components, 1 new view) ✅
+- VLM quality improved across all pages ✅
+
+### Unresolved Issues / Risks
+- Dashboard still at 6/10 — VLM says cards need more depth and contrast
+- Onboarding modal shows on every fresh browser session (expected, localStorage reset)
+- Performance optimization still needed for heavy components (Recharts, GPACalculator)
+- DataImport uses direct localStorage manipulation
+
+### Next Phase Recommendations
+1. **Further dashboard polish** — larger card shadows, better number contrast, animated transitions
+2. **Add interactive data visualization** — clickable chart elements, drill-down views
+3. **Performance optimization** — lazy loading for remaining heavy components
+4. **Add dark mode animated toggle** with smooth theme transition
+5. **Improve mobile experience** — better touch targets, swipe navigation
+6. **Add collaborative features** (shared notes, study groups)

@@ -147,7 +147,7 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
       whileTap={{ scale: 0.98 }}
     >
       <Card
-        className="glass card-omni card-depth card-gradient-overlay glow-hover card-ornament relative cursor-pointer overflow-hidden p-0"
+        className="glass card-omni card-depth card-gradient-overlay glow-hover card-ornament subject-card-glow relative cursor-pointer overflow-hidden p-0"
         onClick={onClick}
       >
         {/* Color accent bar on the right side (RTL) */}
@@ -157,14 +157,14 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
         />
 
         <div className="flex items-start gap-4 p-4 sm:p-5 pe-6 relative z-10">
-          {/* Icon with colored background */}
+          {/* Icon with colored background — consistent sizing */}
           <div
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl sm:h-14 sm:w-14"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
             style={{ backgroundColor: `${subjectColor}15` }}
           >
             <SubjectIcon
               iconName={subject.icon}
-              className="h-6 w-6 sm:h-7 sm:w-7"
+              className="h-7 w-7"
               style={{ color: subjectColor }}
             />
           </div>

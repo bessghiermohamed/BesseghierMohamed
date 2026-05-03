@@ -10,7 +10,8 @@ export type ViewType =
   | "search"
   | "about"
   | "planner"
-  | "timer";
+  | "timer"
+  | "resources";
 
 export interface Subject {
   id: string;
