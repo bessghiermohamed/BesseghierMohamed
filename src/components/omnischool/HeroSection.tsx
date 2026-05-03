@@ -50,6 +50,23 @@ function FloatingDot({
 }
 
 /* ------------------------------------------------------------------ */
+/*  Arabic Ornamental Divider                                          */
+/* ------------------------------------------------------------------ */
+function OrnamentalDivider() {
+  return (
+    <div className="flex items-center justify-center gap-3 my-4">
+      <div className="h-px flex-1 max-w-24 bg-gradient-to-l from-omni-gold/40 to-transparent" />
+      <div className="flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-omni-gold/50" />
+        <span className="w-2 h-2 bg-omni-gold/70 rotate-45" />
+        <span className="w-1.5 h-1.5 rounded-full bg-omni-gold/50" />
+      </div>
+      <div className="h-px flex-1 max-w-24 bg-gradient-to-r from-omni-gold/40 to-transparent" />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Hero section                                                       */
 /* ------------------------------------------------------------------ */
 export default function HeroSection() {
@@ -109,14 +126,19 @@ export default function HeroSection() {
         animate="visible"
         className="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center"
       >
-        {/* Title */}
+        {/* Title with text shadow */}
         <motion.h1
           variants={itemVariants}
-          className="mb-4 text-5xl font-extrabold leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl"
+          className="text-shadow-omni mb-2 text-5xl font-extrabold leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl"
         >
           Omni
           <span className="text-omni-gold">School</span>
         </motion.h1>
+
+        {/* Ornamental divider */}
+        <motion.div variants={itemVariants}>
+          <OrnamentalDivider />
+        </motion.div>
 
         {/* Subtitle */}
         <motion.p
@@ -134,13 +156,13 @@ export default function HeroSection() {
           فرع PEP — تخصص الأدب العربي
         </motion.p>
 
-        {/* Search bar */}
+        {/* Search bar with pulsing glow */}
         <motion.form
           variants={itemVariants}
           onSubmit={handleSearch}
           className="relative mb-10 w-full max-w-xl"
         >
-          <div className="glow-gold-sm rounded-xl">
+          <div className="search-glow-pulse rounded-xl">
             <div className="glass-strong flex items-center rounded-xl border border-white/20 shadow-lg transition-shadow focus-within:shadow-xl focus-within:border-omni-gold/40">
               <Search className="ms-4 size-5 shrink-0 text-omni-gold" />
               <Input
@@ -148,11 +170,11 @@ export default function HeroSection() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="ابحث عن مادة، تصنيف، أو كود..."
-                className="h-12 border-0 bg-transparent text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:border-0 shadow-none px-4"
+                className="h-14 border-0 bg-transparent text-lg text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:border-0 shadow-none px-4"
               />
               <button
                 type="submit"
-                className="btn-omni-primary ms-2 me-2 rounded-lg px-5 py-2 text-sm font-semibold text-white transition-all"
+                className="btn-omni-primary ms-2 me-2 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-all"
               >
                 بحث
               </button>
@@ -160,18 +182,18 @@ export default function HeroSection() {
           </div>
         </motion.form>
 
-        {/* Stats row */}
+        {/* Stats row — more prominent pills */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-wrap items-center justify-center gap-4 sm:gap-8"
+          className="flex flex-wrap items-center justify-center gap-3 sm:gap-5"
         >
           {STATS.map((stat, idx) => {
             const Icon = stat.icon;
             return (
               <motion.div
                 key={stat.label}
-                whileHover={{ scale: 1.08, y: -2 }}
-                className="glass-gold flex items-center gap-2 rounded-full px-4 py-2 sm:px-5 sm:py-2.5"
+                whileHover={{ scale: 1.1, y: -3 }}
+                className="glass-gold flex items-center gap-2 rounded-full px-4 py-2 sm:px-6 sm:py-3 border border-omni-gold/20 hover:border-omni-gold/40 transition-colors"
               >
                 <Icon className="size-4 text-omni-gold" />
                 <span className="text-lg font-bold text-white">{stat.value}</span>

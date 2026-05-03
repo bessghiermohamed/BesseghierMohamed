@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ViewType, SubjectProgress, SubjectStatus, UserRole, StudySession, Achievement } from "./types";
+import { ViewType, SubjectProgress, SubjectStatus, UserRole, StudySession, Achievement, WeeklyGoal } from "./types";
 
 interface AppState {
   // Navigation
@@ -27,6 +27,9 @@ interface AppState {
   searchQuery: string;
   searchCategory: string;
 
+  // Weekly Goals
+  weeklyGoals: WeeklyGoal[];
+
   // UI
   sidebarOpen: boolean;
   theme: "light" | "dark";
@@ -52,6 +55,9 @@ interface AppState {
   toggleTheme: () => void;
   toggleChat: () => void;
   toggleFavorite: (subjectId: string) => void;
+  addWeeklyGoal: (goal: WeeklyGoal) => void;
+  toggleWeeklyGoal: (id: string) => void;
+  removeWeeklyGoal: (id: string) => void;
   resetProgress: () => void;
 }
 
@@ -81,6 +87,9 @@ export const useAppStore = create<AppState>()(
       // Search
       searchQuery: "",
       searchCategory: "",
+
+      // Weekly Goals
+      weeklyGoals: [],
 
       // UI
       sidebarOpen: false,
@@ -210,7 +219,24 @@ export const useAppStore = create<AppState>()(
             : [...state.favorites, subjectId],
         })),
 
-      resetProgress: () => set({ progress: [], achievements: [], studySessions: [], subjectNotes: {} }),
+      addWeeklyGoal: (goal) =>
+        set((state) => ({
+          weeklyGoals: [...state.weeklyGoals, goal],
+        })),
+
+      toggleWeeklyGoal: (id) =>
+        set((state) => ({
+          weeklyGoals: state.weeklyGoals.map((g) =>
+            g.id === id ? { ...g, completed: !g.completed, completedHours: g.completed ? 0 : g.targetHours } : g
+          ),
+        })),
+
+      removeWeeklyGoal: (id) =>
+        set((state) => ({
+          weeklyGoals: state.weeklyGoals.filter((g) => g.id !== id),
+        })),
+
+      resetProgress: () => set({ progress: [], achievements: [], studySessions: [], subjectNotes: {}, weeklyGoals: [] }),
     }),
     {
       name: "omnischool-storage",
@@ -223,6 +249,7 @@ export const useAppStore = create<AppState>()(
         studySessions: state.studySessions,
         achievements: state.achievements,
         favorites: state.favorites,
+        weeklyGoals: state.weeklyGoals,
         theme: state.theme,
       }),
     }

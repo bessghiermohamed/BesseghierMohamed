@@ -66,3 +66,13 @@ export interface DashboardStats {
   notStarted: number;
   overallProgress: number;
 }
+
+export interface WeeklyGoal {
+  id: string;
+  subjectId: string;
+  targetHours: number;
+  completedHours: number;
+  description: string;
+  completed: boolean;
+  createdAt: string;
+}

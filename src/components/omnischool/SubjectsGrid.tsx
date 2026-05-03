@@ -18,14 +18,16 @@ import {
   List,
   SlidersHorizontal,
   X,
+  Heart,
 } from "lucide-react";
 import { useState } from "react";
 
 export function SubjectsGrid() {
-  const { progress, selectSubject, selectedSemester, setSelectedSemester } =
+  const { progress, selectSubject, selectedSemester, setSelectedSemester, favorites } =
     useAppStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [showFavorites, setShowFavorites] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
@@ -45,12 +47,14 @@ export function SubjectsGrid() {
       );
     }
 
-    if (selectedCategory) {
+    if (showFavorites) {
+      subjects = subjects.filter((s) => favorites.includes(s.id));
+    } else if (selectedCategory) {
       subjects = subjects.filter((s) => s.category === selectedCategory);
     }
 
     return subjects.sort((a, b) => a.order - b.order);
-  }, [selectedSemester, searchQuery, selectedCategory]);
+  }, [selectedSemester, searchQuery, selectedCategory, showFavorites, favorites]);
 
   const getProgress = (subjectId: string) =>
     progress.find((p) => p.subjectId === subjectId);
@@ -170,11 +174,24 @@ export function SubjectsGrid() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Badge
-                    variant={selectedCategory === "" ? "default" : "outline"}
+                    variant={selectedCategory === "" && !showFavorites ? "default" : "outline"}
                     className="cursor-pointer transition-all hover:scale-105"
-                    onClick={() => setSelectedCategory("")}
+                    onClick={() => { setSelectedCategory(""); setShowFavorites(false); }}
                   >
                     الكل
+                  </Badge>
+                  <Badge
+                    variant={showFavorites ? "default" : "outline"}
+                    className="cursor-pointer transition-all hover:scale-105 gap-1"
+                    onClick={() => { setShowFavorites(true); setSelectedCategory(""); }}
+                    style={
+                      showFavorites
+                        ? { backgroundColor: "#B91C1C", borderColor: "#B91C1C" }
+                        : { borderColor: "rgba(185, 28, 28, 0.25)", color: "#B91C1C" }
+                    }
+                  >
+                    <Heart className="size-3" />
+                    المفضلة
                   </Badge>
                   {categories.map((cat) => (
                     <Badge
@@ -194,7 +211,7 @@ export function SubjectsGrid() {
                               color: cat.color,
                             }
                       }
-                      onClick={() => setSelectedCategory(cat.id)}
+                      onClick={() => { setSelectedCategory(cat.id); setShowFavorites(false); }}
                     >
                       {cat.label}
                     </Badge>

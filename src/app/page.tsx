@@ -20,6 +20,8 @@ import { StudyStreak } from "@/components/omnischool/StudyStreak";
 import { SemesterComparisonChart } from "@/components/omnischool/SemesterComparisonChart";
 import { DataExportImport } from "@/components/omnischool/DataExportImport";
 import { QuickStatsWidget } from "@/components/omnischool/QuickStatsWidget";
+import { WeeklyGoalsTracker } from "@/components/omnischool/WeeklyGoalsTracker";
+import { KeyboardShortcutsHelp } from "@/components/omnischool/KeyboardShortcutsHelp";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
 import { useEffect, useState } from "react";
@@ -69,15 +71,15 @@ function QuickAccessSection() {
   const quickSubjects = subjectsData.slice(0, 6);
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-12">
       {/* Quick Access */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground section-header-line">
               أحدث المواد
             </h2>
-            <p className="text-muted-foreground text-sm mt-1">
+            <p className="text-muted-foreground text-sm mt-2">
               الوصول السريع لموادك الدراسية
             </p>
           </div>
@@ -98,7 +100,7 @@ function QuickAccessSection() {
               transition={{ delay: idx * 0.08, duration: 0.4 }}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="cursor-pointer"
+              className="cursor-pointer hover-lift"
               onClick={() => selectSubject(subject.id)}
             >
               <div className="glass card-omni rounded-xl p-4 flex items-center gap-4">
@@ -129,47 +131,66 @@ function QuickAccessSection() {
         </div>
       </div>
 
-      {/* Quick Feature Cards */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">أدوات الدراسة</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* Section Divider */}
+      <div className="section-divider">
+        <span className="diamond" />
+      </div>
+
+      {/* Quick Feature Cards — with depth/parallax effect */}
+      <div className="space-y-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground section-header-line">
+          أدوات الدراسة
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
           <motion.div
-            whileHover={{ scale: 1.03, y: -2 }}
+            initial={{ opacity: 0, y: 20, rotateX: 5 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+            whileHover={{ scale: 1.04, y: -4, rotateX: -2 }}
             whileTap={{ scale: 0.97 }}
             className="cursor-pointer"
             onClick={() => setView("planner")}
+            style={{ perspective: 1000 }}
           >
-            <div className="glass-red rounded-2xl p-6 text-center space-y-3 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 rounded-xl mx-auto flex items-center justify-center bg-omni-red/10">
-                <span className="text-2xl">📅</span>
+            <div className="glass-red gradient-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl transition-all">
+              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-red/10 animate-float">
+                <span className="text-3xl">📅</span>
               </div>
               <h3 className="font-bold text-foreground">مخطط الدراسة</h3>
               <p className="text-xs text-muted-foreground">نظّم جدولك الأسبوعي</p>
             </div>
           </motion.div>
           <motion.div
-            whileHover={{ scale: 1.03, y: -2 }}
+            initial={{ opacity: 0, y: 20, rotateX: 5 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            whileHover={{ scale: 1.04, y: -4, rotateX: -2 }}
             whileTap={{ scale: 0.97 }}
             className="cursor-pointer"
             onClick={() => setView("timer")}
+            style={{ perspective: 1000 }}
           >
-            <div className="glass-gold rounded-2xl p-6 text-center space-y-3 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 rounded-xl mx-auto flex items-center justify-center bg-omni-gold/10">
-                <span className="text-2xl">⏱️</span>
+            <div className="glass-gold gradient-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl transition-all">
+              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-gold/10 animate-float" style={{ animationDelay: "0.5s" }}>
+                <span className="text-3xl">⏱️</span>
               </div>
               <h3 className="font-bold text-foreground">مؤقت البومودورو</h3>
               <p className="text-xs text-muted-foreground">ركّز بمتقنية البومودورو</p>
             </div>
           </motion.div>
           <motion.div
-            whileHover={{ scale: 1.03, y: -2 }}
+            initial={{ opacity: 0, y: 20, rotateX: 5 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            whileHover={{ scale: 1.04, y: -4, rotateX: -2 }}
             whileTap={{ scale: 0.97 }}
             className="cursor-pointer"
             onClick={() => setView("dashboard")}
+            style={{ perspective: 1000 }}
           >
-            <div className="glass rounded-2xl p-6 text-center space-y-3 border border-border hover:shadow-lg transition-all">
-              <div className="w-14 h-14 rounded-xl mx-auto flex items-center justify-center bg-green-500/10">
-                <span className="text-2xl">📊</span>
+            <div className="glass gradient-border rounded-2xl p-6 sm:p-8 text-center space-y-3 border border-border hover:shadow-xl transition-all">
+              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-green-500/10 animate-float" style={{ animationDelay: "1s" }}>
+                <span className="text-3xl">📊</span>
               </div>
               <h3 className="font-bold text-foreground">لوحة المتعلم</h3>
               <p className="text-xs text-muted-foreground">تتبع تقدّمك الدراسي</p>
@@ -178,15 +199,28 @@ function QuickAccessSection() {
         </div>
       </div>
 
-      {/* Study Streak & Semester Comparison */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Section Divider */}
+      <div className="section-divider">
+        <span className="diamond" />
+      </div>
+
+      {/* Study Streak, Semester Comparison & Weekly Goals */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <StudyStreak />
         <SemesterComparisonChart />
+        <WeeklyGoalsTracker />
+      </div>
+
+      {/* Section Divider */}
+      <div className="section-divider">
+        <span className="diamond" />
       </div>
 
       {/* Categories */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">التصنيفات</h2>
+      <div className="space-y-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground section-header-line">
+          التصنيفات
+        </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {categories.map((cat) => {
             const count = subjectsData.filter(
@@ -197,7 +231,7 @@ function QuickAccessSection() {
                 key={cat.id}
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="cursor-pointer"
+                className="cursor-pointer hover-lift"
                 onClick={() => {
                   useAppStore.getState().setSearchCategory(cat.id);
                   useAppStore.getState().setView("search");
@@ -225,13 +259,23 @@ function QuickAccessSection() {
         </div>
       </div>
 
-      {/* CTA Section */}
+      {/* Section Divider */}
+      <div className="section-divider">
+        <span className="diamond" />
+      </div>
+
+      {/* CTA Section — enhanced with decorative elements */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="gradient-hero rounded-2xl p-8 sm:p-12 text-center text-white space-y-4 relative overflow-hidden"
+        className="gradient-hero rounded-2xl p-8 sm:p-12 text-center text-white space-y-4 relative overflow-hidden islamic-pattern-bg"
       >
+        {/* Decorative floating circles */}
+        <div className="absolute -top-8 -left-8 w-32 h-32 rounded-full bg-omni-gold/5 pointer-events-none" />
+        <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-omni-red/5 pointer-events-none" />
+        <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full bg-white/3 pointer-events-none" />
+
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -240,26 +284,36 @@ function QuickAccessSection() {
           }}
         />
         <div className="relative z-10">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+          <h2 className="text-shadow-omni text-2xl sm:text-3xl font-bold mb-2">
             ابدأ رحلتك التعليمية اليوم
           </h2>
+
+          {/* Decorative line under CTA heading */}
+          <div className="decorative-line mx-auto max-w-xs my-4">
+            <span className="diamond" />
+          </div>
+
           <p className="text-white/80 max-w-lg mx-auto mb-6">
             تتبع تقدمك في جميع المواد، نظّم ملاحظاتك، وكن على الطريق الصحيح
             نحو التفوق
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setView("dashboard")}
-              className="btn-omni-gold rounded-xl px-6 py-3 font-semibold transition-all"
+              className="btn-omni-gold rounded-xl px-7 py-3 font-semibold transition-all shadow-lg"
             >
               لوحة المتعلم
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setView("subjects")}
-              className="glass rounded-xl px-6 py-3 font-semibold text-white border-white/20 hover:bg-white/10 transition-all"
+              className="glass rounded-xl px-7 py-3 font-semibold text-white border-white/20 hover:bg-white/10 transition-all"
             >
               تصفح المواد
-            </button>
+            </motion.button>
           </div>
         </div>
       </motion.div>
@@ -324,6 +378,7 @@ export default function Home() {
       <OnboardingModal />
       <AchievementToast />
       <AIChatPanel />
+      <KeyboardShortcutsHelp />
 
       {/* Scroll to top button */}
       <ScrollToTop />

@@ -80,9 +80,14 @@ const floatingDot = (i: number) => ({
 /*  Step Indicators (external component)                               */
 /* ------------------------------------------------------------------ */
 function StepIndicators({ currentStep }: { currentStep: number }) {
+  /* In RTL Arabic, steps should flow right-to-left visually.
+     We reverse the rendering order so step 1 appears on the right
+     and step 3 appears on the left, matching RTL reading direction. */
+  const reversedIndices = Array.from({ length: TOTAL_STEPS }, (_, i) => TOTAL_STEPS - 1 - i);
+
   return (
-    <div className="flex items-center justify-center gap-3 mb-6">
-      {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+    <div className="flex items-center justify-center gap-3 mb-6" dir="rtl">
+      {reversedIndices.map((i, arrIdx) => (
         <div key={i} className="flex items-center gap-2">
           <motion.div
             className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
@@ -97,7 +102,7 @@ function StepIndicators({ currentStep }: { currentStep: number }) {
           >
             {i < currentStep ? "✓" : i + 1}
           </motion.div>
-          {i < TOTAL_STEPS - 1 && (
+          {arrIdx < TOTAL_STEPS - 1 && (
             <div
               className={`w-8 h-0.5 rounded-full ${
                 i < currentStep ? "bg-omni-gold" : "bg-white/20"

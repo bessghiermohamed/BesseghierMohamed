@@ -24,6 +24,7 @@ import { ProgressCircle } from "./ProgressCircle";
 import { StudyStreak } from "./StudyStreak";
 import { SemesterComparisonChart } from "./SemesterComparisonChart";
 import { DataExportImport } from "./DataExportImport";
+import { GPACalculator } from "./GPACalculator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -414,7 +415,12 @@ export function StudentDashboard() {
         </div>
       </motion.div>
 
-      {/* ========== 6. Data Management ========== */}
+      {/* ========== 6. GPA Calculator ========== */}
+      <motion.div variants={itemVariants}>
+        <GPACalculator />
+      </motion.div>
+
+      {/* ========== 7. Data Management ========== */}
       <motion.div variants={itemVariants}>
         <DataExportImport />
       </motion.div>

@@ -498,3 +498,140 @@ Stage Summary:
 - 2 new CSS utility classes added (card-shine, animate-heart-pop)
 - QuickStatsWidget integrated into homepage between hero and quick access sections
 - All lint checks pass, dev server runs correctly
+
+---
+Task ID: phase5-bugs-styling
+Agent: frontend-styling-expert
+Task: Fix bugs and dramatically improve styling across OmniSchool platform
+
+Work Log:
+- Bug Fix 1: Removed duplicate CSS declarations in globals.css — merged `.card-shine` (was declared twice with ::after and ::before, consolidated into single ::before version with merged gradient), removed duplicate `@keyframes heart-pop` (kept scale(0)→scale(1.3)→scale(1) version which is the true "pop"), removed duplicate `.animate-heart-pop` (kept 0.35s duration version)
+- Bug Fix 2: Fixed OnboardingModal RTL step indicators — reversed rendering order so steps flow right-to-left (3←2←1 visually), matching Arabic RTL reading direction
+- Bug Fix 3: Added favorites filter "المفضلة" to SubjectsGrid — new Heart icon badge alongside category filters, when active shows only favorited subjects, mutually exclusive with category filter
+- Styling 1: Redesigned QuickStatsWidget — gradient backgrounds per card (stat-card-gradient-red/green/gold/purple), AnimatedCounter component that counts up from 0 with ease-out cubic, accent bar at top of each card, larger 14×14 icons with hover scale, decorative corner circles, animate-border-glow pulsing effect
+- Styling 2: Improved HeroSection typography — added text-shadow-omni to main title, created OrnamentalDivider component (gold diamond with gradient lines) between title and subtitle, larger search bar (h-14, text-lg), search-glow-pulse animation on search container, enhanced stat pills with border-omni-gold/20
+- Styling 3: Enhanced Footer — dark gradient background (from-[#1A0A0A] to-[#0F0505]), elaborate 3-layer wave SVG divider, islamic-pattern-bg background, footer-link-hover animated underlines on links, "Back to top" smooth scroll link with ArrowUp icon, gold decorative line under logo
+- Styling 4: Improved Homepage QuickAccessSection — added 4 section-divider ornaments between major sections, section-header-line decorative gold gradient underlines on all headings, hover-lift class on subject cards and category cards, study tools cards have gradient-border, animate-float on icons with staggered delays, perspective/rotateX parallax depth on hover, CTA section enhanced with islamic-pattern-bg, decorative floating circles, text-shadow-omni on heading, decorative-line ornament, motion-animated buttons
+- Styling 5: Added 10+ new CSS utility classes: stat-card-gradient-red/green/gold/purple (with dark variants), animate-border-glow (pulsing red↔gold glow), decorative-line (ornamental line with center diamond), hover-lift (enhanced hover with shadow), text-shadow-omni (subtle text shadow), animate-fill-width (width fill animation), gradient-border (gradient border via mask), footer-link-hover (animated underline on hover), search-glow-pulse (pulsing gold glow for search bar)
+- Ran lint — passes with zero errors
+- Build succeeds — compiled in 8.5s, all pages generated
+
+Stage Summary:
+- 3 bug fixes: duplicate CSS removed, RTL step indicators reversed, favorites filter added
+- 4 styling improvements: QuickStatsWidget redesign, HeroSection typography, Footer enhancement, QuickAccessSection transitions
+- 10+ new CSS utility classes added (stat-card-gradient-*, animate-border-glow, decorative-line, hover-lift, text-shadow-omni, animate-fill-width, gradient-border, footer-link-hover, search-glow-pulse)
+- All changes lint-clean and build-verified
+
+---
+Task ID: phase5-new-features
+Agent: main
+Task: Create 3 new feature components and integrate them into the platform
+
+Work Log:
+- Added WeeklyGoal interface to types.ts (id, subjectId, targetHours, completedHours, description, completed, createdAt)
+- Updated Zustand store (store.ts): added weeklyGoals state, addWeeklyGoal/toggleWeeklyGoal/removeWeeklyGoal actions, added weeklyGoals to partialize for localStorage persistence, added weeklyGoals to resetProgress
+- Created GPACalculator.tsx: semester GPA calculator with glass morphism card, two semester tabs (السداسي الأول/الثاني), grade selector per subject (A+/A/B+/B/C+/C/D/F mapping to 4/3.75/3.5/3/2.5/2/1/0), auto-calculate toggle that derives grades from progress percentages (0-20%: F, 20-40%: D, 40-55%: C, 55-65%: C+, 65-75%: B, 75-85%: B+, 85-92%: A, 92-100%: A+), animated GPA display with glow effect, color-coded indicator (red < 2, gold 2-3, green > 3), sparkle decorations, scrollable subject list
+- Created WeeklyGoalsTracker.tsx: weekly study goals tracker with glass morphism card, add goal dialog (subject selector, target hours, description), goals list with progress bars and completed/target hours, checkmark animation with spring transitions, weekly progress summary (X of Y goals completed), motivational Arabic messages based on completion rate, delete goals, all stored in Zustand with persistence
+- Created KeyboardShortcutsHelp.tsx: floating keyboard button (bottom-left, gold gradient) that opens shortcuts panel, modal with glass morphism showing all keyboard shortcuts grouped by category (تنقل Navigation: Ctrl+K/D/H/S; أدوات Tools: Ctrl+P/T//, Esc), styled kbd elements (dark bg, monospace, rounded), global keyboard event listener implementing all shortcuts, animated open/close with framer-motion, backdrop blur overlay
+- Integrated GPACalculator into StudentDashboard.tsx (added after DataExportImport section as section 6)
+- Integrated WeeklyGoalsTracker into homepage page.tsx (changed grid from 2-col to 3-col for StudyStreak, SemesterComparisonChart, WeeklyGoalsTracker)
+- Integrated KeyboardShortcutsHelp into homepage page.tsx (added as global overlay alongside OnboardingModal, AchievementToast, AIChatPanel)
+- Fixed lint warning: removed unused eslint-disable directive in GPACalculator.tsx
+- All lint checks pass with zero errors
+
+Stage Summary:
+- 3 new components created: GPACalculator, WeeklyGoalsTracker, KeyboardShortcutsHelp
+- Zustand store expanded with weeklyGoals system (3 new actions, persisted to localStorage)
+- WeeklyGoal type added to types.ts
+- GPACalculator integrated into StudentDashboard
+- WeeklyGoalsTracker integrated into homepage (3-column grid with StudyStreak and SemesterComparisonChart)
+- KeyboardShortcutsHelp integrated as global overlay with 8 keyboard shortcuts
+- Project now has 25 components in /src/components/omnischool/
+- All changes lint-clean, dev server running correctly
+
+---
+Task ID: main-phase5
+Agent: main
+Task: Phase 5 QA, bug fixes, styling improvements, and new features
+
+Work Log:
+- Reviewed worklog.md and assessed project status (22 components, 24 features, VLM 8/10)
+- Performed QA testing with agent-browser + VLM analysis (homepage rated 6/10 initially, dashboard 6/10)
+- Identified bugs: duplicate CSS declarations, onboarding RTL step indicators wrong direction, no favorites filter
+- Delegated bug fixes and styling improvements to frontend-styling-expert subagent
+- Delegated new feature development to full-stack-developer subagent
+- Bug fixes: duplicate CSS removed (card-shine, heart-pop), RTL step indicators reversed, favorites filter added
+- Styling improvements: QuickStatsWidget redesign (gradient backgrounds, animated counters, accent bars), HeroSection typography (text shadow, ornamental divider, larger search bar, glow pulse), Footer enhancement (dark gradient, 3-layer wave, Islamic pattern, back to top), Homepage section transitions (dividers, header lines, parallax, CTA enhancement)
+- New features: GPACalculator (semester GPA with auto-calculate from progress), WeeklyGoalsTracker (add/toggle/remove weekly goals with dialog), KeyboardShortcutsHelp (8 global shortcuts with floating button and help panel)
+- Added 10+ new CSS utility classes (stat-card-gradient-*, animate-border-glow, decorative-line, hover-lift, text-shadow-omni, animate-fill-width, gradient-border, footer-link-hover, search-glow-pulse)
+- VLM re-test: homepage rated 8/10 (up from 6/10), dashboard rated 6/10
+- All lint checks pass with zero errors
+
+Stage Summary:
+- 3 bugs fixed (duplicate CSS, RTL indicators, missing filter)
+- 4 major styling improvements (QuickStatsWidget, HeroSection, Footer, Homepage transitions)
+- 3 new components created (GPACalculator, WeeklyGoalsTracker, KeyboardShortcutsHelp)
+- 10+ new CSS utility classes added
+- VLM quality rating improved from 6/10 to 8/10
+- Project now has 25 components, 27+ features
+
+## Current Project Status Assessment (Phase 5 Update)
+
+### Architecture
+- **Framework**: Next.js 16 App Router, TypeScript, Tailwind CSS 4
+- **25 Components** in `/src/components/omnischool/`
+- **9 API Routes** (subjects, progress, search, stats, chat with LLM)
+- **Zustand Store** with localStorage persistence for 16+ state fields
+- **Prisma SQLite** for server-side data
+- **8 Views**: home, dashboard, subjects, subject-detail, search, about, planner, timer
+
+### Features Completed (All 27+)
+1. ✅ Red+Gold RTL Arabic theme with glass morphism
+2. ✅ 24 subjects (12/semester) with categories and progress tracking
+3. ✅ Student Dashboard with summary cards, progress circles, category breakdown
+4. ✅ Subject detail with status update, progress slider, notes (persisted), resources
+5. ✅ Advanced search with trending queries and category filters
+6. ✅ Study Planner with weekly calendar and session management
+7. ✅ Pomodoro Timer with focus/break modes
+8. ✅ AI Chat Assistant with real LLM integration (z-ai-web-dev-sdk) + mock fallback
+9. ✅ Onboarding wizard (3 steps, RTL-correct)
+10. ✅ Achievement system with toast notifications
+11. ✅ Dark mode support
+12. ✅ Mobile responsive with hamburger menu
+13. ✅ Study Streak tracker with flame animation and 7-day activity
+14. ✅ Semester Comparison Chart using Recharts
+15. ✅ Data Export/Import (JSON backup & restore)
+16. ✅ Announcement Banner (dismissible, animated)
+17. ✅ Wave dividers between hero and content sections
+18. ✅ Card ornaments, button ripple effects, gradient text effects
+19. ✅ QuickStatsWidget with animated counters and gradient backgrounds
+20. ✅ Subject favorites with animated heart toggle
+21. ✅ Scroll-to-top floating button
+22. ✅ Keyboard shortcuts (8 global shortcuts with help panel)
+23. ✅ Card shine hover effect
+24. ✅ Section header decorative line utility
+25. ✅ **NEW** GPA Calculator with auto-calculate from progress
+26. ✅ **NEW** Weekly Goals Tracker with dialog and persistence
+27. ✅ **NEW** Favorites filter in SubjectsGrid
+
+### Goals Completed This Phase
+- QA testing with agent-browser + VLM analysis ✅
+- Bug fixes (duplicate CSS, RTL step indicators, favorites filter) ✅
+- Styling improvements (4 major areas, 10+ new CSS utilities) ✅
+- New features (3 new components, 8 global keyboard shortcuts) ✅
+- VLM quality rating improved from 6/10 to 8/10 ✅
+
+### Unresolved Issues / Risks
+- Dev server dies after ~15 seconds in sandbox (process killed, likely sandbox memory limitation)
+- Server works correctly when alive (confirmed 200 responses and VLM screenshots)
+- Dashboard VLM rating still 6/10 - could benefit from better data visualization
+- DataImport uses direct localStorage manipulation (could be improved with Zustand store actions)
+
+### Next Phase Recommendations
+1. **Add PDF export** for progress reports (using jsPDF or similar)
+2. **Improve dashboard data visualization** - add more interactive charts, better card designs
+3. **Performance optimization** - lazy loading for heavy components like Recharts and GPACalculator
+4. **Add dark mode toggle animation** - smooth transition between themes
+5. **Improve DataImport** to use Zustand store actions instead of direct localStorage
+6. **Add collaborative features** (shared notes, study groups)
+7. **Add subject comparison** feature (compare 2-3 subjects side by side)
