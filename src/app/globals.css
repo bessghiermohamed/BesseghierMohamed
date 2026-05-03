@@ -899,3 +899,212 @@ html {
     display: none !important;
   }
 }
+
+/* ------------------------------------------------------------------
+   Islamic Geometric Pattern — Decorative Background
+   ------------------------------------------------------------------ */
+.islamic-pattern-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.islamic-pattern-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 40px,
+      rgba(185, 28, 28, 0.3) 40px,
+      rgba(185, 28, 28, 0.3) 41px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(212, 168, 67, 0.3) 40px,
+      rgba(212, 168, 67, 0.3) 41px
+    );
+  pointer-events: none;
+}
+
+.dark .islamic-pattern-bg::after {
+  opacity: 0.02;
+}
+
+/* ------------------------------------------------------------------
+   Chat Panel Styles
+   ------------------------------------------------------------------ */
+.chat-bubble-user {
+  background: linear-gradient(135deg, #B91C1C, #991B1B);
+  color: white;
+  border-radius: 16px 16px 4px 16px;
+}
+
+.chat-bubble-ai {
+  background: var(--muted);
+  color: var(--foreground);
+  border-radius: 16px 16px 16px 4px;
+}
+
+.dark .chat-bubble-user {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+}
+
+/* ------------------------------------------------------------------
+   Section Divider — Ornamental
+   ------------------------------------------------------------------ */
+.section-divider {
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  height: 1px;
+  top: 50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border) 20%,
+    rgba(185, 28, 28, 0.3) 50%,
+    var(--border) 80%,
+    transparent 100%
+  );
+}
+
+.section-divider::after {
+  content: '◆';
+  position: relative;
+  z-index: 1;
+  background: var(--background);
+  padding: 0 12px;
+  color: #D4A843;
+  font-size: 10px;
+}
+
+/* ------------------------------------------------------------------
+   Scroll Reveal — Intersection Observer
+   ------------------------------------------------------------------ */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------
+   Timer Ring Animation
+   ------------------------------------------------------------------ */
+@keyframes timer-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(185, 28, 28, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(185, 28, 28, 0.6));
+  }
+}
+
+.timer-active {
+  animation: timer-pulse 2s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------
+   Typing Indicator
+   ------------------------------------------------------------------ */
+@keyframes typing-dot {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+.typing-dot-1 { animation: typing-dot 1.4s ease-in-out infinite 0ms; }
+.typing-dot-2 { animation: typing-dot 1.4s ease-in-out infinite 200ms; }
+.typing-dot-3 { animation: typing-dot 1.4s ease-in-out infinite 400ms; }
+
+/* ------------------------------------------------------------------
+   Onboarding Gradient
+   ------------------------------------------------------------------ */
+.onboarding-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(185, 28, 28, 0.05) 0%,
+    rgba(212, 168, 67, 0.05) 50%,
+    rgba(185, 28, 28, 0.03) 100%
+  );
+}
+
+.dark .onboarding-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.05) 0%,
+    rgba(212, 168, 67, 0.05) 50%,
+    rgba(239, 68, 68, 0.03) 100%
+  );
+}
+
+/* ------------------------------------------------------------------
+   Achievement Glow
+   ------------------------------------------------------------------ */
+.achievement-unlock {
+  animation: achievement-glow 1s ease-out;
+}
+
+@keyframes achievement-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 67, 0.6);
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(212, 168, 67, 0.4);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(212, 168, 67, 0.1);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Smooth Page Transition
+   ------------------------------------------------------------------ */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-transition-exit {
+  opacity: 1;
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: all 0.25s ease-in;
+}

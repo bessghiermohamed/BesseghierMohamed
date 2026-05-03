@@ -8,7 +8,9 @@ export type ViewType =
   | "subjects"
   | "subject-detail"
   | "search"
-  | "about";
+  | "about"
+  | "planner"
+  | "timer";
 
 export interface Subject {
   id: string;
@@ -30,6 +32,23 @@ export interface SubjectProgress {
   status: SubjectStatus;
   progress: number;
   notes?: string;
+}
+
+export interface StudySession {
+  id: string;
+  subjectId: string;
+  date: string; // ISO date string
+  duration: number; // minutes
+  completed: boolean;
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlockedAt?: string; // ISO date when unlocked
+  condition: string; // description of unlock condition
 }
 
 export interface User {

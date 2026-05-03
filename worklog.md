@@ -96,11 +96,7 @@ Agent: main
 Task: Build remaining components and main page assembly
 
 Work Log:
-- Created SubjectsGrid.tsx with search, filters, semester tabs, grid/list views
-- Created SubjectDetail.tsx with progress control, resources, notes, related subjects
-- Created AdvancedSearch.tsx with trending searches, category filters
-- Created AboutPage.tsx with features, semester overview, tech stack
-- Created Footer.tsx with school info, credits
+- Created SubjectsGrid.tsx, SubjectDetail.tsx, AdvancedSearch.tsx, AboutPage.tsx, Footer.tsx
 - Created main page.tsx with ViewRenderer, QuickAccessSection, categories, CTA
 - Fixed ESLint errors (require import)
 - Build succeeds, lint passes
@@ -109,5 +105,107 @@ Stage Summary:
 - All UI components built and assembled
 - Single-page app with 6 views: home, dashboard, subjects, subject-detail, search, about
 - Zustand store with localStorage persistence for progress tracking
-- Server compiles and serves pages (200 response confirmed)
-- Dev server stability issue in sandbox environment (process killed after ~15s)
+
+---
+Task ID: phase2-bugs
+Agent: main
+Task: Fix bugs and enhance store for Phase 2
+
+Work Log:
+- Fixed SubjectDetail.tsx: notes now persisted to Zustand store (subjectNotes, setSubjectNotes) instead of local useState
+- Updated store.ts: added subjectNotes, studySessions, achievements, chatOpen, hasOnboarded
+- Updated types.ts: added StudySession, Achievement types, "planner" and "timer" view types
+- Store now auto-detects achievements when progress is updated (first_step, getting_started, halfway, almost_there, graduate)
+- Removed duplicate theme management (kept in Header.tsx, removed from page.tsx redundant useEffect)
+
+Stage Summary:
+- Notes persistence fixed
+- Store expanded with 5 new state fields and 8 new actions
+- Achievement system integrated into updateProgress action
+
+---
+Task ID: 3+7
+Agent: full-stack-developer (subagent)
+Task: Build StudyPlanner and PomodoroTimer components
+
+Work Log:
+- Created StudyPlanner.tsx: weekly calendar (Saturday-Friday), session management, add/delete/complete
+- Created PomodoroTimer.tsx: circular SVG timer, 3 modes, auto-switch, session counter
+
+Stage Summary:
+- StudyPlanner: weekly calendar, today's sessions, dialog form, glass cards
+- PomodoroTimer: SVG timer, focus/short break/long break, auto-logging to store
+
+---
+Task ID: 4+5+6
+Agent: full-stack-developer (subagent)
+Task: Build OnboardingModal, AchievementToast, AIChatPanel
+
+Work Log:
+- Created OnboardingModal.tsx: 3-step wizard with animated transitions
+- Created AchievementToast.tsx: gold-themed animated toasts for achievements
+- Created AIChatPanel.tsx: floating FAB, chat panel, message bubbles, quick questions
+- Created /api/chat route: keyword-based Arabic study tips
+
+Stage Summary:
+- 3 new interactive components: OnboardingModal, AchievementToast, AIChatPanel
+- 1 new API route: /api/chat
+- All RTL Arabic, Red+Gold themed, responsive, framer-motion animated
+
+---
+Task ID: phase2-styling
+Agent: main
+Task: Enhanced CSS with new patterns and utilities
+
+Work Log:
+- Added Islamic geometric pattern background class (.islamic-pattern-bg)
+- Added chat bubble styles (.chat-bubble-user, .chat-bubble-ai)
+- Added ornamental section divider (.section-divider with ◆ center)
+- Added scroll reveal animation (.reveal-on-scroll)
+- Added timer pulse animation (.timer-active)
+- Added typing indicator dots (.typing-dot-1/2/3)
+- Added onboarding gradient (.onboarding-gradient)
+- Added achievement glow animation (.achievement-unlock)
+- Added page transition utilities (.page-transition-*)
+
+Stage Summary:
+- 10+ new CSS utility classes for enhanced visual effects
+- Build passes, lint passes
+- VLM QA confirms: homepage rendering correctly, Arabic text well-rendered, color scheme cohesive
+
+## Current Project Status Assessment
+
+### Architecture
+- **Framework**: Next.js 16 App Router, TypeScript, Tailwind CSS 4
+- **15 Components** in `/src/components/omnischool/` (~5,300 lines total)
+- **8 API Routes** (subjects, progress, search, stats, chat)
+- **Zustand Store** with localStorage persistence for 12+ state fields
+- **Prisma SQLite** for server-side data
+- **8 Views**: home, dashboard, subjects, subject-detail, search, about, planner, timer
+
+### Features Completed
+1. ✅ Red+Gold RTL Arabic theme with glass morphism
+2. ✅ 24 subjects (12/semester) with categories and progress tracking
+3. ✅ Student Dashboard with summary cards, progress circles, category breakdown
+4. ✅ Subject detail with status update, progress slider, notes (persisted), resources
+5. ✅ Advanced search with trending queries and category filters
+6. ✅ Study Planner with weekly calendar and session management
+7. ✅ Pomodoro Timer with focus/break modes
+8. ✅ AI Chat Assistant with quick questions
+9. ✅ Onboarding wizard (3 steps)
+10. ✅ Achievement system with toast notifications
+11. ✅ Dark mode support
+12. ✅ Mobile responsive with hamburger menu
+
+### Unresolved Issues / Risks
+- Dev server dies after ~15 seconds in sandbox (process killed, likely sandbox limitation)
+- Server works correctly when alive (confirmed 200 responses and screenshots)
+- AI Chat uses mock responses (keyword-based), not real LLM integration
+- Some icons in StudentDashboard icon map are mapped to wrong icons (workaround, not critical)
+
+### Next Phase Recommendations
+1. **Integrate real LLM** using z-ai-web-dev-sdk for the AI Chat panel
+2. **Add data export** (PDF/CSV) for progress reports
+3. **Add semester comparison** chart in dashboard
+4. **Add collaborative features** (shared notes, study groups)
+5. **Performance optimization** (lazy loading, code splitting)

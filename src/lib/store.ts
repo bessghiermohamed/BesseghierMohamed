@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ViewType, SubjectProgress, SubjectStatus, UserRole } from "./types";
+import { ViewType, SubjectProgress, SubjectStatus, UserRole, StudySession, Achievement } from "./types";
 
 interface AppState {
   // Navigation
@@ -11,9 +11,17 @@ interface AppState {
   // User
   userName: string;
   userRole: UserRole;
+  hasOnboarded: boolean;
 
   // Progress
   progress: SubjectProgress[];
+  subjectNotes: Record<string, string>;
+
+  // Study Sessions
+  studySessions: StudySession[];
+
+  // Achievements
+  achievements: Achievement[];
 
   // Search
   searchQuery: string;
@@ -22,6 +30,7 @@ interface AppState {
   // UI
   sidebarOpen: boolean;
   theme: "light" | "dark";
+  chatOpen: boolean;
 
   // Actions
   setView: (view: ViewType) => void;
@@ -29,17 +38,24 @@ interface AppState {
   setSelectedSemester: (semester: 1 | 2) => void;
   setUserName: (name: string) => void;
   setUserRole: (role: UserRole) => void;
+  completeOnboarding: () => void;
   updateProgress: (subjectId: string, status: SubjectStatus, progress: number) => void;
+  setSubjectNotes: (subjectId: string, notes: string) => void;
+  addStudySession: (session: StudySession) => void;
+  removeStudySession: (id: string) => void;
+  toggleStudySession: (id: string) => void;
+  unlockAchievement: (id: string) => void;
   setSearchQuery: (query: string) => void;
   setSearchCategory: (category: string) => void;
   toggleSidebar: () => void;
   toggleTheme: () => void;
+  toggleChat: () => void;
   resetProgress: () => void;
 }
 
 export const useAppStore = create<AppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       // Navigation
       currentView: "home",
       selectedSubjectId: null,
@@ -48,9 +64,17 @@ export const useAppStore = create<AppState>()(
       // User
       userName: "طالب",
       userRole: "student",
+      hasOnboarded: false,
 
       // Progress
       progress: [],
+      subjectNotes: {},
+
+      // Study Sessions
+      studySessions: [],
+
+      // Achievements
+      achievements: [],
 
       // Search
       searchQuery: "",
@@ -59,6 +83,7 @@ export const useAppStore = create<AppState>()(
       // UI
       sidebarOpen: false,
       theme: "light",
+      chatOpen: false,
 
       // Actions
       setView: (view) => set({ currentView: view }),
@@ -72,18 +97,93 @@ export const useAppStore = create<AppState>()(
 
       setUserRole: (role) => set({ userRole: role }),
 
+      completeOnboarding: () => set({ hasOnboarded: true }),
+
       updateProgress: (subjectId, status, progress) =>
         set((state) => {
           const existing = state.progress.find((p) => p.subjectId === subjectId);
+          let newProgress: SubjectProgress[];
           if (existing) {
-            return {
-              progress: state.progress.map((p) =>
-                p.subjectId === subjectId ? { ...p, status, progress } : p
-              ),
-            };
+            newProgress = state.progress.map((p) =>
+              p.subjectId === subjectId ? { ...p, status, progress } : p
+            );
+          } else {
+            newProgress = [...state.progress, { subjectId, status, progress }];
           }
+
+          // Check for achievement unlocks
+          const completedCount = newProgress.filter(p => p.status === "completed").length;
+          const inProgressCount = newProgress.filter(p => p.status === "in_progress").length;
+          const newAchievements = [...state.achievements];
+
+          const tryUnlock = (id: string) => {
+            if (!newAchievements.find(a => a.id === id)) {
+              newAchievements.push({
+                id,
+                title: id === "first_step" ? "الخطوة الأولى" :
+                       id === "getting_started" ? "بداية الانطلاق" :
+                       id === "halfway" ? "نصف الطريق" :
+                       id === "almost_there" ? "عتبة التخرج" :
+                       id === "graduate" ? "خريج متفوق" : id,
+                description:
+                  id === "first_step" ? "أكملت مادتك الأولى" :
+                  id === "getting_started" ? "بدأت 5 مواد" :
+                  id === "halfway" ? "أكملت نصف المواد" :
+                  id === "almost_there" ? "أكملت 20 مادة" :
+                  id === "graduate" ? "أكملت جميع المواد الـ 24" : "",
+                icon: "🏆",
+                unlockedAt: new Date().toISOString(),
+                condition: id,
+              });
+            }
+          };
+
+          if (completedCount >= 1) tryUnlock("first_step");
+          if (inProgressCount >= 5 || completedCount >= 1 && inProgressCount + completedCount >= 5) tryUnlock("getting_started");
+          if (completedCount >= 12) tryUnlock("halfway");
+          if (completedCount >= 20) tryUnlock("almost_there");
+          if (completedCount >= 24) tryUnlock("graduate");
+
+          return { progress: newProgress, achievements: newAchievements };
+        }),
+
+      setSubjectNotes: (subjectId, notes) =>
+        set((state) => ({
+          subjectNotes: { ...state.subjectNotes, [subjectId]: notes },
+        })),
+
+      addStudySession: (session) =>
+        set((state) => ({
+          studySessions: [...state.studySessions, session],
+        })),
+
+      removeStudySession: (id) =>
+        set((state) => ({
+          studySessions: state.studySessions.filter((s) => s.id !== id),
+        })),
+
+      toggleStudySession: (id) =>
+        set((state) => ({
+          studySessions: state.studySessions.map((s) =>
+            s.id === id ? { ...s, completed: !s.completed } : s
+          ),
+        })),
+
+      unlockAchievement: (id) =>
+        set((state) => {
+          if (state.achievements.find((a) => a.id === id)) return state;
           return {
-            progress: [...state.progress, { subjectId, status, progress }],
+            achievements: [
+              ...state.achievements,
+              {
+                id,
+                title: id,
+                description: "",
+                icon: "🏆",
+                unlockedAt: new Date().toISOString(),
+                condition: id,
+              },
+            ],
           };
         }),
 
@@ -98,14 +198,20 @@ export const useAppStore = create<AppState>()(
           theme: state.theme === "light" ? "dark" : "light",
         })),
 
-      resetProgress: () => set({ progress: [] }),
+      toggleChat: () => set((state) => ({ chatOpen: !state.chatOpen })),
+
+      resetProgress: () => set({ progress: [], achievements: [], studySessions: [], subjectNotes: {} }),
     }),
     {
       name: "omnischool-storage",
       partialize: (state) => ({
         userName: state.userName,
         userRole: state.userRole,
+        hasOnboarded: state.hasOnboarded,
         progress: state.progress,
+        subjectNotes: state.subjectNotes,
+        studySessions: state.studySessions,
+        achievements: state.achievements,
         theme: state.theme,
       }),
     }

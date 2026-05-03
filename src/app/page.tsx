@@ -10,6 +10,11 @@ import { SubjectDetail } from "@/components/omnischool/SubjectDetail";
 import { AdvancedSearch } from "@/components/omnischool/AdvancedSearch";
 import { AboutPage } from "@/components/omnischool/AboutPage";
 import { Footer } from "@/components/omnischool/Footer";
+import { StudyPlanner } from "@/components/omnischool/StudyPlanner";
+import { PomodoroTimer } from "@/components/omnischool/PomodoroTimer";
+import { OnboardingModal } from "@/components/omnischool/OnboardingModal";
+import { AchievementToast } from "@/components/omnischool/AchievementToast";
+import { AIChatPanel } from "@/components/omnischool/AIChatPanel";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
 import { useEffect } from "react";
@@ -44,6 +49,8 @@ function ViewRenderer() {
         {currentView === "subject-detail" && <SubjectDetail />}
         {currentView === "search" && <AdvancedSearch />}
         {currentView === "about" && <AboutPage />}
+        {currentView === "planner" && <StudyPlanner />}
+        {currentView === "timer" && <PomodoroTimer />}
       </motion.div>
     </AnimatePresence>
   );
@@ -111,6 +118,55 @@ function QuickAccessSection() {
               </div>
             </motion.div>
           ))}
+        </div>
+      </div>
+
+      {/* Quick Feature Cards */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-foreground">أدوات الدراسة</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <motion.div
+            whileHover={{ scale: 1.03, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            className="cursor-pointer"
+            onClick={() => setView("planner")}
+          >
+            <div className="glass-red rounded-2xl p-6 text-center space-y-3 hover:shadow-lg transition-all">
+              <div className="w-14 h-14 rounded-xl mx-auto flex items-center justify-center bg-omni-red/10">
+                <span className="text-2xl">📅</span>
+              </div>
+              <h3 className="font-bold text-foreground">مخطط الدراسة</h3>
+              <p className="text-xs text-muted-foreground">نظّم جدولك الأسبوعي</p>
+            </div>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.03, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            className="cursor-pointer"
+            onClick={() => setView("timer")}
+          >
+            <div className="glass-gold rounded-2xl p-6 text-center space-y-3 hover:shadow-lg transition-all">
+              <div className="w-14 h-14 rounded-xl mx-auto flex items-center justify-center bg-omni-gold/10">
+                <span className="text-2xl">⏱️</span>
+              </div>
+              <h3 className="font-bold text-foreground">مؤقت البومودورو</h3>
+              <p className="text-xs text-muted-foreground">ركّز بمتقنية البومودورو</p>
+            </div>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.03, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            className="cursor-pointer"
+            onClick={() => setView("dashboard")}
+          >
+            <div className="glass rounded-2xl p-6 text-center space-y-3 border border-border hover:shadow-lg transition-all">
+              <div className="w-14 h-14 rounded-xl mx-auto flex items-center justify-center bg-green-500/10">
+                <span className="text-2xl">📊</span>
+              </div>
+              <h3 className="font-bold text-foreground">لوحة المتعلم</h3>
+              <p className="text-xs text-muted-foreground">تتبع تقدّمك الدراسي</p>
+            </div>
+          </motion.div>
         </div>
       </div>
 
@@ -198,8 +254,9 @@ function QuickAccessSection() {
 }
 
 export default function Home() {
-  const { theme } = useAppStore();
+  const { theme, hasOnboarded } = useAppStore();
 
+  // Apply theme on mount
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "dark") {
@@ -216,6 +273,11 @@ export default function Home() {
         <ViewRenderer />
       </main>
       <Footer />
+
+      {/* Global Overlays */}
+      <OnboardingModal />
+      <AchievementToast />
+      <AIChatPanel />
     </div>
   );
 }

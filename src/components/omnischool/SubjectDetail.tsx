@@ -91,9 +91,10 @@ const statusConfig: Record<
 /*  SubjectDetail Component                                            */
 /* ================================================================== */
 export function SubjectDetail() {
-  const { selectedSubjectId, progress, setView, updateProgress } = useAppStore();
-  const [notes, setNotes] = useState("");
+  const { selectedSubjectId, progress, setView, updateProgress, subjectNotes, setSubjectNotes } = useAppStore();
   const [saving, setSaving] = useState(false);
+
+  const notes = subjectNotes[selectedSubjectId ?? ""] ?? "";
 
   const subject = useMemo(
     () => subjectsData.find((s) => s.id === selectedSubjectId),
@@ -407,12 +408,22 @@ export function SubjectDetail() {
               className="w-full min-h-[120px] rounded-xl border border-border bg-background/50 p-4 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-omni-red/30 transition-all placeholder:text-muted-foreground/50"
               placeholder="أضف ملاحظاتك حول هذه المادة..."
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={(e) => {
+                if (selectedSubjectId) {
+                  setSubjectNotes(selectedSubjectId, e.target.value);
+                }
+              }}
             />
-            <div className="mt-3 flex justify-end">
-              <Button size="sm" className="gap-2 btn-omni-primary">
+            <div className="mt-3 flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">
+                {notes.length > 0 ? `${notes.length} حرف` : "يتم الحفظ تلقائياً"}
+              </p>
+              <Button size="sm" className="gap-2 btn-omni-primary" onClick={() => {
+                setSaving(true);
+                setTimeout(() => setSaving(false), 500);
+              }}>
                 <Save className="size-4" />
-                حفظ الملاحظات
+                {saving ? "تم الحفظ ✓" : "حفظ الملاحظات"}
               </Button>
             </div>
           </CardContent>

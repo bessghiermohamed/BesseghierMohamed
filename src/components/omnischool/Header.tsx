@@ -15,6 +15,8 @@ import {
   Search,
   Info,
   GraduationCap,
+  CalendarDays,
+  Timer,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { ViewType } from "@/lib/types";
@@ -32,6 +34,8 @@ const NAV_LINKS: NavLink[] = [
   { label: "الرئيسية", view: "home", icon: Home },
   { label: "المواد", view: "subjects", icon: BookOpen },
   { label: "لوحة الطالب", view: "dashboard", icon: LayoutDashboard },
+  { label: "مخطط الدراسة", view: "planner", icon: CalendarDays },
+  { label: "مؤقت البومودورو", view: "timer", icon: Timer },
   { label: "بحث متقدم", view: "search", icon: Search },
   { label: "حول المنصة", view: "about", icon: Info },
 ];
