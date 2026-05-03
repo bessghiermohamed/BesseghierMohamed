@@ -1165,3 +1165,193 @@ Stage Summary:
 4. **Add dark mode animated toggle** with smooth theme transition
 5. **Add collaborative features** (shared notes, study groups)
 6. **Improve mobile experience** — better touch targets, swipe navigation
+
+---
+Task ID: phase8-styling
+Agent: frontend-styling-expert
+Task: Improve AboutPage and SubjectDetail styling for OmniSchool
+
+Work Log:
+- Read worklog.md and assessed project status (25+ components, 27+ features, VLM 7-8/10)
+- Read current AboutPage.tsx, SubjectDetail.tsx, globals.css, subjects-data.ts, types.ts
+- Completely rewrote AboutPage.tsx with rich visual sections:
+  - Hero section with Islamic geometric pattern overlay, floating decorative shapes, gradient background, ornamental divider, and info pills row
+  - Animated statistics counter row (24 مادة، 2 سداسي، 7 تصنيفات، 10+ مواد مشتركة) with AnimatedCounter component that counts up from 0
+  - Feature showcase section with 6 features in 3x2 grid using card-depth bg-card border border-border styling
+  - "How it works" section with 3 numbered steps and connecting line between them
+  - Semester overview with enhanced card styling (bullet points with colored dots, category icons)
+  - Testimonials section with 3 Arabic student testimonials, colored avatar circles, Quote icon decoration
+  - Tech stack section in a single card with colored border badges
+  - Team/credits section with decorative card, developer avatar, social links, and Islamic pattern background
+  - Used section-header-line on all section headings
+  - Used section-divider between all major sections
+  - Better visual flow with staggered framer-motion animations and scale variants
+- Enhanced SubjectDetail.tsx with:
+  - Better color theming based on subject category (categoryTheme mapping with primary color, light, gradient per category)
+  - Larger progress circle (150px with 12px stroke) wrapped in progress-ring-glow for hover glow effect
+  - Category-themed gradient top bar and subtle radial background overlay on header card
+  - Icon with glow blur behind it for visual depth
+  - New Progress Timeline section (horizontal bar with 5 milestone dots: البداية, الربع الأول, نصف الطريق, الربع الأخير, الإتمام)
+  - Enhanced status buttons with category-themed active styling and shadow glow
+  - Larger progress slider with thumb indicator
+  - Enhanced resource section with better visual hierarchy (icon + title + description per resource item)
+  - Better note-taking area with note-area-focus class for gradient border on focus, larger 180px min-height, and category-themed save button
+  - Enhanced related subjects section with RsIcon (uppercase fix), mini progress bars, and percentage display
+  - Used card-depth bg-card border border-border for all cards
+  - More spacing between sections (space-y-10)
+- Added 10+ new CSS utility classes to globals.css:
+  - .about-hero-parallax — Parallax scroll effect for About hero with radial gradient overlays
+  - .step-connector — Connecting line between how-it-works steps
+  - .testimonial-quote — Decorative quote mark styling with ::before pseudo-element
+  - .progress-timeline, .progress-timeline-line, .progress-timeline-fill, .progress-timeline-dot — Horizontal progress timeline components
+  - .note-area-focus — Enhanced textarea focus styling with gradient border on focus-within
+  - .resource-item — Enhanced resource link item with hover
+  - .avatar-circle — Colored avatar circle for testimonials/credits
+  - .category-tag — Pill-style category badge for subjects
+  - .stat-counter-glow — Glow effect on stat counter numbers
+- Fixed TypeScript errors:
+  - Changed ease: "easeOut" to ease: "easeOut" as const in AboutPage variant objects
+  - Removed invalid focusWithinBorderColor CSS property, replaced with note-area-focus CSS class
+  - Changed lowercase <rsIcon> to uppercase <RsIcon> for React component naming convention
+- Ran lint on modified files — passes with zero errors
+- Ran TypeScript check on modified files — passes with zero errors
+
+Stage Summary:
+- AboutPage completely redesigned with 8 visual sections (hero, stats, features, how-it-works, semesters, testimonials, tech stack, credits)
+- SubjectDetail enhanced with category theming, progress timeline, better visual hierarchy
+- 10+ new CSS utility classes added
+- All changes TypeScript-clean and lint-clean
+
+---
+Task ID: phase8-new-features
+Agent: main
+Task: Create 2 new feature components (StudyCountdownTimer, NotificationCenter)
+
+Work Log:
+- Read worklog.md and assessed project context (27+ components, Phase 7 completed)
+- Read existing store.ts, page.tsx, Header.tsx, types.ts to understand current structure
+- Updated Zustand store (store.ts):
+  - Added `countdowns` state array with `addCountdown` and `removeCountdown` actions
+  - Added `notifications` state array with `addNotification`, `markNotificationRead`, `markAllNotificationsRead`, `removeNotification` actions
+  - Added both `countdowns` and `notifications` to `partialize` for localStorage persistence
+  - Updated `resetProgress` to clear both new state fields
+- Created StudyCountdownTimer.tsx:
+  - Study countdown timer component with flip-style digit transitions (AnimatePresence mode="popLayout")
+  - Set countdown to specific date/time (up to 5 countdowns)
+  - Display countdown as days/hours/minutes/seconds with animated flip digits
+  - Visual urgency indicator: green (>7d), gold (3-7d), red (<3d), pulsing red (<1d)
+  - SVG progress ring that depletes as deadline approaches (motion.circle animated strokeDashoffset)
+  - Title and formatted date for each countdown
+  - Delete countdown with animated transitions
+  - Auto-notify visual flash when countdown reaches zero (AnimatePresence gold overlay)
+  - Glass morphism card with Red+Gold gradient accent
+  - Dialog form for adding new countdowns (title, date, time)
+  - Empty state with clock icon and Arabic text
+  - Counter indicator dots (X/5)
+  - RTL Arabic layout, responsive design
+- Created NotificationCenter.tsx:
+  - Bell icon button with unread count badge (red circle, animated spring)
+  - Animated bell bounce when new notifications arrive (key-based motion trigger)
+  - Dropdown panel with notification list (Popover + ScrollArea)
+  - 3 notification types: study_reminder (gold), achievement (red), streak_warning (orange)
+  - Auto-generate notifications from store data using useRef to prevent infinite loops
+  - Mark as read / mark all as read ("قراءة الكل")
+  - Clear individual notifications
+  - Time-relative display (منذ ساعة, منذ يومين, etc.)
+  - Empty state: "لا توجد إشعارات" with Bell icon
+  - Glass morphism dropdown panel (glass-strong)
+  - Color-coded icons and backgrounds per type
+- Integrated StudyCountdownTimer into homepage page.tsx (after MotivationalQuoteWidget, before Categories)
+- Integrated NotificationCenter into Header.tsx (in right actions area, before theme toggle)
+- Fixed lint issues: removed unused eslint-disable, replaced setState in useEffect with key-based animation
+- All lint checks pass with zero errors
+
+Stage Summary:
+- 2 new components created: StudyCountdownTimer, NotificationCenter
+- Zustand store expanded with countdowns and notifications systems (7 new actions, persisted to localStorage)
+- StudyCountdownTimer integrated into homepage after MotivationalQuoteWidget
+- NotificationCenter integrated into Header navbar
+- Project now has 27+ components in /src/components/omnischool/
+- All changes lint-clean, dev server running correctly
+
+---
+Task ID: phase8
+Agent: main
+Task: QA testing, new features (StudyCountdownTimer + NotificationCenter), styling improvements (AboutPage + SubjectDetail)
+
+Work Log:
+- Reviewed worklog.md: project has 27+ components, 30+ features, VLM scores 7/10 homepage, 7/10 dashboard
+- Performed QA testing with agent-browser + VLM analysis
+  - Homepage rated 7/10 (needs more visual depth in content sections)
+  - Dashboard rated 6/10 (VLM confused by onboarding modal overlay)
+  - Subjects rated 7/10
+  - About page rated 7/10 (needs more content variety)
+- Identified key issue: onboarding modal shows on every fresh session (expected behavior, not a bug)
+- Delegated new feature development to full-stack-developer subagent
+  - Created StudyCountdownTimer.tsx: flip-style countdown with urgency indicators, progress ring, up to 5 countdowns
+  - Created NotificationCenter.tsx: bell icon with badge, dropdown panel, 3 notification types, mark read/clear
+  - Added countdowns + notifications state to Zustand store (7 new actions, persisted)
+  - Integrated StudyCountdownTimer into homepage after MotivationalQuoteWidget
+  - Integrated NotificationCenter into Header navbar (bell icon next to theme toggle)
+- Delegated styling improvements to frontend-styling-expert subagent
+  - Completely rewrote AboutPage.tsx: hero with Islamic pattern, animated stats, 6 feature cards, 3 how-it-works steps, testimonials, tech stack, credits
+  - Enhanced SubjectDetail.tsx: category theming (7 color themes), larger progress circle with glow, progress timeline with 5 milestones, enhanced notes area with focus styling, related subjects with mini progress bars
+  - Added 10+ new CSS utilities: about-hero-parallax, step-connector, testimonial-quote, progress-timeline-*, note-area-focus, resource-item, avatar-circle, category-tag, stat-counter-glow
+- VLM re-test: all pages consistently rated 7/10
+- All lint checks pass with zero errors
+- Dev server running correctly (200 responses)
+
+Stage Summary:
+- 2 new components: StudyCountdownTimer, NotificationCenter
+- AboutPage completely rewritten with 8 rich visual sections
+- SubjectDetail enhanced with category theming, progress timeline, better notes area
+- 7 new Zustand store actions for countdowns + notifications
+- 10+ new CSS utility classes
+- VLM quality: all pages 7/10 (consistent, stable)
+- Project now has 29+ components, 34+ features
+- All lint-clean, dev server verified
+
+## Current Project Status Assessment (Phase 8 Update)
+
+### Architecture
+- **Framework**: Next.js 16 App Router, TypeScript, Tailwind CSS 4
+- **29+ Components** in `/src/components/omnischool/`
+- **9 API Routes** (subjects, progress, search, stats, chat with LLM)
+- **Zustand Store** with localStorage persistence for 20+ state fields
+- **Prisma SQLite** for server-side data
+- **8 Views**: home, dashboard, subjects, subject-detail, search, about, planner, timer
+
+### VLM Quality Ratings (Phase 8)
+- **Homepage**: 7/10 (stable, consistent quality)
+- **Dashboard**: 7/10 (major improvement maintained from Phase 7)
+- **Subjects Grid**: 7/10 (stable)
+- **About Page**: 7/10 (rewritten with rich content — improved from basic version)
+
+### Features Completed (All 34+)
+1-32. All previous features maintained and enhanced
+33. ✅ **NEW** StudyCountdownTimer: flip-style countdown with urgency indicators, up to 5 countdowns
+34. ✅ **NEW** NotificationCenter: bell icon with badge count, 3 notification types, mark read/clear
+35. ✅ **NEW** AboutPage rewrite: 8 sections with animated stats, features, testimonials
+36. ✅ **NEW** SubjectDetail category theming: 7 color themes per subject category
+37. ✅ **NEW** Progress timeline in SubjectDetail: 5 horizontal milestones
+38. ✅ **NEW** Enhanced notes area with focus styling and category-themed save button
+
+### Goals Completed This Phase
+- QA testing with agent-browser + VLM analysis ✅
+- New features (StudyCountdownTimer, NotificationCenter) ✅
+- Styling improvements (AboutPage rewrite, SubjectDetail enhancement) ✅
+- VLM quality maintained at 7/10 across all pages ✅
+
+### Unresolved Issues / Risks
+- VLM consistently rates 7/10 — to reach 8-9/10 would need more sophisticated data visualizations and interactive elements
+- Onboarding modal blocks VLM view on fresh sessions (expected behavior, not a bug)
+- Performance optimization still needed for heavy components (Recharts, GPACalculator)
+- DataImport uses direct localStorage manipulation
+
+### Next Phase Recommendations
+1. **Add trend/line charts** for progress over time using Recharts
+2. **Add collaborative features** (shared notes, study groups)
+3. **Performance optimization** — lazy loading for remaining heavy components
+4. **Add mobile gesture navigation** — swipe between views
+5. **Add dark mode animated toggle** with smooth theme transition
+6. **Improve DataImport** to use Zustand store actions

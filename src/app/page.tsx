@@ -20,6 +20,7 @@ import { StudyStreak } from "@/components/omnischool/StudyStreak";
 import { DataExportImport } from "@/components/omnischool/DataExportImport";
 import { QuickStatsWidget } from "@/components/omnischool/QuickStatsWidget";
 import { MotivationalQuoteWidget } from "@/components/omnischool/MotivationalQuoteWidget";
+import { StudyCountdownTimer } from "@/components/omnischool/StudyCountdownTimer";
 import { ActivityTimeline } from "@/components/omnischool/ActivityTimeline";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
@@ -269,6 +270,12 @@ function QuickAccessSection() {
 
       {/* Motivational Quote Widget */}
       <MotivationalQuoteWidget />
+
+      {/* Section Divider */}
+      <div className="section-divider" />
+
+      {/* Study Countdown Timer */}
+      <StudyCountdownTimer />
 
       {/* Section Divider */}
       <div className="section-divider" />

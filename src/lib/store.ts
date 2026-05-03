@@ -30,6 +30,12 @@ interface AppState {
   // Weekly Goals
   weeklyGoals: WeeklyGoal[];
 
+  // Countdowns
+  countdowns: Array<{id: string; title: string; targetDate: string; createdAt: string}>;
+
+  // Notifications
+  notifications: Array<{id: string; type: 'study_reminder' | 'achievement' | 'streak_warning'; title: string; message: string; read: boolean; createdAt: string}>;
+
   // UI
   sidebarOpen: boolean;
   theme: "light" | "dark";
@@ -60,6 +66,12 @@ interface AppState {
   addWeeklyGoal: (goal: WeeklyGoal) => void;
   toggleWeeklyGoal: (id: string) => void;
   removeWeeklyGoal: (id: string) => void;
+  addCountdown: (countdown: {id: string; title: string; targetDate: string; createdAt: string}) => void;
+  removeCountdown: (id: string) => void;
+  addNotification: (notification: {id: string; type: 'study_reminder' | 'achievement' | 'streak_warning'; title: string; message: string; read: boolean; createdAt: string}) => void;
+  markNotificationRead: (id: string) => void;
+  markAllNotificationsRead: () => void;
+  removeNotification: (id: string) => void;
   resetProgress: () => void;
 }
 
@@ -92,6 +104,12 @@ export const useAppStore = create<AppState>()(
 
       // Weekly Goals
       weeklyGoals: [],
+
+      // Countdowns
+      countdowns: [],
+
+      // Notifications
+      notifications: [],
 
       // UI
       sidebarOpen: false,
@@ -246,7 +264,39 @@ export const useAppStore = create<AppState>()(
           weeklyGoals: state.weeklyGoals.filter((g) => g.id !== id),
         })),
 
-      resetProgress: () => set({ progress: [], achievements: [], studySessions: [], subjectNotes: {}, weeklyGoals: [] }),
+      addCountdown: (countdown) =>
+        set((state) => ({
+          countdowns: [...state.countdowns, countdown],
+        })),
+
+      removeCountdown: (id) =>
+        set((state) => ({
+          countdowns: state.countdowns.filter((c) => c.id !== id),
+        })),
+
+      addNotification: (notification) =>
+        set((state) => ({
+          notifications: [notification, ...state.notifications],
+        })),
+
+      markNotificationRead: (id) =>
+        set((state) => ({
+          notifications: state.notifications.map((n) =>
+            n.id === id ? { ...n, read: true } : n
+          ),
+        })),
+
+      markAllNotificationsRead: () =>
+        set((state) => ({
+          notifications: state.notifications.map((n) => ({ ...n, read: true })),
+        })),
+
+      removeNotification: (id) =>
+        set((state) => ({
+          notifications: state.notifications.filter((n) => n.id !== id),
+        })),
+
+      resetProgress: () => set({ progress: [], achievements: [], studySessions: [], subjectNotes: {}, weeklyGoals: [], countdowns: [], notifications: [] }),
     }),
     {
       name: "omnischool-storage",
@@ -261,6 +311,8 @@ export const useAppStore = create<AppState>()(
         favorites: state.favorites,
         favoriteQuotes: state.favoriteQuotes,
         weeklyGoals: state.weeklyGoals,
+        countdowns: state.countdowns,
+        notifications: state.notifications,
         theme: state.theme,
       }),
     }

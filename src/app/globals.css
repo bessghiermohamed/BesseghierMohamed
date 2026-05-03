@@ -2223,3 +2223,229 @@ html {
 .dark .stat-value-xl {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
+
+/* ========================================================================
+   Phase 8 — AboutPage & SubjectDetail Enhancement CSS Utilities
+   ======================================================================== */
+
+/* ------------------------------------------------------------------
+   About Hero Parallax — Parallax scroll effect for About hero section
+   ------------------------------------------------------------------ */
+.about-hero-parallax {
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.about-hero-parallax::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 70% 20%,
+    rgba(212, 168, 67, 0.08) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    ellipse at 30% 80%,
+    rgba(185, 28, 28, 0.05) 0%,
+    transparent 40%
+  );
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------
+   Step Connector Line — Connecting line between how-it-works steps
+   ------------------------------------------------------------------ */
+.step-connector {
+  position: relative;
+}
+
+.step-connector::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -1rem;
+  right: -1rem;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(185, 28, 28, 0.15) 20%,
+    rgba(212, 168, 67, 0.3) 50%,
+    rgba(185, 28, 28, 0.15) 80%,
+    transparent 100%
+  );
+}
+
+/* ------------------------------------------------------------------
+   Testimonial Quote Mark — Decorative quote icon styling
+   ------------------------------------------------------------------ */
+.testimonial-quote {
+  position: relative;
+}
+
+.testimonial-quote::before {
+  content: '"';
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  font-size: 4rem;
+  font-family: Georgia, serif;
+  color: rgba(185, 28, 28, 0.06);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.dark .testimonial-quote::before {
+  color: rgba(239, 68, 68, 0.06);
+}
+
+/* ------------------------------------------------------------------
+   Progress Timeline — Horizontal progress timeline styling
+   ------------------------------------------------------------------ */
+.progress-timeline {
+  position: relative;
+  padding: 1rem 0;
+}
+
+.progress-timeline-line {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  left: 1rem;
+  height: 4px;
+  background: var(--muted);
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.progress-timeline-fill {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  height: 4px;
+  border-radius: 2px;
+  transform: translateY(-50%);
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-timeline-dot {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid;
+  transition: all 0.3s ease;
+}
+
+.progress-timeline-dot.reached {
+  box-shadow: 0 0 12px rgba(185, 28, 28, 0.2);
+}
+
+/* ------------------------------------------------------------------
+   Note Area Focus — Enhanced textarea focus styling for notes
+   ------------------------------------------------------------------ */
+.note-area-focus {
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.note-area-focus::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  padding: 2px;
+  background: linear-gradient(135deg, transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+
+.note-area-focus:focus-within::before {
+  background: linear-gradient(
+    135deg,
+    rgba(185, 28, 28, 0.4),
+    rgba(212, 168, 67, 0.4),
+    rgba(185, 28, 28, 0.2)
+  );
+}
+
+.dark .note-area-focus:focus-within::before {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.4),
+    rgba(212, 168, 67, 0.4),
+    rgba(239, 68, 68, 0.2)
+  );
+}
+
+/* ------------------------------------------------------------------
+   Resource Item — Enhanced resource link item with hover
+   ------------------------------------------------------------------ */
+.resource-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.resource-item:hover {
+  border-color: var(--border);
+  background: rgba(var(--muted), 0.3);
+  transform: translateX(-2px);
+}
+
+/* ------------------------------------------------------------------
+   Avatar Circle — Colored avatar circle for testimonials/credits
+   ------------------------------------------------------------------ */
+.avatar-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------
+   Category Tag — Pill-style category badge for subjects
+   ------------------------------------------------------------------ */
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+/* ------------------------------------------------------------------
+   Stat Counter Glow — Glow effect on stat counter numbers
+   ------------------------------------------------------------------ */
+.stat-counter-glow {
+  text-shadow: 0 0 20px currentColor;
+  transition: text-shadow 0.3s ease;
+}
+
+.stat-counter-glow:hover {
+  text-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
+}

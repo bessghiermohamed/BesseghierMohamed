@@ -18,6 +18,7 @@ import {
   CalendarDays,
   Timer,
 } from "lucide-react";
+import { NotificationCenter } from "@/components/omnischool/NotificationCenter";
 import { useState, useEffect } from "react";
 import type { ViewType } from "@/lib/types";
 
@@ -143,8 +144,11 @@ export default function Header() {
           })}
         </nav>
 
-        {/* ---- Right actions: theme toggle + mobile menu ---- */}
+        {/* ---- Right actions: notifications + theme toggle + mobile menu ---- */}
         <div className="flex items-center gap-2">
+          {/* Notification Center */}
+          <NotificationCenter />
+
           {/* Theme toggle */}
           <motion.div whileTap={{ scale: 0.9 }}>
             <Button
