@@ -65,6 +65,18 @@ export default function Header() {
     }
   }, [theme]);
 
+  /* Keyboard shortcut: Ctrl+K for search */
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setView("search");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [setView]);
+
   const handleNav = (view: ViewType) => {
     setView(view);
     setMobileOpen(false);
@@ -118,11 +130,11 @@ export default function Header() {
                   {isActive && (
                     <motion.span
                       layoutId="activeNav"
-                      initial={{ opacity: 0, scaleX: 0 }}
-                      animate={{ opacity: 1, scaleX: 1 }}
-                      exit={{ opacity: 0, scaleX: 0 }}
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "100%" }}
+                      exit={{ opacity: 0, width: 0 }}
                       transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                      className="absolute bottom-0 right-0 left-0 h-0.5 origin-center rounded-full bg-omni-red dark:bg-red-400"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-omni-red dark:bg-red-400"
                     />
                   )}
                 </AnimatePresence>

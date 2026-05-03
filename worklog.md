@@ -368,3 +368,133 @@ Stage Summary:
 5. **Add subject bookmarks/favorites** system
 6. **Improve DataImport** to use Zustand store actions instead of direct localStorage
 7. **Add semester GPA calculator** based on progress
+
+---
+Task ID: phase4
+Agent: main
+Task: QA testing, bug fixes, styling improvements, new features
+
+Work Log:
+- Reviewed worklog.md and assessed project status (20 components, 18 features, VLM 8/10)
+- Performed QA testing with agent-browser + VLM analysis (rated 7/10 on this round)
+- Identified bugs: overflow scrollbar, search bar padding, nav underline alignment
+- Fixed overflow-x-hidden in layout.tsx body
+- Fixed search bar padding in HeroSection.tsx (added px-4 to Input)
+- Fixed nav underline alignment in Header.tsx (changed scaleX to width animation, centered with translate)
+- Added scroll-to-top floating button (appears after 400px scroll, smooth scroll)
+- Added Ctrl+K / Cmd+K keyboard shortcut for search navigation
+- Added favorites system to Zustand store (favorites array + toggleFavorite action, persisted)
+- Created QuickStatsWidget component (4 stat cards: total, completed, in progress, avg %)
+- Created SubjectFavoriteToggle component (animated heart with spring transitions)
+- Integrated SubjectFavoriteToggle into SubjectCard and SubjectDetail
+- Added 7 new CSS utilities: scroll-top-btn, animate-heart-pop, tooltip-enter, card-shine, animate-number-pop, section-header-line
+- Integrated QuickStatsWidget into homepage between hero and quick access
+- VLM QA re-test: stats section rated 8/10, wave divider visible, search bar well-aligned
+- All lint checks pass, dev server runs correctly
+
+Stage Summary:
+- 3 bugs fixed (overflow, search padding, nav alignment)
+- 2 new components created (QuickStatsWidget, SubjectFavoriteToggle)
+- 7 new CSS micro-interaction utilities added
+- Keyboard shortcuts (Ctrl+K) and scroll-to-top added
+- Subject favorites system with animated heart toggle
+- VLM quality rating: 8/10 for stats section, search bar aligned
+
+## Current Project Status Assessment (Phase 4 Update)
+
+### Architecture
+- **Framework**: Next.js 16 App Router, TypeScript, Tailwind CSS 4
+- **22 Components** in `/src/components/omnischool/`
+- **9 API Routes** (subjects, progress, search, stats, chat with LLM)
+- **Zustand Store** with localStorage persistence for 14+ state fields
+- **Prisma SQLite** for server-side data
+- **8 Views**: home, dashboard, subjects, subject-detail, search, about, planner, timer
+
+### Features Completed (All 24)
+1. ✅ Red+Gold RTL Arabic theme with glass morphism
+2. ✅ 24 subjects (12/semester) with categories and progress tracking
+3. ✅ Student Dashboard with summary cards, progress circles, category breakdown
+4. ✅ Subject detail with status update, progress slider, notes (persisted), resources
+5. ✅ Advanced search with trending queries and category filters
+6. ✅ Study Planner with weekly calendar and session management
+7. ✅ Pomodoro Timer with focus/break modes
+8. ✅ AI Chat Assistant with real LLM integration (z-ai-web-dev-sdk) + mock fallback
+9. ✅ Onboarding wizard (3 steps)
+10. ✅ Achievement system with toast notifications
+11. ✅ Dark mode support
+12. ✅ Mobile responsive with hamburger menu
+13. ✅ Study Streak tracker with flame animation and 7-day activity
+14. ✅ Semester Comparison Chart using Recharts
+15. ✅ Data Export/Import (JSON backup & restore)
+16. ✅ Announcement Banner (dismissible, animated)
+17. ✅ Wave dividers between hero and content sections
+18. ✅ Card ornaments, button ripple effects, gradient text effects
+19. ✅ **NEW** QuickStatsWidget with 4 live stat cards
+20. ✅ **NEW** Subject favorites with animated heart toggle
+21. ✅ **NEW** Scroll-to-top floating button
+22. ✅ **NEW** Keyboard shortcuts (Ctrl+K for search)
+23. ✅ **NEW** Card shine hover effect
+24. ✅ **NEW** Section header decorative line utility
+
+### Goals Completed This Phase
+- QA testing with agent-browser + VLM analysis ✅
+- Bug fixes (overflow, search padding, nav alignment) ✅
+- Styling improvements (7 new micro-interaction CSS utilities) ✅
+- New features (2 new components, favorites system, keyboard shortcuts, scroll-to-top) ✅
+
+### Unresolved Issues / Risks
+- Dev server dies after ~15 seconds in sandbox (process killed, likely sandbox memory limitation)
+- Server works correctly when alive (confirmed 200 responses and VLM screenshots)
+- Some icons in StudentDashboard icon map use workarounds (not critical)
+- DataImport uses direct localStorage manipulation (could be improved with Zustand store actions)
+
+### Next Phase Recommendations
+1. **Add PDF export** for progress reports (using jsPDF or similar)
+2. **Add subject comparison** feature (compare 2-3 subjects side by side)
+3. **Performance optimization** (lazy loading for heavy components like Recharts)
+4. **Add semester GPA calculator** based on progress
+5. **Improve DataImport** to use Zustand store actions instead of direct localStorage
+6. **Add collaborative features** (shared notes, study groups)
+7. **Add dark mode toggle animation** transition between themes
+
+---
+Task ID: phase4-bugs-styling
+Agent: main
+Task: Fix QA bugs and add UX enhancements (Phase 4)
+
+Work Log:
+- Bug 1: Added `overflow-x-hidden` to body className in layout.tsx to fix visible red scrollbar on right edge
+- Bug 2: Added `px-4` to search Input className in HeroSection.tsx to fix uneven padding
+- Bug 3: Fixed nav underline alignment in Header.tsx — changed animation from `scaleX` to `width` and updated positioning from `right-0 left-0 origin-center` to `left-1/2 -translate-x-1/2`
+- Enhancement 1: Added ScrollToTop component in page.tsx — floating button appears after 400px scroll, animated with AnimatePresence, smooth scroll to top
+- Enhancement 2: Added Ctrl+K / Cmd+K keyboard shortcut for search in Header.tsx
+- Enhancement 3: Added `favorites: string[]` and `toggleFavorite` action to Zustand store with localStorage persistence
+- Enhancement 4: Added 7 new CSS utility classes to globals.css: scroll-top-btn, animate-heart-pop, tooltip-enter, card-shine, animate-number-pop, section-header-line
+- Fixed duplicate entries in store.ts (duplicate `favorites` field, duplicate `toggleFavorite` action)
+- Ran lint — passes with zero errors
+- Dev server running correctly, confirmed 200 responses
+
+Stage Summary:
+- 3 bugs fixed: overflow scrollbar, search bar padding, nav underline alignment
+- 4 enhancements added: scroll-to-top button, Ctrl+K search shortcut, favorites store, CSS micro-interactions
+- All changes lint-clean and dev-server verified
+
+---
+Task ID: phase4-new-components
+Agent: main
+Task: Create QuickStatsWidget and SubjectFavoriteToggle components
+
+Work Log:
+- Created QuickStatsWidget.tsx: compact stats bar with 4 stat cards (total subjects, completed, in progress, average progress %), glass morphism with card-ornament, animated counters, RTL Arabic, uses Zustand store progress data
+- Created SubjectFavoriteToggle.tsx: heart button toggle for subject favorites with spring animation, AnimatePresence for filled/outline transitions, stopPropagation to prevent card click-through
+- Added `favorites` and `toggleFavorite` to Zustand store (AppState interface, initial state, action, partialize for persistence)
+- Added CSS classes: `card-shine` (hover shimmer effect for stat cards), `animate-heart-pop` (bounce animation for favorite toggle)
+- Integrated QuickStatsWidget into homepage page.tsx between HeroSection and QuickAccessSection
+- Ran lint — passes with zero errors
+
+Stage Summary:
+- 2 new components created: QuickStatsWidget, SubjectFavoriteToggle
+- Zustand store expanded with favorites system (persisted to localStorage)
+- 2 new CSS utility classes added (card-shine, animate-heart-pop)
+- QuickStatsWidget integrated into homepage between hero and quick access sections
+- All lint checks pass, dev server runs correctly

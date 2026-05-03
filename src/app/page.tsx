@@ -19,9 +19,10 @@ import { AnnouncementBanner } from "@/components/omnischool/AnnouncementBanner";
 import { StudyStreak } from "@/components/omnischool/StudyStreak";
 import { SemesterComparisonChart } from "@/components/omnischool/SemesterComparisonChart";
 import { DataExportImport } from "@/components/omnischool/DataExportImport";
+import { QuickStatsWidget } from "@/components/omnischool/QuickStatsWidget";
 import { subjectsData, categories } from "@/lib/subjects-data";
 import { Subject } from "@/lib/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const pageVariants = {
   initial: { opacity: 0, y: 12 },
@@ -45,6 +46,9 @@ function ViewRenderer() {
         {currentView === "home" && (
           <div>
             <HeroSection />
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 mb-8">
+              <QuickStatsWidget />
+            </div>
             <QuickAccessSection />
           </div>
         )}
@@ -263,6 +267,37 @@ function QuickAccessSection() {
   );
 }
 
+function ScrollToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setVisible(window.scrollY > 400);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed bottom-6 right-6 z-[70] w-11 h-11 rounded-full bg-gradient-to-br from-omni-red to-omni-red-dark text-white shadow-lg glow-red-sm flex items-center justify-center"
+          aria-label="العودة للأعلى"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function Home() {
   const { theme, hasOnboarded } = useAppStore();
 
@@ -289,6 +324,9 @@ export default function Home() {
       <OnboardingModal />
       <AchievementToast />
       <AIChatPanel />
+
+      {/* Scroll to top button */}
+      <ScrollToTop />
     </div>
   );
 }

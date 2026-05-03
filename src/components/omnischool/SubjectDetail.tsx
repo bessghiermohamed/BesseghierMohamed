@@ -50,6 +50,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import { SubjectFavoriteToggle } from "./SubjectFavoriteToggle";
+
 /* ------------------------------------------------------------------ */
 /*  Icon mapping                                                       */
 /* ------------------------------------------------------------------ */
@@ -202,12 +204,13 @@ export function SubjectDetail() {
 
               {/* Content */}
               <div className="flex-1 space-y-3">
-                <div className="flex flex-wrap items-start gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
                     {subject.nameAr}
                   </h1>
+                  <SubjectFavoriteToggle subjectId={subject.id} size={20} />
                   {subject.nameEn && (
-                    <span className="text-sm text-muted-foreground mt-2">
+                    <span className="text-sm text-muted-foreground mt-1">
                       {subject.nameEn}
                     </span>
                   )}

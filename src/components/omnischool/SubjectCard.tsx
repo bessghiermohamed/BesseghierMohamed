@@ -27,6 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Subject, SubjectProgress } from "@/lib/types";
 import { ProgressCircle } from "./ProgressCircle";
+import { SubjectFavoriteToggle } from "./SubjectFavoriteToggle";
 
 /* ------------------------------------------------------------------
    Icon Mapping — maps subject.icon string → lucide-react component
@@ -170,11 +171,14 @@ export function SubjectCard({ subject, progress, onClick }: SubjectCardProps) {
 
           {/* Content area */}
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            {/* Subject name + code badge */}
+            {/* Subject name + code badge + favorite */}
             <div className="flex items-start justify-between gap-2">
-              <h3 className="text-base font-bold leading-tight text-foreground sm:text-lg">
-                {subject.nameAr}
-              </h3>
+              <div className="flex items-center gap-1.5 min-w-0">
+                <SubjectFavoriteToggle subjectId={subject.id} size={14} className="shrink-0" />
+                <h3 className="text-base font-bold leading-tight text-foreground sm:text-lg truncate">
+                  {subject.nameAr}
+                </h3>
+              </div>
               <Badge
                 variant="outline"
                 className="shrink-0 text-[10px] font-medium ltr-content"

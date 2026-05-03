@@ -31,6 +31,7 @@ interface AppState {
   sidebarOpen: boolean;
   theme: "light" | "dark";
   chatOpen: boolean;
+  favorites: string[];
 
   // Actions
   setView: (view: ViewType) => void;
@@ -50,6 +51,7 @@ interface AppState {
   toggleSidebar: () => void;
   toggleTheme: () => void;
   toggleChat: () => void;
+  toggleFavorite: (subjectId: string) => void;
   resetProgress: () => void;
 }
 
@@ -84,6 +86,7 @@ export const useAppStore = create<AppState>()(
       sidebarOpen: false,
       theme: "light",
       chatOpen: false,
+      favorites: [],
 
       // Actions
       setView: (view) => set({ currentView: view }),
@@ -200,6 +203,13 @@ export const useAppStore = create<AppState>()(
 
       toggleChat: () => set((state) => ({ chatOpen: !state.chatOpen })),
 
+      toggleFavorite: (subjectId) =>
+        set((state) => ({
+          favorites: state.favorites.includes(subjectId)
+            ? state.favorites.filter((id) => id !== subjectId)
+            : [...state.favorites, subjectId],
+        })),
+
       resetProgress: () => set({ progress: [], achievements: [], studySessions: [], subjectNotes: {} }),
     }),
     {
@@ -212,6 +222,7 @@ export const useAppStore = create<AppState>()(
         subjectNotes: state.subjectNotes,
         studySessions: state.studySessions,
         achievements: state.achievements,
+        favorites: state.favorites,
         theme: state.theme,
       }),
     }

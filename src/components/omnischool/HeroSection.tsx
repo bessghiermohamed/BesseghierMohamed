@@ -148,7 +148,7 @@ export default function HeroSection() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="ابحث عن مادة، تصنيف، أو كود..."
-                className="h-12 border-0 bg-transparent text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:border-0 shadow-none"
+                className="h-12 border-0 bg-transparent text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:border-0 shadow-none px-4"
               />
               <button
                 type="submit"
