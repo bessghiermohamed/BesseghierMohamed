@@ -101,13 +101,32 @@ function ViewRenderer() {
   );
 }
 
+/* Enhanced section divider: gradient line with animated diamond */
+function OrnamentalDivider() {
+  return (
+    <div className="relative flex items-center justify-center h-10 my-6">
+      <div className="absolute inset-x-0 h-px top-1/2" style={{ background: "linear-gradient(90deg, transparent 0%, var(--border) 15%, rgba(185,28,28,0.25) 40%, rgba(212,168,67,0.4) 50%, rgba(185,28,28,0.25) 60%, var(--border) 85%, transparent 100%)" }} />
+      <motion.div
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="relative z-10 w-3 h-3 rotate-45 bg-gradient-to-br from-omni-red to-omni-gold shadow-sm"
+      />
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-[15%] pointer-events-none">
+        <div className="w-1.5 h-1.5 rounded-full bg-omni-red/20" />
+        <div className="w-1.5 h-1.5 rounded-full bg-omni-gold/20" />
+      </div>
+    </div>
+  );
+}
+
 function QuickAccessSection() {
   const { selectSubject, setView } = useAppStore();
   const quickSubjects = subjectsData.slice(0, 6);
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-12">
-      {/* Quick Access */}
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-10">
+      {/* Quick Access — Enhanced Subject Cards */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -118,12 +137,17 @@ function QuickAccessSection() {
               الوصول السريع لموادك الدراسية
             </p>
           </div>
-          <button
+          <motion.button
+            whileHover={{ x: -4 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setView("subjects")}
-            className="text-sm text-omni-red hover:text-omni-red/80 font-medium transition-colors"
+            className="text-sm text-omni-red hover:text-omni-red/80 font-medium transition-colors flex items-center gap-1"
           >
-            عرض الكل ←
-          </button>
+            عرض الكل
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </motion.button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -133,26 +157,42 @@ function QuickAccessSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.08, duration: 0.4 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.02, y: -3 }}
               whileTap={{ scale: 0.98 }}
-              className="cursor-pointer hover-lift"
+              className="cursor-pointer"
               onClick={() => selectSubject(subject.id)}
             >
-              <div className="card-depth bg-card border border-border rounded-xl p-4 sm:p-5 flex items-center gap-4 relative overflow-hidden group transition-all duration-300 hover:border-omni-red/20 hover:shadow-lg">
-                {/* Accent bar — thicker, gradient */}
+              <div className="bg-card border border-border rounded-xl p-4 sm:p-5 flex items-center gap-4 relative overflow-hidden group transition-all duration-300 hover:shadow-lg hover:border-omni-red/20">
+                {/* Gradient overlay on hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: `linear-gradient(135deg, ${subject.color}08 0%, transparent 60%)` }}
+                />
+                {/* Top accent bar — gradient */}
                 <div
                   className="absolute top-0 right-0 left-0 h-1 rounded-t-xl"
                   style={{ background: `linear-gradient(90deg, ${subject.color}, ${subject.color}80)` }}
                 />
+                {/* Bottom shadow line */}
                 <div
-                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 shadow-sm border border-border/50"
-                  style={{ backgroundColor: `${subject.color}12` }}
+                  className="absolute bottom-0 right-0 left-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: `linear-gradient(90deg, transparent, ${subject.color}40, transparent)` }}
+                />
+                {/* Larger, more colorful icon area */}
+                <div
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md relative"
+                  style={{ backgroundColor: `${subject.color}10` }}
                 >
-                  <span className="text-xl sm:text-2xl font-black" style={{ color: subject.color }}>
+                  <span className="text-2xl sm:text-3xl font-black transition-transform duration-300 group-hover:scale-110" style={{ color: subject.color }}>
                     {subject.nameAr.charAt(0)}
                   </span>
+                  {/* Subtle glow ring on hover */}
+                  <div
+                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{ boxShadow: `0 0 16px ${subject.color}25` }}
+                  />
                 </div>
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 relative z-10">
                   <h3 className="font-bold text-sm sm:text-base truncate text-foreground">
                     {subject.nameAr}
                   </h3>
@@ -165,8 +205,8 @@ function QuickAccessSection() {
                     مشترك
                   </span>
                 )}
-                {/* Arrow indicator */}
-                <svg className="w-4 h-4 text-muted-foreground/40 group-hover:text-omni-red/60 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                {/* Animated arrow indicator */}
+                <svg className="w-4 h-4 text-muted-foreground/30 group-hover:text-omni-red/70 group-hover:-translate-x-1 transition-all duration-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
               </div>
@@ -175,80 +215,106 @@ function QuickAccessSection() {
         </div>
       </div>
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
-      {/* Quick Feature Cards — with depth/parallax effect */}
+      {/* Study Tools — Enhanced with gradient backgrounds, animated icons, badges */}
       <div className="space-y-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-foreground section-header-line">
           أدوات الدراسة
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+          {/* Study Planner — Red themed */}
           <motion.div
             initial={{ opacity: 0, y: 20, rotateX: 5 }}
             animate={{ opacity: 1, y: 0, rotateX: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            whileHover={{ scale: 1.04, y: -4, rotateX: -2 }}
+            whileHover={{ scale: 1.04, y: -5 }}
             whileTap={{ scale: 0.97 }}
             className="cursor-pointer"
             onClick={() => setView("planner")}
             style={{ perspective: 1000 }}
           >
-            <div className="card-depth bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-omni-red/20 transition-all relative overflow-hidden group">
+            <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-omni-red/20 transition-all relative overflow-hidden group">
               {/* Red gradient top accent */}
-              <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-omni-red to-omni-red-dark rounded-t-2xl" />
-              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-red/10 animate-float border border-omni-red/10 shadow-sm">
-                <span className="text-3xl">📅</span>
+              <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-l from-omni-red via-omni-red-dark to-omni-red/60 rounded-t-2xl" />
+              {/* Gradient background overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-omni-red/5 via-transparent to-omni-red/3 pointer-events-none" />
+              {/* Floating icon with pulse */}
+              <div className="relative">
+                <div className="w-18 h-18 rounded-2xl mx-auto flex items-center justify-center bg-gradient-to-br from-omni-red/15 to-omni-red/5 border border-omni-red/10 shadow-sm">
+                  <span className="text-4xl animate-float">📅</span>
+                </div>
+                {/* Hot badge */}
+                <div className="absolute -top-2 -left-2 bg-gradient-to-r from-omni-red to-omni-red-light text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+                  HOT
+                </div>
               </div>
-              <h3 className="font-bold text-foreground text-lg">مخطط الدراسة</h3>
-              <p className="text-sm text-muted-foreground">نظّم جدولك الأسبوعي</p>
+              <h3 className="font-bold text-foreground text-lg relative z-10">مخطط الدراسة</h3>
+              <p className="text-sm text-muted-foreground relative z-10 leading-relaxed">نظّم جدولك الأسبوعي وخطط لحصصك بذكاء</p>
             </div>
           </motion.div>
+
+          {/* Pomodoro Timer — Gold themed */}
           <motion.div
             initial={{ opacity: 0, y: 20, rotateX: 5 }}
             animate={{ opacity: 1, y: 0, rotateX: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            whileHover={{ scale: 1.04, y: -4, rotateX: -2 }}
+            whileHover={{ scale: 1.04, y: -5 }}
             whileTap={{ scale: 0.97 }}
             className="cursor-pointer"
             onClick={() => setView("timer")}
             style={{ perspective: 1000 }}
           >
-            <div className="card-depth bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-omni-gold/20 transition-all relative overflow-hidden group">
+            <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-omni-gold/20 transition-all relative overflow-hidden group">
               {/* Gold gradient top accent */}
-              <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-omni-gold to-omni-gold-dark rounded-t-2xl" />
-              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-omni-gold/10 animate-float border border-omni-gold/10 shadow-sm" style={{ animationDelay: "0.5s" }}>
-                <span className="text-3xl">⏱️</span>
+              <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-l from-omni-gold via-omni-gold-dark to-omni-gold/60 rounded-t-2xl" />
+              {/* Gradient background overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-omni-gold/5 via-transparent to-omni-gold/3 pointer-events-none" />
+              {/* Floating icon with staggered animation */}
+              <div className="relative">
+                <div className="w-18 h-18 rounded-2xl mx-auto flex items-center justify-center bg-gradient-to-br from-omni-gold/15 to-omni-gold/5 border border-omni-gold/10 shadow-sm">
+                  <span className="text-4xl animate-float" style={{ animationDelay: "0.5s" }}>⏱️</span>
+                </div>
+                {/* New badge */}
+                <div className="absolute -top-2 -left-2 bg-gradient-to-r from-omni-gold to-omni-gold-light text-omni-gold-dark text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                  NEW
+                </div>
               </div>
-              <h3 className="font-bold text-foreground text-lg">مؤقت البومودورو</h3>
-              <p className="text-sm text-muted-foreground">ركّز بتقنية البومودورو</p>
+              <h3 className="font-bold text-foreground text-lg relative z-10">مؤقت البومودورو</h3>
+              <p className="text-sm text-muted-foreground relative z-10 leading-relaxed">ركّز بتقنية البومودورو وزِد إنتاجيتك الدراسية</p>
             </div>
           </motion.div>
+
+          {/* Learner Dashboard — Green themed */}
           <motion.div
             initial={{ opacity: 0, y: 20, rotateX: 5 }}
             animate={{ opacity: 1, y: 0, rotateX: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            whileHover={{ scale: 1.04, y: -4, rotateX: -2 }}
+            whileHover={{ scale: 1.04, y: -5 }}
             whileTap={{ scale: 0.97 }}
             className="cursor-pointer"
             onClick={() => setView("dashboard")}
             style={{ perspective: 1000 }}
           >
-            <div className="card-depth bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-green-500/20 transition-all relative overflow-hidden group">
+            <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 text-center space-y-3 hover:shadow-xl hover:border-green-500/20 transition-all relative overflow-hidden group">
               {/* Green gradient top accent */}
-              <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-green-600 to-green-500 rounded-t-2xl" />
-              <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center bg-green-500/10 animate-float border border-green-500/10 shadow-sm" style={{ animationDelay: "1s" }}>
-                <span className="text-3xl">📊</span>
+              <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-l from-green-600 via-green-500 to-green-500/60 rounded-t-2xl" />
+              {/* Gradient background overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-500/3 pointer-events-none" />
+              {/* Floating icon with staggered animation */}
+              <div className="relative">
+                <div className="w-18 h-18 rounded-2xl mx-auto flex items-center justify-center bg-gradient-to-br from-green-500/15 to-green-500/5 border border-green-500/10 shadow-sm">
+                  <span className="text-4xl animate-float" style={{ animationDelay: "1s" }}>📊</span>
+                </div>
               </div>
-              <h3 className="font-bold text-foreground text-lg">لوحة المتعلم</h3>
-              <p className="text-sm text-muted-foreground">تتبع تقدّمك الدراسي</p>
+              <h3 className="font-bold text-foreground text-lg relative z-10">لوحة المتعلم</h3>
+              <p className="text-sm text-muted-foreground relative z-10 leading-relaxed">تتبع تقدّمك الدراسي وحقّق أهدافك خطوة بخطوة</p>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
       {/* Study Streak, Semester Comparison & Weekly Goals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -257,39 +323,37 @@ function QuickAccessSection() {
         <WeeklyGoalsTracker />
       </div>
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
       {/* Subject Comparison */}
       <SubjectComparison />
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
       {/* Activity Timeline */}
       <ActivityTimeline />
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
       {/* Motivational Quote Widget */}
       <MotivationalQuoteWidget />
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
       {/* Study Countdown Timer */}
       <StudyCountdownTimer />
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
-      {/* Categories */}
+      {/* Categories — Enhanced with larger cards, prominent hover color */}
       <div className="space-y-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground section-header-line">
-          التصنيفات
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground section-header-line">
+            التصنيفات
+          </h2>
+          <p className="text-xs text-muted-foreground">تصفح حسب التخصص</p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {categories.map((cat, idx) => {
             const count = subjectsData.filter(
               (s) => s.category === cat.id
@@ -300,7 +364,7 @@ function QuickAccessSection() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.06, duration: 0.4 }}
-                whileHover={{ scale: 1.04, y: -3 }}
+                whileHover={{ scale: 1.05, y: -4 }}
                 whileTap={{ scale: 0.97 }}
                 className="cursor-pointer"
                 onClick={() => {
@@ -308,26 +372,34 @@ function QuickAccessSection() {
                   useAppStore.getState().setView("search");
                 }}
               >
-                <div
-                  className="card-depth bg-card border border-border rounded-xl p-4 sm:p-5 text-center space-y-2 relative overflow-hidden group transition-all duration-300 hover:shadow-lg"
-                >
-                  {/* Accent bar at top — thicker gradient */}
+                <div className="bg-card border border-border rounded-xl p-5 sm:p-6 text-center space-y-3 relative overflow-hidden group transition-all duration-300 hover:shadow-lg hover:border-omni-red/10">
+                  {/* Prominent color background on hover */}
                   <div
-                    className="absolute top-0 right-0 left-0 h-1 rounded-t-xl"
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at center, ${cat.color}10 0%, transparent 70%)` }}
+                  />
+                  {/* Accent bar at top */}
+                  <div
+                    className="absolute top-0 right-0 left-0 h-1.5 rounded-t-xl transition-all duration-300 group-hover:h-2"
                     style={{ background: `linear-gradient(90deg, ${cat.color}, ${cat.color}80)` }}
                   />
+                  {/* Larger icon area with subtle color glow on hover */}
                   <div
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl mx-auto flex items-center justify-center transition-transform group-hover:scale-110 border border-border/50 shadow-sm"
-                    style={{ backgroundColor: `${cat.color}12` }}
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl mx-auto flex items-center justify-center transition-all duration-300 group-hover:scale-110 relative"
+                    style={{ backgroundColor: `${cat.color}10` }}
                   >
-                    <span className="text-xl sm:text-2xl font-black" style={{ color: cat.color }}>
+                    <span className="text-2xl sm:text-3xl font-black transition-colors duration-300" style={{ color: cat.color }}>
                       {count}
                     </span>
+                    <div
+                      className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                      style={{ boxShadow: `0 0 20px ${cat.color}20` }}
+                    />
                   </div>
-                  <p className="text-sm font-bold text-foreground">
+                  <p className="text-sm font-bold text-foreground relative z-10">
                     {cat.label}
                   </p>
-                  <p className="text-[11px] text-muted-foreground font-medium">
+                  <p className="text-[11px] text-muted-foreground font-medium relative z-10">
                     {count === 1 ? 'مادة واحدة' : count === 2 ? 'مادتين' : `${count} مواد`}
                   </p>
                 </div>
@@ -337,60 +409,99 @@ function QuickAccessSection() {
         </div>
       </div>
 
-      {/* Section Divider */}
-      <div className="section-divider" />
+      <OrnamentalDivider />
 
-      {/* CTA Section — enhanced with decorative elements */}
+      {/* CTA Section — Enhanced with animated decorations, larger buttons, pattern overlay */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="gradient-hero rounded-2xl p-8 sm:p-12 text-center text-white space-y-4 relative overflow-hidden islamic-pattern-bg"
+        className="gradient-hero rounded-2xl p-8 sm:p-14 text-center text-white relative overflow-hidden islamic-pattern-bg"
       >
-        {/* Decorative floating circles */}
-        <div className="absolute -top-8 -left-8 w-32 h-32 rounded-full bg-omni-gold/5 pointer-events-none" />
-        <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-omni-red/5 pointer-events-none" />
-        <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full bg-white/3 pointer-events-none" />
-
-        <div
-          className="pointer-events-none absolute inset-0"
+        {/* Animated floating decorative shapes */}
+        <motion.div
+          animate={{ y: [-8, 8, -8], rotate: [0, 10, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-6 -left-6 w-36 h-36 rounded-full bg-omni-gold/8 pointer-events-none"
+        />
+        <motion.div
+          animate={{ y: [6, -6, 6], rotate: [0, -8, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute -bottom-8 -right-8 w-28 h-28 rounded-full bg-omni-red/8 pointer-events-none"
+        />
+        <motion.div
+          animate={{ y: [-5, 5, -5], scale: [1, 1.1, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute top-1/4 right-[15%] w-20 h-20 rounded-full bg-white/5 pointer-events-none"
+        />
+        <motion.div
+          animate={{ y: [4, -4, 4] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          className="absolute bottom-1/4 left-[20%] w-12 h-12 rounded-full bg-omni-gold/6 pointer-events-none"
+        />
+        {/* Gradient circle overlay */}
+        <motion.div
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
           style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,168,67,0.12) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(212,168,67,0.08) 0%, transparent 60%)",
           }}
         />
-        <div className="relative z-10">
-          <h2 className="text-shadow-omni text-2xl sm:text-3xl font-bold mb-2">
+        {/* Subtle pattern overlay */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.1) 20px, rgba(255,255,255,0.1) 21px)`,
+          }}
+        />
+
+        <div className="relative z-10 space-y-5">
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-shadow-omni text-2xl sm:text-4xl font-bold"
+          >
             ابدأ رحلتك التعليمية اليوم
-          </h2>
+          </motion.h2>
 
           {/* Decorative line under CTA heading */}
-          <div className="decorative-line mx-auto max-w-xs my-4">
+          <div className="decorative-line mx-auto max-w-xs">
             <span className="diamond" />
           </div>
 
-          <p className="text-white/80 max-w-lg mx-auto mb-6">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="text-white/80 max-w-lg mx-auto text-sm sm:text-base leading-relaxed"
+          >
             تتبع تقدمك في جميع المواد، نظّم ملاحظاتك، وكن على الطريق الصحيح
             نحو التفوق
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+            className="flex flex-wrap items-center justify-center gap-4 pt-2"
+          >
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.07, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setView("dashboard")}
-              className="btn-omni-gold rounded-xl px-7 py-3 font-semibold transition-all shadow-lg"
+              className="btn-omni-gold rounded-xl px-8 py-3.5 text-base font-bold transition-all shadow-lg hover:shadow-xl"
             >
-              لوحة المتعلم
+              🚀 لوحة المتعلم
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.07, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setView("subjects")}
-              className="glass rounded-xl px-7 py-3 font-semibold text-white border-white/20 hover:bg-white/10 transition-all"
+              className="glass rounded-xl px-8 py-3.5 text-base font-semibold text-white border-white/20 hover:bg-white/10 transition-all"
             >
-              تصفح المواد
+              📚 تصفح المواد
             </motion.button>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
     </section>
