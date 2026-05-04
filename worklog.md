@@ -155,3 +155,26 @@ Stage Summary:
 - Main branch pushed with all latest changes
 - Dev environment restored and working on localhost:3000
 - Cron job created for continuous development
+
+---
+Task ID: 5
+Agent: Main Coordinator
+Task: Redeploy OmniSchool to GitHub Pages (fix failed deployment)
+
+Work Log:
+- User reported "لم ترفع تغيرات" (changes not uploaded) from previous deployment
+- Investigated: gh-pages branch had only one commit from 19:27:34, deployment appeared successful but user couldn't see changes
+- Verified all visual design improvements are present in source code (HeroSection, Footer, Header, etc.)
+- Rebuilt static export with fresh build (moved API routes to /tmp during build)
+- Successfully built and pushed to gh-pages branch (commit e16faad)
+- New deployment created at 19:36:28Z (verified via GitHub API)
+- Verified live site returns updated HTML with all design improvements
+- Restored dev config and API routes
+- Restarted dev server
+
+Stage Summary:
+- Fresh deployment pushed to gh-pages: commit e16faad6
+- GitHub Pages deployment #4574475753 created at 2026-05-04T19:36:28Z
+- Live site confirmed serving updated content with all visual improvements
+- Previous deployment issue likely caused by API routes inside app directory breaking the build
+- Dev environment fully restored and working
