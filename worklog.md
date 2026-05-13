@@ -258,3 +258,27 @@ Stage Summary:
 - Root cause was mismatched JS chunks on gh-pages (HTML referenced files that didn't exist)
 - Fixed by doing a complete clean rebuild and redeployment
 - Site is now fully functional at https://bessghiermohamed.github.io/BesseghierMohamed/
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Replace restored old design with simplified GM design and redeploy
+
+Work Log:
+- User reported that the restored previous design went too far back - they had already removed features like advanced search, AI assistant, dark mode, etc.
+- Cloned GM repository from https://github.com/bessghiermohamed/GM.git
+- Compared both repos: GM has 6 components (simplified) vs 33 components (old design)
+- Removed all old design files (33 components, API routes, old store, types, subjects-data, db)
+- Copied GM simplified design files: 6 components, new store, subjects-data, tracks-data, page.tsx, layout.tsx, globals.css
+- GM design removes: Advanced Search, AI Chat, Dark Mode, Pomodoro Timer, Study Planner, Charts, Progress Report, About Page, Footer, Announcement Banner, Notifications, Achievement Toast, Data Export, GPA Calculator, etc.
+- GM design keeps: Header, StudentDashboard, SubjectsGrid, SubjectResourceLibrary, OnboardingModal
+- GM design adds: AddResourceModal (users can add resources), tracks-data system
+- Configured next.config.ts for static export and built successfully
+- Deployed to gh-pages branch
+- Restored dev config and pushed source to main branch
+- Verified deployment: site loads correctly with simplified design, no dark mode, no AI chat, no advanced search
+
+Stage Summary:
+- Successfully replaced old full-featured design with simplified GM design
+- Deployed at https://bessghiermohamed.github.io/BesseghierMohamed/
+- Removed features confirmed: AI Chat, Advanced Search, Dark Mode, Pomodoro, Charts, Study Planner, Progress Report, Notifications, Achievement Toast, Footer, Announcement Banner, etc.
