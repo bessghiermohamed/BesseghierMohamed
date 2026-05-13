@@ -52,6 +52,28 @@ const pageVariants = {
 
 function ViewRenderer() {
   const { currentView } = useAppStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Before JS hydrates, show content directly without animation
+  if (!mounted) {
+    return (
+      <div className="flex-1">
+        {currentView === "home" && <HomePage />}
+        {currentView === "dashboard" && <StudentDashboard />}
+        {currentView === "subjects" && <SubjectsGrid />}
+        {currentView === "subject-detail" && <SubjectDetail />}
+        {currentView === "search" && <AdvancedSearch />}
+        {currentView === "about" && <AboutPage />}
+        {currentView === "planner" && <StudyPlanner />}
+        {currentView === "timer" && <PomodoroTimer />}
+        {currentView === "resources" && <SubjectResourceLibrary />}
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -92,7 +114,7 @@ function HomePage() {
   return (
     <motion.div
       className="w-full flex flex-col items-center"
-      initial={{ opacity: 0 }}
+      initial={false}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
@@ -277,7 +299,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-background">
       <AnnouncementBanner />
       <Header />
-      <main className="flex-1">
+      <main className="flex-1" style={{ opacity: 1 }}>
         <ViewRenderer />
       </main>
       <Footer />
