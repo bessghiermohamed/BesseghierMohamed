@@ -10,14 +10,14 @@ export default function HomePage() {
 
   if (!isOnboarded) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-bl from-emerald-50 via-white to-amber-50">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-bl from-omni-red/5 via-omni-cream to-omni-gold/5">
         <OnboardingModal />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/50 to-white">
+    <div className="min-h-screen bg-background">
       <Header />
       <StudentDashboard />
     </div>

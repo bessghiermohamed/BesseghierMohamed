@@ -43,7 +43,12 @@ export function StudentDashboard() {
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       {/* رسالة الترحيب - تظهر مرة واحدة فقط */}
       {!hasSeenWelcome && userName && (
-        <div className="mb-6 relative overflow-hidden rounded-xl bg-gradient-to-l from-emerald-600 to-emerald-700 p-5 text-white shadow-lg">
+        <div
+          className="mb-6 relative overflow-hidden rounded-xl p-5 text-white shadow-lg"
+          style={{
+            background: "linear-gradient(135deg, #B91C1C 0%, #991B1B 40%, #B8922E 100%)",
+          }}
+        >
           <button
             onClick={dismissWelcome}
             className="absolute top-3 left-3 rounded-lg p-1 text-white/70 transition-colors hover:bg-white/20 hover:text-white"
@@ -58,7 +63,7 @@ export function StudentDashboard() {
               <h2 className="text-lg font-bold">
                 مرحباً بك يا {userName}!
               </h2>
-              <p className="mt-0.5 text-sm text-emerald-100">
+              <p className="mt-0.5 text-sm text-white/80">
                 ابدأ رحلتك التعليمية اليوم واكتشف الموارد المتاحة لكل مادة
               </p>
             </div>
@@ -68,56 +73,56 @@ export function StudentDashboard() {
 
       {/* إحصائيات سريعة */}
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-        <Card className="border-emerald-100 bg-emerald-50/50">
+        <Card className="border-omni-red/10 bg-white/60" style={{ boxShadow: "0 1px 3px rgba(185, 28, 28, 0.06)" }}>
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-omni-red/10 text-omni-red">
               <BookOpen className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-emerald-600">المواد الدراسية</p>
-              <p className="text-lg font-bold text-emerald-800">
+              <p className="text-xs text-omni-red/70">المواد الدراسية</p>
+              <p className="text-lg font-bold text-omni-red-dark">
                 {semesterSubjects.length}
               </p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-amber-100 bg-amber-50/50">
+        <Card className="border-omni-gold/10 bg-white/60" style={{ boxShadow: "0 1px 3px rgba(212, 168, 67, 0.06)" }}>
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-omni-gold/10 text-omni-gold-dark">
               <FolderOpen className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-amber-600">الشعبة</p>
-              <p className="text-lg font-bold text-amber-800">
+              <p className="text-xs text-omni-gold-dark/70">الشعبة</p>
+              <p className="text-lg font-bold text-omni-gold-dark">
                 {trackData?.name || "—"}
               </p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-teal-100 bg-teal-50/50">
+        <Card className="border-omni-red/10 bg-white/60" style={{ boxShadow: "0 1px 3px rgba(185, 28, 28, 0.06)" }}>
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-omni-red/10 text-omni-red">
               <BookOpen className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-teal-600">المستوى</p>
-              <p className="text-lg font-bold text-teal-800">
+              <p className="text-xs text-omni-red/70">المستوى</p>
+              <p className="text-lg font-bold text-omni-red-dark">
                 {levelData?.name || "—"}
               </p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-rose-100 bg-rose-50/50">
+        <Card className="border-omni-gold/10 bg-white/60" style={{ boxShadow: "0 1px 3px rgba(212, 168, 67, 0.06)" }}>
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-omni-gold/10 text-omni-gold-dark">
               <FolderOpen className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-rose-600">السداسي</p>
-              <p className="text-lg font-bold text-rose-800">{semesterLabel}</p>
+              <p className="text-xs text-omni-gold-dark/70">السداسي</p>
+              <p className="text-lg font-bold text-omni-gold-dark">{semesterLabel}</p>
             </div>
           </CardContent>
         </Card>
@@ -125,11 +130,11 @@ export function StudentDashboard() {
 
       {/* عنوان قسم المواد */}
       <div className="mb-4 flex items-center gap-2">
-        <BookOpen className="h-5 w-5 text-emerald-600" />
-        <h2 className="text-lg font-bold text-emerald-800">
+        <BookOpen className="h-5 w-5 text-omni-red" />
+        <h2 className="text-lg font-bold text-foreground">
           مواد {semesterLabel}
         </h2>
-        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+        <span className="rounded-full bg-omni-red/10 px-2 py-0.5 text-xs font-medium text-omni-red">
           {semesterSubjects.length} مادة
         </span>
       </div>

@@ -44,19 +44,19 @@ export function OnboardingModal() {
   return (
     <Dialog open onOpenChange={() => {}}>
       <DialogContent
-        className="sm:max-w-md"
+        className="sm:max-w-md bg-omni-cream"
         showCloseButton={false}
         onPointerDownOutside={(e) => e.preventDefault()}
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader className="text-center">
-          <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-600 text-white">
+          <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-omni-red text-white">
             <GraduationCap className="h-8 w-8" />
           </div>
-          <DialogTitle className="text-xl text-emerald-800">
-            مرحباً بك في أومني سكول
+          <DialogTitle className="text-xl text-foreground">
+            مرحباً بك في OmniSchool
           </DialogTitle>
-          <DialogDescription className="text-emerald-600">
+          <DialogDescription className="text-omni-red/70">
             {step === 1 && "أخبرنا باسمك للبدء"}
             {step === 2 && "اختر الشعبة الدراسية"}
             {step === 3 && "اختر المستوى الدراسي"}
@@ -70,9 +70,9 @@ export function OnboardingModal() {
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all ${
                   s < step
-                    ? "bg-emerald-600 text-white"
+                    ? "bg-omni-red text-white"
                     : s === step
-                      ? "bg-emerald-100 text-emerald-700 ring-2 ring-emerald-600"
+                      ? "bg-omni-red/10 text-omni-red ring-2 ring-omni-red"
                       : "bg-gray-100 text-gray-400"
                 }`}
               >
@@ -81,7 +81,7 @@ export function OnboardingModal() {
               {s < 3 && (
                 <div
                   className={`h-0.5 w-8 rounded-full transition-all ${
-                    s < step ? "bg-emerald-600" : "bg-gray-200"
+                    s < step ? "bg-omni-red" : "bg-gray-200"
                   }`}
                 />
               )}
@@ -93,7 +93,7 @@ export function OnboardingModal() {
         {step === 1 && (
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-emerald-800">
+              <Label htmlFor="name" className="text-foreground">
                 الاسم الكامل
               </Label>
               <Input
@@ -101,14 +101,14 @@ export function OnboardingModal() {
                 placeholder="أدخل اسمك هنا..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-500/20"
+                className="border-omni-gold/20 focus-visible:border-omni-red focus-visible:ring-omni-red/20"
                 dir="rtl"
               />
             </div>
             <Button
               onClick={() => setStep(2)}
               disabled={!isStep1Valid}
-              className="w-full bg-emerald-600 hover:bg-emerald-700"
+              className="w-full bg-omni-red hover:bg-omni-red-dark text-white"
             >
               التالي
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -120,7 +120,7 @@ export function OnboardingModal() {
         {step === 2 && (
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label className="text-emerald-800">الشعبة</Label>
+              <Label className="text-foreground">الشعبة</Label>
               <div className="space-y-2">
                 {tracks.map((t) => (
                   <button
@@ -128,15 +128,15 @@ export function OnboardingModal() {
                     onClick={() => setTrack(t.id)}
                     className={`w-full rounded-xl border-2 p-4 text-right transition-all ${
                       track === t.id
-                        ? "border-emerald-500 bg-emerald-50"
-                        : "border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50"
+                        ? "border-omni-red bg-omni-red/5"
+                        : "border-gray-200 hover:border-omni-gold/30 hover:bg-omni-gold/5"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold text-emerald-800">
+                      <span className="text-lg font-semibold text-foreground">
                         {t.name}
                       </span>
-                      <span className="text-xs text-emerald-600">
+                      <span className="text-xs text-omni-gold-dark">
                         {t.semesters} سداسي
                       </span>
                     </div>
@@ -148,14 +148,14 @@ export function OnboardingModal() {
               <Button
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="flex-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                className="flex-1 border-omni-gold/20 text-omni-red hover:bg-omni-red/5"
               >
                 رجوع
               </Button>
               <Button
                 onClick={() => setStep(3)}
                 disabled={!isStep2Valid}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                className="flex-1 bg-omni-red hover:bg-omni-red-dark text-white"
               >
                 التالي
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -168,7 +168,7 @@ export function OnboardingModal() {
         {step === 3 && (
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label className="text-emerald-800">المستوى</Label>
+              <Label className="text-foreground">المستوى</Label>
               <div className="space-y-2">
                 {selectedTrackData?.levels.map((l) => (
                   <button
@@ -179,13 +179,13 @@ export function OnboardingModal() {
                       l.isLocked
                         ? "cursor-not-allowed border-gray-200 bg-gray-50 opacity-60"
                         : level === l.id
-                          ? "border-emerald-500 bg-emerald-50"
-                          : "border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50"
+                          ? "border-omni-red bg-omni-red/5"
+                          : "border-gray-200 hover:border-omni-gold/30 hover:bg-omni-gold/5"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span
-                        className={`text-lg font-semibold ${l.isLocked ? "text-gray-400" : "text-emerald-800"}`}
+                        className={`text-lg font-semibold ${l.isLocked ? "text-gray-400" : "text-foreground"}`}
                       >
                         {l.name}
                       </span>
@@ -201,14 +201,15 @@ export function OnboardingModal() {
               <Button
                 variant="outline"
                 onClick={() => setStep(2)}
-                className="flex-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                className="flex-1 border-omni-gold/20 text-omni-red hover:bg-omni-red/5"
               >
                 رجوع
               </Button>
               <Button
                 onClick={handleComplete}
                 disabled={!isStep3Valid}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                className="flex-1 text-white"
+                style={{ background: "linear-gradient(135deg, #B91C1C, #D4A843)" }}
               >
                 ابدأ التعلم
                 <Check className="mr-2 h-4 w-4" />

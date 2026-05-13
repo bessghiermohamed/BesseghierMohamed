@@ -2,22 +2,22 @@
 
 import { type Subject } from "@/data/subjects-data"
 
-// خريطة ألوان المادة - يجب أن تكون كاملة لأن Tailwind لا يدعم الأنماط الديناميكية
+// خريطة ألوان المادة - ألوان دافئة تتناسب مع الثيم الأحمر-الذهبي
 const subjectColorMap: Record<string, { bg: string; border: string; text: string; iconBg: string }> = {
-  emerald: { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-700", iconBg: "bg-emerald-100" },
-  teal: { bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", iconBg: "bg-teal-100" },
-  amber: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700", iconBg: "bg-amber-100" },
-  orange: { bg: "bg-orange-50", border: "border-orange-200", text: "text-orange-700", iconBg: "bg-orange-100" },
-  rose: { bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", iconBg: "bg-rose-100" },
-  sky: { bg: "bg-sky-50", border: "border-sky-200", text: "text-sky-700", iconBg: "bg-sky-100" },
-  violet: { bg: "bg-violet-50", border: "border-violet-200", text: "text-violet-700", iconBg: "bg-violet-100" },
-  slate: { bg: "bg-slate-50", border: "border-slate-200", text: "text-slate-700", iconBg: "bg-slate-100" },
-  lime: { bg: "bg-lime-50", border: "border-lime-200", text: "text-lime-700", iconBg: "bg-lime-100" },
-  cyan: { bg: "bg-cyan-50", border: "border-cyan-200", text: "text-cyan-700", iconBg: "bg-cyan-100" },
-  pink: { bg: "bg-pink-50", border: "border-pink-200", text: "text-pink-700", iconBg: "bg-pink-100" },
-  yellow: { bg: "bg-yellow-50", border: "border-yellow-200", text: "text-yellow-700", iconBg: "bg-yellow-100" },
-  fuchsia: { bg: "bg-fuchsia-50", border: "border-fuchsia-200", text: "text-fuchsia-700", iconBg: "bg-fuchsia-100" },
-  indigo: { bg: "bg-indigo-50", border: "border-indigo-200", text: "text-indigo-700", iconBg: "bg-indigo-100" },
+  emerald: { bg: "bg-omni-cream", border: "border-omni-red/15", text: "text-omni-red-dark", iconBg: "bg-omni-red/8" },
+  teal: { bg: "bg-omni-cream", border: "border-omni-gold/15", text: "text-omni-gold-dark", iconBg: "bg-omni-gold/8" },
+  amber: { bg: "bg-omni-cream", border: "border-omni-gold/20", text: "text-omni-gold-dark", iconBg: "bg-omni-gold/10" },
+  orange: { bg: "bg-omni-cream", border: "border-omni-red/15", text: "text-omni-red-dark", iconBg: "bg-omni-red/8" },
+  rose: { bg: "bg-omni-cream", border: "border-omni-red/20", text: "text-omni-red", iconBg: "bg-omni-red/10" },
+  sky: { bg: "bg-omni-cream", border: "border-omni-gold/15", text: "text-omni-gold-dark", iconBg: "bg-omni-gold/8" },
+  violet: { bg: "bg-omni-cream", border: "border-omni-red/15", text: "text-omni-red-dark", iconBg: "bg-omni-red/8" },
+  slate: { bg: "bg-omni-cream", border: "border-omni-gold/10", text: "text-omni-gold-dark", iconBg: "bg-omni-gold/6" },
+  lime: { bg: "bg-omni-cream", border: "border-omni-gold/15", text: "text-omni-gold-dark", iconBg: "bg-omni-gold/8" },
+  cyan: { bg: "bg-omni-cream", border: "border-omni-gold/15", text: "text-omni-gold-dark", iconBg: "bg-omni-gold/8" },
+  pink: { bg: "bg-omni-cream", border: "border-omni-red/15", text: "text-omni-red", iconBg: "bg-omni-red/8" },
+  yellow: { bg: "bg-omni-cream", border: "border-omni-gold/20", text: "text-omni-gold-dark", iconBg: "bg-omni-gold/10" },
+  fuchsia: { bg: "bg-omni-cream", border: "border-omni-red/15", text: "text-omni-red-dark", iconBg: "bg-omni-red/8" },
+  indigo: { bg: "bg-omni-cream", border: "border-omni-red/15", text: "text-omni-red-dark", iconBg: "bg-omni-red/8" },
 }
 
 interface SubjectsGridProps {
@@ -36,7 +36,8 @@ export function SubjectsGrid({ subjects, onSubjectClick }: SubjectsGridProps) {
           <button
             key={subject.id}
             onClick={() => onSubjectClick(subject)}
-            className={`group relative overflow-hidden rounded-xl border-2 ${colors.border} ${colors.bg} p-4 text-right transition-all hover:scale-[1.02] hover:shadow-md active:scale-[0.98]`}
+            className={`group relative overflow-hidden rounded-xl border-2 ${colors.border} ${colors.bg} p-4 text-right transition-all hover:scale-[1.02] hover:border-omni-gold/30 active:scale-[0.98]`}
+            style={{ boxShadow: "0 1px 3px rgba(185, 28, 28, 0.04), 0 1px 2px rgba(212, 168, 67, 0.04)" }}
           >
             {/* أيقونة المادة */}
             <div

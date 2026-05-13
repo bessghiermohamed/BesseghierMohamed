@@ -16,12 +16,12 @@ const resourceTypeIcons: Record<ResourceType, React.ReactNode> = {
   "فيديو": <Video className="h-4 w-4" />,
 }
 
-// ألوان أنواع الموارد
+// ألوان أنواع الموارد - بالثيم الأحمر-الذهبي
 const resourceTypeColorMap: Record<ResourceType, string> = {
-  "ملخص": "bg-amber-100 text-amber-700 border-amber-200",
-  "تمرين": "bg-emerald-100 text-emerald-700 border-emerald-200",
-  "درس": "bg-teal-100 text-teal-700 border-teal-200",
-  "فيديو": "bg-rose-100 text-rose-700 border-rose-200",
+  "ملخص": "bg-omni-gold/10 text-omni-gold-dark border-omni-gold/20",
+  "تمرين": "bg-omni-red/10 text-omni-red border-omni-red/20",
+  "درس": "bg-omni-gold/8 text-omni-gold-dark border-omni-gold/15",
+  "فيديو": "bg-omni-red/8 text-omni-red border-omni-red/15",
 }
 
 interface SubjectResourceLibraryProps {
@@ -57,23 +57,23 @@ export function SubjectResourceLibrary({ subject, onBack }: SubjectResourceLibra
             variant="outline"
             size="sm"
             onClick={onBack}
-            className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+            className="border-omni-gold/20 text-omni-red hover:bg-omni-red/5"
           >
             <ArrowRight className="ml-1 h-4 w-4" />
             رجوع
           </Button>
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-omni-red/10 text-omni-red">
             <Icon className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-emerald-800">{subject.name}</h2>
+            <h2 className="text-lg font-bold text-foreground">{subject.name}</h2>
             <p className="text-xs text-gray-500">{subject.description}</p>
           </div>
         </div>
 
         <Button
           onClick={() => setShowAddModal(true)}
-          className="bg-emerald-600 hover:bg-emerald-700"
+          className="bg-omni-red hover:bg-omni-red-dark text-white"
           size="sm"
         >
           <Plus className="ml-1 h-4 w-4" />
@@ -83,13 +83,13 @@ export function SubjectResourceLibrary({ subject, onBack }: SubjectResourceLibra
 
       {/* نظام التصفية */}
       <div className="flex flex-wrap items-center gap-2">
-        <Filter className="h-4 w-4 text-emerald-600" />
+        <Filter className="h-4 w-4 text-omni-red" />
         <button
           onClick={() => setActiveFilter("الكل")}
           className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
             activeFilter === "الكل"
-              ? "bg-emerald-600 text-white"
-              : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+              ? "bg-omni-red text-white"
+              : "bg-omni-cream text-omni-red/70 hover:bg-omni-gold/10"
           }`}
         >
           الكل
@@ -100,8 +100,8 @@ export function SubjectResourceLibrary({ subject, onBack }: SubjectResourceLibra
             onClick={() => setActiveFilter(type)}
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
               activeFilter === type
-                ? "bg-emerald-600 text-white"
-                : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                ? "bg-omni-red text-white"
+                : "bg-omni-cream text-omni-red/70 hover:bg-omni-gold/10"
             }`}
           >
             {resourceTypeIcons[type]}
@@ -112,12 +112,12 @@ export function SubjectResourceLibrary({ subject, onBack }: SubjectResourceLibra
 
       {/* قائمة الموارد */}
       {filteredResources.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-emerald-200 bg-emerald-50/50 py-12 text-center">
-          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-omni-gold/20 bg-omni-cream/50 py-12 text-center">
+          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-omni-red/8 text-omni-red">
             <BookOpen className="h-7 w-7" />
           </div>
-          <p className="text-sm font-medium text-emerald-700">لا توجد موارد بعد</p>
-          <p className="mt-1 text-xs text-emerald-500">
+          <p className="text-sm font-medium text-foreground">لا توجد موارد بعد</p>
+          <p className="mt-1 text-xs text-gray-500">
             اضغط على &quot;إضافة مورد&quot; لإضافة مورد جديد
           </p>
         </div>
@@ -126,7 +126,8 @@ export function SubjectResourceLibrary({ subject, onBack }: SubjectResourceLibra
           {filteredResources.map((resource) => (
             <div
               key={resource.id}
-              className="group rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-emerald-200 hover:shadow-sm"
+              className="group rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-omni-gold/20 hover:shadow-sm"
+              style={{ boxShadow: "0 1px 2px rgba(185, 28, 28, 0.03)" }}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1">
