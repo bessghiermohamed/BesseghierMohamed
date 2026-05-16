@@ -1,4 +1,4 @@
 1:"$Sreact.fragment"
-2:I[39756,["/BesseghierMohamed/_next/static/chunks/28392ef45f00e723.js","/BesseghierMohamed/_next/static/chunks/d62eb9fc7c32159c.js","/BesseghierMohamed/_next/static/chunks/4392189f08a7af14.js"],"default"]
-3:I[37457,["/BesseghierMohamed/_next/static/chunks/28392ef45f00e723.js","/BesseghierMohamed/_next/static/chunks/d62eb9fc7c32159c.js","/BesseghierMohamed/_next/static/chunks/4392189f08a7af14.js"],"default"]
-0:{"buildId":"EMCnJURVAztg90_wL56IY","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
+2:I[39756,["/BesseghierMohamed/_next/static/chunks/0c5aaa4757e3a53e.js","/BesseghierMohamed/_next/static/chunks/9ec22179ae347b64.js","/BesseghierMohamed/_next/static/chunks/14b30ec7967e467e.js"],"default"]
+3:I[37457,["/BesseghierMohamed/_next/static/chunks/0c5aaa4757e3a53e.js","/BesseghierMohamed/_next/static/chunks/9ec22179ae347b64.js","/BesseghierMohamed/_next/static/chunks/14b30ec7967e467e.js"],"default"]
+0:{"buildId":"QefWfX0nDmjD3osUHSmdC","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
