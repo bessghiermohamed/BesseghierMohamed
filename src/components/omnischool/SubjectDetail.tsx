@@ -54,6 +54,12 @@ import {
   Link2,
   Award,
   Milestone,
+  FileSpreadsheet,
+  ClipboardList,
+  Hash,
+  CheckCheck,
+  AlertCircle,
+  RotateCcw,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -85,15 +91,33 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Status config                                                      */
+/*  Status config — Enhanced with better icons and descriptions       */
 /* ------------------------------------------------------------------ */
 const statusConfig: Record<
   SubjectStatus,
-  { label: string; color: string; bgColor: string; icon: LucideIcon }
+  { label: string; color: string; bgColor: string; icon: LucideIcon; description: string }
 > = {
-  completed: { label: "مكتملة", color: "#16A34A", bgColor: "rgba(22,163,74,0.1)", icon: CheckCircle2 },
-  in_progress: { label: "قيد التقدم", color: "#D4A843", bgColor: "rgba(212,168,67,0.1)", icon: Clock },
-  not_started: { label: "لم تبدأ", color: "#8B7E6A", bgColor: "rgba(139,126,106,0.1)", icon: PlayCircle },
+  completed: {
+    label: "مكتملة",
+    color: "#16A34A",
+    bgColor: "rgba(22,163,74,0.1)",
+    icon: CheckCircle2,
+    description: "أنهيت دراسة هذه المادة بالكامل",
+  },
+  in_progress: {
+    label: "قيد التقدم",
+    color: "#D4A843",
+    bgColor: "rgba(212,168,67,0.1)",
+    icon: Clock,
+    description: "تدرس هذه المادة حالياً",
+  },
+  not_started: {
+    label: "لم تبدأ",
+    color: "#8B7E6A",
+    bgColor: "rgba(139,126,106,0.1)",
+    icon: PlayCircle,
+    description: "لم تبدأ دراسة هذه المادة بعد",
+  },
 };
 
 /* ------------------------------------------------------------------ */
@@ -110,15 +134,24 @@ const categoryTheme: Record<string, { primary: string; light: string; gradient: 
 };
 
 /* ------------------------------------------------------------------ */
-/*  Progress Timeline Milestones                                       */
+/*  Progress Timeline Milestones — Enhanced with descriptions         */
 /* ------------------------------------------------------------------ */
 const progressMilestones = [
-  { percent: 0, label: "البداية", icon: PlayCircle },
-  { percent: 25, label: "الربع الأول", icon: BookOpen },
-  { percent: 50, label: "نصف الطريق", icon: Target },
-  { percent: 75, label: "الربع الأخير", icon: TrendingUp },
-  { percent: 100, label: "الإتمام", icon: Award },
+  { percent: 0, label: "البداية", description: "بداية الرحلة", icon: PlayCircle },
+  { percent: 25, label: "الربع الأول", description: "أساسيات المادة", icon: BookOpen },
+  { percent: 50, label: "نصف الطريق", description: "منتصف الإنجاز", icon: Target },
+  { percent: 75, label: "الربع الأخير", description: "اقتراب الهدف", icon: TrendingUp },
+  { percent: 100, label: "الإتمام", description: "اكتمال المادة", icon: Award },
 ];
+
+/* ------------------------------------------------------------------ */
+/*  Resource type config with specific icons                           */
+/* ------------------------------------------------------------------ */
+const resourceTypeConfig: Record<string, { icon: LucideIcon; color: string }> = {
+  pdf: { icon: FileText, color: "#DC2626" },
+  exercises: { icon: ClipboardList, color: "#D97706" },
+  exams: { icon: FileSpreadsheet, color: "#059669" },
+};
 
 /* ================================================================== */
 /*  SubjectDetail Component                                            */
@@ -126,8 +159,12 @@ const progressMilestones = [
 export function SubjectDetail() {
   const { selectedSubjectId, progress, setView, updateProgress, subjectNotes, setSubjectNotes } = useAppStore();
   const [saving, setSaving] = useState(false);
+  const [noteFocused, setNoteFocused] = useState(false);
+  const [statusChanging, setStatusChanging] = useState<SubjectStatus | null>(null);
+  const [lastSavedLength, setLastSavedLength] = useState(0);
 
   const notes = subjectNotes[selectedSubjectId ?? ""] ?? "";
+  const maxNoteLength = 2000;
 
   const subject = useMemo(
     () => subjectsData.find((s) => s.id === selectedSubjectId),
@@ -138,6 +175,9 @@ export function SubjectDetail() {
     () => progress.find((p) => p.subjectId === selectedSubjectId),
     [progress, selectedSubjectId]
   );
+
+  // Auto-save indicator — derived from notes change, no setState in effect
+  const autoSaveActive = notes.length > 0 && notes.length !== lastSavedLength;
 
   if (!subject) {
     return (
@@ -165,11 +205,13 @@ export function SubjectDetail() {
   const theme = categoryTheme[subject.category] || { primary: subjectColor, light: `${subjectColor}10`, gradient: "from-red-500 to-red-700" };
 
   const handleStatusChange = (newStatus: SubjectStatus) => {
+    setStatusChanging(newStatus);
     let newProgress = progressValue;
     if (newStatus === "completed") newProgress = 100;
     else if (newStatus === "not_started") newProgress = 0;
     else if (newStatus === "in_progress" && progressValue === 0) newProgress = 10;
     updateProgress(subject.id, newStatus, newProgress);
+    setTimeout(() => setStatusChanging(null), 600);
   };
 
   const handleProgressChange = (value: number) => {
@@ -265,35 +307,54 @@ export function SubjectDetail() {
       </motion.div>
 
       {/* ============================================================ */}
-      {/* Header Card with Category Theming and Progress Circle Glow   */}
+      {/* ENHANCED Header Card — Thicker animated gradient, bigger    */}
+      {/* icon with glow, better badges, "كود المادة" label          */}
       {/* ============================================================ */}
       <motion.div variants={itemVariants}>
         <Card className="card-depth bg-card border border-border overflow-hidden relative">
-          {/* Category-themed gradient top bar */}
+          {/* ENHANCED: Thicker gradient top bar with animated gradient */}
           <div
-            className="h-2"
-            style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.primary}AA, ${subjectColor})` }}
-          />
+            className="h-3 relative overflow-hidden"
+            style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.primary}CC, #D4A843, ${theme.primary}CC, ${theme.primary})` }}
+          >
+            {/* Animated shimmer on the top bar */}
+            <div
+              className="absolute inset-0 animate-shimmer"
+              style={{
+                background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%)`,
+                backgroundSize: "200% 100%",
+              }}
+            />
+          </div>
           {/* Subtle category background overlay */}
           <div
-            className="absolute inset-0 top-2 opacity-[0.02]"
+            className="absolute inset-0 top-3 opacity-[0.03]"
             style={{ background: `radial-gradient(ellipse at top right, ${theme.primary}, transparent 60%)` }}
           />
 
           <CardContent className="relative z-10 p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-start gap-6">
-              {/* Icon with category-themed glow */}
+              {/* ENHANCED: Icon with more prominent glow effect */}
               <div className="relative">
                 <div
-                  className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl"
-                  style={{ backgroundColor: `${theme.primary}12` }}
+                  className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl"
+                  style={{ backgroundColor: `${theme.primary}15` }}
                 >
-                  <Icon className="h-12 w-12" style={{ color: theme.primary }} />
+                  <Icon className="h-14 w-14" style={{ color: theme.primary }} />
                 </div>
-                {/* Subtle glow behind icon */}
+                {/* ENHANCED: Stronger glow behind icon — multi-layer */}
                 <div
-                  className="absolute inset-0 rounded-2xl opacity-20 blur-xl"
+                  className="absolute inset-0 rounded-2xl opacity-30 blur-2xl"
                   style={{ backgroundColor: theme.primary }}
+                />
+                <div
+                  className="absolute inset-[-8px] rounded-3xl opacity-15 blur-3xl"
+                  style={{ backgroundColor: theme.primary }}
+                />
+                {/* Decorative ring */}
+                <div
+                  className="absolute inset-[-4px] rounded-2xl border-2 opacity-20"
+                  style={{ borderColor: theme.primary }}
                 />
               </div>
 
@@ -311,42 +372,54 @@ export function SubjectDetail() {
                   </p>
                 )}
 
-                {/* Badges with better styling */}
+                {/* ENHANCED: Badges with better styling and colored backgrounds */}
                 <div className="flex flex-wrap gap-2">
+                  {/* Code badge with "كود المادة" label */}
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] text-muted-foreground/70 font-medium">كود المادة</span>
+                    <Badge
+                      className="ltr-content font-mono text-xs font-bold px-3 py-1"
+                      style={{
+                        backgroundColor: `${theme.primary}15`,
+                        color: theme.primary,
+                        border: `1.5px solid ${theme.primary}30`,
+                      }}
+                    >
+                      {subject.code}
+                    </Badge>
+                  </div>
                   <Badge
-                    variant="outline"
-                    className="ltr-content font-mono text-xs"
+                    className="font-semibold px-3 py-1"
                     style={{
-                      borderColor: `${theme.primary}30`,
+                      backgroundColor: `${theme.primary}18`,
                       color: theme.primary,
-                    }}
-                  >
-                    {subject.code}
-                  </Badge>
-                  <Badge
-                    style={{
-                      backgroundColor: `${theme.primary}12`,
-                      color: theme.primary,
-                      border: `1px solid ${theme.primary}25`,
+                      border: `1.5px solid ${theme.primary}30`,
                     }}
                   >
                     {subject.category}
                   </Badge>
-                  <Badge variant="outline" className="gap-1">
+                  <Badge
+                    className="gap-1 px-3 py-1 font-semibold"
+                    style={{
+                      backgroundColor: "var(--muted)",
+                      border: "1.5px solid var(--border)",
+                    }}
+                  >
                     <BookOpen className="size-3" />
                     السداسي {subject.semester}
                   </Badge>
                   {subject.isShared && (
-                    <Badge className="badge-omni-gold gap-1">
+                    <Badge className="badge-omni-gold gap-1 px-3 py-1 font-semibold">
                       <Share2 className="size-3" />
                       مشترك
                     </Badge>
                   )}
                   <Badge
-                    className="gap-1"
+                    className="gap-1 px-3 py-1 font-semibold"
                     style={{
                       backgroundColor: statusInfo.bgColor,
                       color: statusInfo.color,
+                      border: `1.5px solid ${statusInfo.color}30`,
                     }}
                   >
                     <statusInfo.icon className="size-3" />
@@ -388,7 +461,7 @@ export function SubjectDetail() {
                 <motion.div
                   className="h-full rounded-full relative"
                   style={{
-                    background: `linear-gradient(90deg, ${theme.primary}, ${theme.primary}BB)`,
+                    background: `linear-gradient(90deg, ${theme.primary}, ${theme.primary}BB, #D4A84388)`,
                   }}
                   initial={{ width: 0 }}
                   animate={{ width: `${progressValue}%` }}
@@ -420,7 +493,8 @@ export function SubjectDetail() {
       </motion.div>
 
       {/* ============================================================ */}
-      {/* Progress Timeline — Horizontal Milestone Bar                 */}
+      {/* ENHANCED Progress Timeline — Animated connecting lines,      */}
+      {/* larger dots, pulsing current milestone, better labels       */}
       {/* ============================================================ */}
       <motion.div variants={itemVariants}>
         <Card className="card-depth bg-card border border-border">
@@ -431,21 +505,25 @@ export function SubjectDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="relative py-4">
-              {/* Horizontal line */}
-              <div className="absolute top-1/2 right-4 left-4 h-1 bg-muted rounded-full -translate-y-1/2" />
-              {/* Filled line */}
+            <div className="relative py-6">
+              {/* Horizontal line — background */}
+              <div className="absolute top-1/2 right-4 left-4 h-1.5 bg-muted rounded-full -translate-y-1/2" />
+              {/* ENHANCED: Filled line with animated gradient */}
               <motion.div
-                className="absolute top-1/2 right-4 h-1 rounded-full -translate-y-1/2"
-                style={{ backgroundColor: theme.primary }}
+                className="absolute top-1/2 right-4 h-1.5 rounded-full -translate-y-1/2 overflow-hidden"
+                style={{ background: `linear-gradient(90deg, ${theme.primary}, #D4A843)` }}
                 initial={{ width: 0 }}
                 animate={{ width: `${Math.min(progressValue, 100)}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-              />
-              {/* Milestone dots */}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+              >
+                {/* Animated shimmer on the filled line */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent animate-shimmer" />
+              </motion.div>
+              {/* ENHANCED: Milestone dots — larger, more colorful, pulsing current */}
               <div className="relative flex justify-between px-4">
                 {progressMilestones.map((milestone, idx) => {
                   const isReached = progressValue >= milestone.percent;
+                  const isCurrent = idx === currentMilestoneIndex;
                   const MilestoneIcon = milestone.icon;
                   return (
                     <div key={milestone.percent} className="flex flex-col items-center">
@@ -458,30 +536,45 @@ export function SubjectDetail() {
                         transition={{ delay: idx * 0.1 }}
                         className="relative z-10"
                       >
+                        {/* ENHANCED: Larger dots (w-12 h-12) with pulsing current */}
                         <div
-                          className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
+                          className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all ${
                             isReached ? "shadow-lg" : ""
-                          }`}
+                          } ${isCurrent && isReached ? "pulse-red" : ""}`}
                           style={{
                             borderColor: isReached ? theme.primary : "var(--muted-foreground)",
-                            backgroundColor: isReached ? `${theme.primary}15` : "var(--muted)",
-                            boxShadow: isReached ? `0 0 12px ${theme.primary}30` : "none",
+                            backgroundColor: isReached ? `${theme.primary}20` : "var(--muted)",
+                            boxShadow: isReached ? `0 0 16px ${theme.primary}35` : "none",
                           }}
                         >
                           <MilestoneIcon
-                            className="size-4"
+                            className="size-5"
                             style={{ color: isReached ? theme.primary : "var(--muted-foreground)" }}
                           />
                         </div>
+                        {/* ENHANCED: Extra glow ring for current milestone */}
+                        {isCurrent && isReached && (
+                          <div
+                            className="absolute inset-[-6px] rounded-full opacity-20 animate-pulse"
+                            style={{ border: `2px solid ${theme.primary}` }}
+                          />
+                        )}
                       </motion.div>
+                      {/* ENHANCED: Better labels with descriptions */}
                       <span
-                        className="text-[10px] mt-2 text-center max-w-[60px] leading-tight"
+                        className="text-[11px] font-bold mt-2.5 text-center max-w-[70px] leading-tight"
                         style={{ color: isReached ? theme.primary : "var(--muted-foreground)" }}
                       >
                         {milestone.label}
                       </span>
                       <span
-                        className="text-[10px] font-bold ltr-content"
+                        className="text-[9px] mt-0.5 text-center max-w-[70px] leading-tight"
+                        style={{ color: isReached ? `${theme.primary}99` : "var(--muted-foreground)" }}
+                      >
+                        {milestone.description}
+                      </span>
+                      <span
+                        className="text-[10px] font-bold ltr-content mt-1"
                         style={{ color: isReached ? theme.primary : "var(--muted-foreground)" }}
                         dir="ltr"
                       >
@@ -504,7 +597,10 @@ export function SubjectDetail() {
       {/* ============================================================ */}
       <motion.div variants={itemVariants}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Status Update */}
+          {/* ============================================================ */}
+          {/* ENHANCED Status Update — Icons on buttons, better active   */}
+          {/* state with glow, subtle animation when changing             */}
+          {/* ============================================================ */}
           <Card className="card-depth bg-card border border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -518,6 +614,7 @@ export function SubjectDetail() {
                   const info = statusConfig[s];
                   const StatusIcon = info.icon;
                   const isActive = status === s;
+                  const isChanging = statusChanging === s;
                   return (
                     <motion.button
                       key={s}
@@ -533,18 +630,45 @@ export function SubjectDetail() {
                           ? {
                               borderColor: info.color,
                               backgroundColor: info.color,
-                              boxShadow: `0 4px 12px ${info.color}40`,
+                              boxShadow: `0 4px 16px ${info.color}45, 0 0 8px ${info.color}25`,
                             }
                           : {}
                       }
                       onClick={() => handleStatusChange(s)}
                     >
-                      <StatusIcon className="size-4" />
+                      {/* ENHANCED: Icon on each status button */}
+                      <StatusIcon className={`size-4 ${isChanging ? "animate-scale-pop" : ""}`} />
                       {info.label}
+                      {/* ENHANCED: Active indicator dot */}
+                      {isActive && (
+                        <motion.div
+                          layoutId="status-indicator"
+                          className="w-1.5 h-1.5 rounded-full bg-white/80"
+                          transition={{ type: "spring", bounce: 0.3 }}
+                        />
+                      )}
                     </motion.button>
                   );
                 })}
               </div>
+
+              {/* Current status description */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={status}
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 5 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex items-center gap-2 p-3 rounded-lg"
+                  style={{ backgroundColor: statusInfo.bgColor }}
+                >
+                  <AlertCircle className="size-4 shrink-0" style={{ color: statusInfo.color }} />
+                  <p className="text-xs" style={{ color: statusInfo.color }}>
+                    {statusInfo.description}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
 
               {/* Progress slider */}
               <div className="space-y-3">
@@ -613,7 +737,10 @@ export function SubjectDetail() {
             </CardContent>
           </Card>
 
-          {/* Resources with better visual hierarchy */}
+          {/* ============================================================ */}
+          {/* ENHANCED Resources — Prominent Drive button with gradient,  */}
+          {/* file type icons, better descriptions                        */}
+          {/* ============================================================ */}
           <Card className="card-depth bg-card border border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -622,38 +749,70 @@ export function SubjectDetail() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button
-                className="w-full btn-omni-primary btn-ripple gap-2 py-6 text-base"
+              {/* ENHANCED: Google Drive button — more prominent with gradient */}
+              <motion.button
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full btn-ripple relative overflow-hidden rounded-xl py-5 px-6 text-base font-bold text-white flex items-center justify-center gap-3 cursor-pointer"
+                style={{
+                  background: `linear-gradient(135deg, ${theme.primary}, ${theme.primary}CC, #D4A843CC)`,
+                  boxShadow: `0 6px 20px ${theme.primary}30, 0 2px 8px ${theme.primary}15`,
+                }}
                 onClick={() => {
                   if (subject.driveLink) {
                     window.open(subject.driveLink, "_blank");
                   }
                 }}
               >
-                <ExternalLink className="size-5" />
-                فتح ملفات Google Drive
-              </Button>
+                {/* Shimmer overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-shimmer" />
+                <ExternalLink className="size-5 relative z-10" />
+                <span className="relative z-10">فتح ملفات Google Drive</span>
+              </motion.button>
+
+              {/* ENHANCED: Resource types with specific file type icons */}
               <div className="space-y-3">
                 {[
-                  { icon: Download, text: "محاضرات PDF", desc: "ملفات PDF للمحاضرات والملخصات" },
-                  { icon: FileText, text: "تمارين وأعمال تطبيقية", desc: "تمارين وأسئلة للتطبيق العملي" },
-                  { icon: Star, text: "نماذج اختبارات سابقة", desc: "اختبارات السنوات الماضية مع الحلول" },
+                  {
+                    icon: FileText,
+                    text: "محاضرات PDF",
+                    desc: "ملفات PDF للمحاضرات والملخصات",
+                    typeKey: "pdf",
+                    color: "#DC2626",
+                  },
+                  {
+                    icon: ClipboardList,
+                    text: "تمارين وأعمال تطبيقية",
+                    desc: "تمارين وأسئلة للتطبيق العملي",
+                    typeKey: "exercises",
+                    color: "#D97706",
+                  },
+                  {
+                    icon: FileSpreadsheet,
+                    text: "نماذج اختبارات سابقة",
+                    desc: "اختبارات السنوات الماضية مع الحلول",
+                    typeKey: "exams",
+                    color: "#059669",
+                  },
                 ].map((resource) => (
-                  <div
+                  <motion.div
                     key={resource.text}
-                    className="flex items-start gap-3 p-3 rounded-xl border border-border/50 hover:border-border hover:bg-muted/30 transition-all"
+                    whileHover={{ x: -4, scale: 1.01 }}
+                    className="flex items-start gap-3 p-3.5 rounded-xl border border-border/50 hover:border-border hover:bg-muted/30 transition-all cursor-pointer group"
                   >
                     <div
-                      className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-                      style={{ backgroundColor: `${theme.primary}10` }}
+                      className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform"
+                      style={{ backgroundColor: `${resource.color}12` }}
                     >
-                      <resource.icon className="size-4" style={{ color: theme.primary }} />
+                      <resource.icon className="size-5" style={{ color: resource.color }} />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">{resource.text}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{resource.desc}</p>
                     </div>
-                  </div>
+                    {/* Arrow indicator on hover */}
+                    <ChevronLeft className="size-4 text-muted-foreground/0 group-hover:text-muted-foreground/60 transition-all mt-1 mr-auto shrink-0" />
+                  </motion.div>
                 ))}
               </div>
             </CardContent>
@@ -665,22 +824,56 @@ export function SubjectDetail() {
       <div className="section-divider" />
 
       {/* ============================================================ */}
-      {/* Notes Section with Prominent Textarea                        */}
+      {/* ENHANCED Notes Section — Character counter, border glow     */}
+      {/* when focused, auto-save indicator, better placeholder       */}
       {/* ============================================================ */}
       <motion.div variants={itemVariants}>
         <Card className="card-depth bg-card border border-border">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <Edit3 className="size-4" style={{ color: theme.primary }} />
-              <span className="section-header-line">ملاحظاتي</span>
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <Edit3 className="size-4" style={{ color: theme.primary }} />
+                <span className="section-header-line">ملاحظاتي</span>
+              </CardTitle>
+              {/* Auto-save indicator */}
+              <AnimatePresence>
+                {autoSaveActive && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    className="flex items-center gap-1.5 text-xs text-green-600"
+                  >
+                    <CheckCheck className="size-3.5" />
+                    <span>تم الحفظ تلقائياً</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="note-area-focus border-2 border-border/50">
+            <div
+              className={`rounded-xl overflow-hidden transition-all duration-300 border-2 ${
+                noteFocused
+                  ? "shadow-lg"
+                  : "border-border/50"
+              }`}
+              style={
+                noteFocused
+                  ? {
+                      borderColor: `${theme.primary}50`,
+                      boxShadow: `0 0 0 3px ${theme.primary}15, 0 0 20px ${theme.primary}08`,
+                    }
+                  : {}
+              }
+            >
               <textarea
                 className="w-full min-h-[180px] bg-muted/30 p-5 text-sm resize-none focus:outline-none transition-all placeholder:text-muted-foreground/50 leading-relaxed"
-                placeholder="أضف ملاحظاتك حول هذه المادة... 💡&#10;&#10;يمكنك كتابة أهم النقاط، الملخصات، أو أي شيء تريد تذكره لاحقاً"
+                placeholder={"أضف ملاحظاتك حول هذه المادة... 💡\n\nيمكنك كتابة:\n• أهم النقاط والملخصات\n• أسئلة تحتاج مراجعة\n• خطة الدراسة للمادة\n• أي شيء تريد تذكره لاحقاً"}
                 value={notes}
+                maxLength={maxNoteLength}
+                onFocus={() => setNoteFocused(true)}
+                onBlur={() => setNoteFocused(false)}
                 onChange={(e) => {
                   if (selectedSubjectId) {
                     setSubjectNotes(selectedSubjectId, e.target.value);
@@ -691,11 +884,23 @@ export function SubjectDetail() {
                 }}
               />
             </div>
-            <div className="mt-5 flex items-center justify-between">
+            <div className="mt-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <p className="text-xs text-muted-foreground">
-                  {notes.length > 0 ? `${notes.length} حرف` : "يتم الحفظ تلقائياً"}
-                </p>
+                {/* ENHANCED: Character counter with visual progress */}
+                <div className="flex items-center gap-1.5">
+                  <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${Math.min((notes.length / maxNoteLength) * 100, 100)}%`,
+                        backgroundColor: notes.length > maxNoteLength * 0.9 ? "#DC2626" : theme.primary,
+                      }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-muted-foreground ltr-content" dir="ltr">
+                    {notes.length}/{maxNoteLength}
+                  </span>
+                </div>
                 {notes.length > 0 && (
                   <Badge variant="outline" className="text-xs">
                     <PenTool className="size-3 ml-1" />
@@ -712,6 +917,7 @@ export function SubjectDetail() {
                 }}
                 onClick={() => {
                   setSaving(true);
+                  setLastSavedLength(notes.length);
                   setTimeout(() => setSaving(false), 500);
                 }}
               >
@@ -727,7 +933,8 @@ export function SubjectDetail() {
       <div className="section-divider" />
 
       {/* ============================================================ */}
-      {/* Related Subjects Section                                      */}
+      {/* ENHANCED Related Subjects — Category color indicators,      */}
+      {/* mini progress bars, better hover effects                    */}
       {/* ============================================================ */}
       {relatedSubjectsFinal.length > 0 && (
         <motion.div variants={itemVariants}>
@@ -743,46 +950,75 @@ export function SubjectDetail() {
                 {relatedSubjectsFinal.map((rs) => {
                   const RsIcon = iconMap[rs.icon || ""] || BookOpen;
                   const rsColor = rs.color || "#B91C1C";
+                  const rsTheme = categoryTheme[rs.category] || { primary: rsColor };
                   const rsProgress = progress.find((p) => p.subjectId === rs.id);
                   const rsProgressValue = rsProgress?.progress ?? 0;
+                  const rsStatus: SubjectStatus = rsProgress?.status ?? "not_started";
+                  const rsStatusInfo = statusConfig[rsStatus];
                   return (
                     <motion.div
                       key={rs.id}
-                      whileHover={{ scale: 1.03, y: -3 }}
+                      whileHover={{ scale: 1.03, y: -4 }}
                       whileTap={{ scale: 0.98 }}
                       className="cursor-pointer"
                       onClick={() => {
                         useAppStore.getState().selectSubject(rs.id);
                       }}
                     >
-                      <div className="flex items-center gap-3 rounded-xl border border-border p-4 transition-all hover:border-omni-red/30 hover:shadow-md card-depth bg-card">
+                      <div className="rounded-xl border border-border p-4 transition-all hover:border-omni-red/30 hover:shadow-lg card-depth bg-card relative overflow-hidden">
+                        {/* ENHANCED: Category color indicator bar at top */}
                         <div
-                          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-                          style={{ backgroundColor: `${rsColor}15` }}
-                        >
-                          <RsIcon className="h-6 w-6" style={{ color: rsColor }} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold truncate">
-                            {rs.nameAr}
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {rs.category}
-                          </p>
-                          {/* Mini progress bar */}
-                          <div className="mt-1.5 h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                          className="absolute top-0 right-0 left-0 h-1 rounded-t-xl"
+                          style={{ backgroundColor: rsTheme.primary }}
+                        />
+
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+                            style={{ backgroundColor: `${rsColor}15` }}
+                          >
+                            <RsIcon className="h-6 w-6" style={{ color: rsColor }} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold truncate">
+                              {rs.nameAr}
+                            </p>
+                            {/* ENHANCED: Category color indicator dot + name */}
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <div
+                                className="w-2 h-2 rounded-full shrink-0"
+                                style={{ backgroundColor: rsTheme.primary }}
+                              />
+                              <p className="text-xs text-muted-foreground">
+                                {rs.category}
+                              </p>
+                            </div>
+                            {/* ENHANCED: Mini progress bar with gradient */}
+                            <div className="mt-1.5 h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${rsProgressValue}%`,
+                                  background: `linear-gradient(90deg, ${rsColor}, ${rsColor}BB)`,
+                                }}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${rsProgressValue}%` }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end gap-1 shrink-0">
+                            <span className="text-xs font-bold ltr-content" style={{ color: rsColor }} dir="ltr">
+                              {rsProgressValue}%
+                            </span>
+                            {/* ENHANCED: Status dot */}
                             <div
-                              className="h-full rounded-full transition-all"
-                              style={{
-                                width: `${rsProgressValue}%`,
-                                backgroundColor: rsColor,
-                              }}
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: rsStatusInfo.color }}
+                              title={rsStatusInfo.label}
                             />
                           </div>
                         </div>
-                        <span className="text-xs font-bold ltr-content" style={{ color: rsColor }} dir="ltr">
-                          {rsProgressValue}%
-                        </span>
                       </div>
                     </motion.div>
                   );
