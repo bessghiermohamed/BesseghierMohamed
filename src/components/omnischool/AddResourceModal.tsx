@@ -82,10 +82,10 @@ export function AddResourceModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md" dir="rtl">
+      <DialogContent className="sm:max-w-md bg-omni-cream" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-emerald-800">إضافة مورد جديد</DialogTitle>
-          <DialogDescription className="text-emerald-600">
+          <DialogTitle className="text-foreground">إضافة مورد جديد</DialogTitle>
+          <DialogDescription className="text-omni-red/70">
             أضف مورد تعليمي جديد لمادة {subjectName}
           </DialogDescription>
         </DialogHeader>
@@ -93,7 +93,7 @@ export function AddResourceModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* عنوان المورد */}
           <div className="space-y-2">
-            <Label htmlFor="resource-title" className="text-emerald-800">
+            <Label htmlFor="resource-title" className="text-foreground">
               عنوان المورد
             </Label>
             <Input
@@ -101,20 +101,20 @@ export function AddResourceModal({
               placeholder="أدخل عنوان المورد..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-500/20"
+              className="border-omni-gold/20 focus-visible:border-omni-red focus-visible:ring-omni-red/20"
               dir="rtl"
             />
           </div>
 
           {/* نوع المورد - قائمة منسدلة */}
           <div className="space-y-2">
-            <Label className="text-emerald-800">نوع المورد</Label>
+            <Label className="text-foreground">نوع المورد</Label>
             <Select
               value={type}
               onValueChange={(val) => setType(val as ResourceType)}
               dir="rtl"
             >
-              <SelectTrigger className="w-full border-emerald-200 focus:ring-emerald-500/20">
+              <SelectTrigger className="w-full border-omni-gold/20 focus:ring-omni-red/20">
                 <SelectValue placeholder="اختر نوع المورد..." />
               </SelectTrigger>
               <SelectContent dir="rtl">
@@ -129,13 +129,13 @@ export function AddResourceModal({
 
           {/* المادة - قائمة منسدلة */}
           <div className="space-y-2">
-            <Label className="text-emerald-800">المادة</Label>
+            <Label className="text-foreground">المادة</Label>
             <Select
               value={selectedSubjectId}
               onValueChange={setSelectedSubjectId}
               dir="rtl"
             >
-              <SelectTrigger className="w-full border-emerald-200 focus:ring-emerald-500/20">
+              <SelectTrigger className="w-full border-omni-gold/20 focus:ring-omni-red/20">
                 <SelectValue placeholder="اختر المادة..." />
               </SelectTrigger>
               <SelectContent dir="rtl">
@@ -150,7 +150,7 @@ export function AddResourceModal({
 
           {/* الوصف */}
           <div className="space-y-2">
-            <Label htmlFor="resource-description" className="text-emerald-800">
+            <Label htmlFor="resource-description" className="text-foreground">
               الوصف
             </Label>
             <Textarea
@@ -158,14 +158,14 @@ export function AddResourceModal({
               placeholder="أدخل وصفاً للمورد..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="min-h-[80px] border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-500/20"
+              className="min-h-[80px] border-omni-gold/20 focus-visible:border-omni-red focus-visible:ring-omni-red/20"
               dir="rtl"
             />
           </div>
 
           {/* الرابط */}
           <div className="space-y-2">
-            <Label htmlFor="resource-url" className="text-emerald-800">
+            <Label htmlFor="resource-url" className="text-foreground">
               الرابط (اختياري)
             </Label>
             <Input
@@ -173,7 +173,7 @@ export function AddResourceModal({
               placeholder="https://..."
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-500/20"
+              className="border-omni-gold/20 focus-visible:border-omni-red focus-visible:ring-omni-red/20"
               dir="ltr"
             />
           </div>
@@ -183,14 +183,14 @@ export function AddResourceModal({
               type="button"
               variant="outline"
               onClick={() => handleOpenChange(false)}
-              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+              className="border-omni-gold/20 text-omni-red hover:bg-omni-red/5"
             >
               إلغاء
             </Button>
             <Button
               type="submit"
               disabled={!title.trim() || !type}
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-omni-red hover:bg-omni-red-dark text-white"
             >
               إضافة
             </Button>

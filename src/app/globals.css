@@ -3018,3 +3018,145 @@ html {
 .dark .dashboard-pattern-overlay::after {
   opacity: 0.02;
 }
+
+/* ========================================================================
+   Phase 7 — SubjectDetail & AboutPage Enhanced Visual CSS
+   ======================================================================== */
+
+/* ------------------------------------------------------------------
+   Note Area Focus — Enhanced focus state for note textarea
+   ------------------------------------------------------------------ */
+.note-area-focus {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.note-area-focus:focus-within {
+  border-color: rgba(185, 28, 28, 0.4);
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1), 0 0 20px rgba(185, 28, 28, 0.05);
+}
+
+/* ------------------------------------------------------------------
+   Progress Ring Glow — Glow effect around progress circles
+   ------------------------------------------------------------------ */
+.progress-ring-glow {
+  filter: drop-shadow(0 0 8px rgba(185, 28, 28, 0.15));
+  transition: filter 0.3s ease;
+}
+
+.progress-ring-glow:hover {
+  filter: drop-shadow(0 0 16px rgba(185, 28, 28, 0.25));
+}
+
+.dark .progress-ring-glow {
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.15));
+}
+
+.dark .progress-ring-glow:hover {
+  filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.25));
+}
+
+/* ------------------------------------------------------------------
+   Feature Card Gradient Overlay — Hover gradient for feature cards
+   ------------------------------------------------------------------ */
+.feature-card-gradient {
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card-gradient::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to top, var(--card), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.feature-card-gradient:hover::after {
+  opacity: 0.5;
+}
+
+/* ------------------------------------------------------------------
+   Testimonial Quote Animation — Fade in quote icon
+   ------------------------------------------------------------------ */
+@keyframes quote-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7) rotate(-10deg);
+  }
+  to {
+    opacity: 0.15;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.animate-quote-in {
+  animation: quote-fade-in 0.6s ease-out both;
+}
+
+/* ------------------------------------------------------------------
+   Tech Badge Hover — Interactive tech stack badges
+   ------------------------------------------------------------------ */
+.tech-badge-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tech-badge-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.dark .tech-badge-hover:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* ------------------------------------------------------------------
+   Star Rating — Gold star fill animation
+   ------------------------------------------------------------------ */
+@keyframes star-fill {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-star-fill {
+  animation: star-fill 0.3s ease-out both;
+}
+
+/* ------------------------------------------------------------------
+   Profile Ring — Decorative ring around profile avatars
+   ------------------------------------------------------------------ */
+.profile-ring {
+  position: relative;
+}
+
+.profile-ring::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 2px solid rgba(212, 168, 67, 0.3);
+  animation: profile-ring-pulse 3s ease-in-out infinite;
+}
+
+@keyframes profile-ring-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.02); }
+}
+
+/* ------------------------------------------------------------------
+   Status Change Animation — Smooth transition for status buttons
+   ------------------------------------------------------------------ */
+@keyframes status-change {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.1); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.animate-status-change {
+  animation: status-change 0.4s ease-out;
+}
