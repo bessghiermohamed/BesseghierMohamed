@@ -1,62 +1,302 @@
-"use client"
+"use client";
 
-import { type Subject } from "@/data/subjects-data"
+import { useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAppStore } from "@/lib/store";
+import { subjectsData, categories } from "@/lib/subjects-data";
+import { Subject } from "@/lib/types";
+import { SubjectCard } from "./SubjectCard";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Search,
+  Filter,
+  BookOpen,
+  Grid3X3,
+  List,
+  SlidersHorizontal,
+  X,
+  Heart,
+} from "lucide-react";
+import { useState } from "react";
 
-// خريطة ألوان المادة - يجب أن تكون كاملة لأن Tailwind لا يدعم الأنماط الديناميكية
-const subjectColorMap: Record<string, { bg: string; border: string; text: string; iconBg: string }> = {
-  emerald: { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-700", iconBg: "bg-emerald-100" },
-  teal: { bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-700", iconBg: "bg-teal-100" },
-  amber: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700", iconBg: "bg-amber-100" },
-  orange: { bg: "bg-orange-50", border: "border-orange-200", text: "text-orange-700", iconBg: "bg-orange-100" },
-  rose: { bg: "bg-rose-50", border: "border-rose-200", text: "text-rose-700", iconBg: "bg-rose-100" },
-  sky: { bg: "bg-sky-50", border: "border-sky-200", text: "text-sky-700", iconBg: "bg-sky-100" },
-  violet: { bg: "bg-violet-50", border: "border-violet-200", text: "text-violet-700", iconBg: "bg-violet-100" },
-  slate: { bg: "bg-slate-50", border: "border-slate-200", text: "text-slate-700", iconBg: "bg-slate-100" },
-  lime: { bg: "bg-lime-50", border: "border-lime-200", text: "text-lime-700", iconBg: "bg-lime-100" },
-  cyan: { bg: "bg-cyan-50", border: "border-cyan-200", text: "text-cyan-700", iconBg: "bg-cyan-100" },
-  pink: { bg: "bg-pink-50", border: "border-pink-200", text: "text-pink-700", iconBg: "bg-pink-100" },
-  yellow: { bg: "bg-yellow-50", border: "border-yellow-200", text: "text-yellow-700", iconBg: "bg-yellow-100" },
-  fuchsia: { bg: "bg-fuchsia-50", border: "border-fuchsia-200", text: "text-fuchsia-700", iconBg: "bg-fuchsia-100" },
-  indigo: { bg: "bg-indigo-50", border: "border-indigo-200", text: "text-indigo-700", iconBg: "bg-indigo-100" },
-}
+export function SubjectsGrid() {
+  const { progress, selectSubject, selectedSemester, setSelectedSemester, favorites } =
+    useAppStore();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showFilters, setShowFilters] = useState(false);
 
-interface SubjectsGridProps {
-  subjects: Subject[]
-  onSubjectClick: (subject: Subject) => void
-}
+  const filteredSubjects = useMemo(() => {
+    let subjects = subjectsData.filter(
+      (s) => s.semester === selectedSemester
+    );
 
-export function SubjectsGrid({ subjects, onSubjectClick }: SubjectsGridProps) {
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      subjects = subjects.filter(
+        (s) =>
+          s.nameAr.includes(q) ||
+          s.nameEn?.toLowerCase().includes(q) ||
+          s.code.toLowerCase().includes(q) ||
+          s.description?.includes(q)
+      );
+    }
+
+    if (showFavorites) {
+      subjects = subjects.filter((s) => favorites.includes(s.id));
+    } else if (selectedCategory) {
+      subjects = subjects.filter((s) => s.category === selectedCategory);
+    }
+
+    return subjects.sort((a, b) => a.order - b.order);
+  }, [selectedSemester, searchQuery, selectedCategory, showFavorites, favorites]);
+
+  const getProgress = (subjectId: string) =>
+    progress.find((p) => p.subjectId === subjectId);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.06 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
-      {subjects.map((subject) => {
-        const colors = subjectColorMap[subject.color] || subjectColorMap.emerald
-        const Icon = subject.icon
+    <motion.div
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants}>
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+          المواد الدراسية
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm sm:text-base">
+          تصفح جميع المواد الدراسية حسب السداسي والتصنيف
+        </p>
+      </motion.div>
 
-        return (
-          <button
-            key={subject.id}
-            onClick={() => onSubjectClick(subject)}
-            className={`group relative overflow-hidden rounded-xl border-2 ${colors.border} ${colors.bg} p-4 text-right transition-all hover:scale-[1.02] hover:shadow-md active:scale-[0.98]`}
-          >
-            {/* أيقونة المادة */}
-            <div
-              className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl ${colors.iconBg} ${colors.text} transition-transform group-hover:scale-110`}
+      {/* Search & Filter Bar */}
+      <motion.div variants={itemVariants} className="space-y-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="ابحث في المواد..."
+              className="pe-10 h-11 glass border-border"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="size-4" />
+              </button>
+            )}
+          </div>
+
+          {/* View mode toggle */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant={viewMode === "grid" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("grid")}
+              className="h-11 w-11"
             >
-              <Icon className="h-6 w-6" />
-            </div>
+              <Grid3X3 className="size-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("list")}
+              className="h-11 w-11"
+            >
+              <List className="size-4" />
+            </Button>
+            <Button
+              variant={showFilters ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+              className="h-11 gap-2 px-4"
+            >
+              <SlidersHorizontal className="size-4" />
+              <span className="hidden sm:inline">تصفية</span>
+            </Button>
+          </div>
+        </div>
 
-            {/* اسم المادة */}
-            <h3 className={`text-sm font-bold leading-tight ${colors.text} sm:text-base`}>
-              {subject.name}
-            </h3>
+        {/* Category Filters */}
+        <AnimatePresence>
+          {showFilters && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="glass rounded-xl p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <Filter className="size-4 text-omni-red" />
+                    تصفية حسب التصنيف
+                  </h3>
+                  {selectedCategory && (
+                    <button
+                      onClick={() => setSelectedCategory("")}
+                      className="text-xs text-muted-foreground hover:text-omni-red transition-colors flex items-center gap-1"
+                    >
+                      <X className="size-3" />
+                      إزالة التصفية
+                    </button>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Badge
+                    variant={selectedCategory === "" && !showFavorites ? "default" : "outline"}
+                    className={`cursor-pointer transition-all hover:scale-110 text-sm px-4 py-1.5 ${selectedCategory === "" && !showFavorites ? "category-filter-active" : ""}`}
+                    onClick={() => { setSelectedCategory(""); setShowFavorites(false); }}
+                  >
+                    الكل
+                  </Badge>
+                  <Badge
+                    variant={showFavorites ? "default" : "outline"}
+                    className={`cursor-pointer transition-all hover:scale-110 gap-1.5 text-sm px-4 py-1.5 ${showFavorites ? "category-filter-active" : ""}`}
+                    onClick={() => { setShowFavorites(true); setSelectedCategory(""); }}
+                    style={
+                      showFavorites
+                        ? {}
+                        : { borderColor: "rgba(185, 28, 28, 0.25)", color: "#B91C1C" }
+                    }
+                  >
+                    <Heart className="size-3.5" />
+                    المفضلة
+                  </Badge>
+                  {categories.map((cat) => (
+                    <Badge
+                      key={cat.id}
+                      variant={
+                        selectedCategory === cat.id ? "default" : "outline"
+                      }
+                      className={`cursor-pointer transition-all hover:scale-110 text-sm px-4 py-1.5 ${selectedCategory === cat.id ? "category-filter-active" : ""}`}
+                      style={
+                        selectedCategory === cat.id
+                          ? {}
+                          : {
+                              borderColor: `${cat.color}40`,
+                              color: cat.color,
+                            }
+                      }
+                      onClick={() => { setSelectedCategory(cat.id); setShowFavorites(false); }}
+                    >
+                      {cat.label}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-            {/* وصف مختصر */}
-            <p className="mt-1 text-xs leading-relaxed text-gray-500 line-clamp-2">
-              {subject.description}
-            </p>
-          </button>
-        )
-      })}
-    </div>
-  )
+      {/* Semester Tabs */}
+      <motion.div variants={itemVariants}>
+        <Tabs
+          value={String(selectedSemester)}
+          onValueChange={(v) => setSelectedSemester(Number(v) as 1 | 2)}
+        >
+          <TabsList className="mb-4">
+            <TabsTrigger value="1" className="gap-2">
+              <BookOpen className="size-4" />
+              السداسي الأول
+            </TabsTrigger>
+            <TabsTrigger value="2" className="gap-2">
+              <BookOpen className="size-4" />
+              السداسي الثاني
+            </TabsTrigger>
+          </TabsList>
+
+          {([1, 2] as const).map((sem) => (
+            <TabsContent key={sem} value={String(sem)}>
+              {/* Results count */}
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {filteredSubjects.length === 0
+                    ? "لا توجد نتائج"
+                    : `${filteredSubjects.length} مادة`}
+                </p>
+              </div>
+
+              {/* Subjects Grid/List */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${sem}-${viewMode}-${selectedCategory}-${searchQuery}`}
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                      : "flex flex-col gap-3"
+                  }
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {filteredSubjects.map((subject, idx) => (
+                    <motion.div
+                      key={subject.id}
+                      variants={itemVariants}
+                      className="card-hover-lift card-entrance"
+                      style={{ animationDelay: `${idx * 60}ms` }}
+                    >
+                      <SubjectCard
+                        subject={subject}
+                        progress={getProgress(subject.id)}
+                        onClick={() => selectSubject(subject.id)}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+
+              {filteredSubjects.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex flex-col items-center justify-center py-16 text-center"
+                >
+                  <BookOpen className="size-16 text-muted-foreground/30 mb-4" />
+                  <p className="text-lg font-medium text-muted-foreground">
+                    لا توجد مواد مطابقة
+                  </p>
+                  <p className="text-sm text-muted-foreground/70 mt-1">
+                    حاول تغيير معايير البحث أو التصفية
+                  </p>
+                </motion.div>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
+      </motion.div>
+    </motion.div>
+  );
 }
